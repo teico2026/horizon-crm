@@ -239,6 +239,7 @@
     <div class="stat"><div class="stat-num" id="total-won">0</div><div class="stat-label">Ganadas</div></div>
   </div>
   <div class="header-actions">
+    <button class="btn btn-ghost" onclick="openKeyModal()" title="Configurar API Key Perplexity">⚙️ API Key</button>
     <button class="btn btn-ghost">📊 Reportes</button>
     <button class="btn btn-primary" onclick="openModal()">+ Nueva oportunidad</button>
   </div>
@@ -663,9 +664,77 @@ function deleteCard(id) {
 }
 
 // ─── AGENT ───────────────────────────────────────────────
-function toggleAgent(id) {
+function getPplxKey() { return localStorage.getItem('pplx_key') || ''; }
+
+function openKeyModal() {
+  document.getElementById('key-modal').style.display = 'flex';
+  document.getElementById('key-input').value = getPplxKey();
+}
+function closeKeyModal() {
+  document.getElementById('key-modal').style.display = 'none';
+}
+function saveKey() {
+  const k = document.getElementById('key-input').value.trim();
+  if (k) { localStorage.setItem('pplx_key', k); closeKeyModal(); }
+}
+
+async function toggleAgent(id) {
   const panel = document.getElementById('agent-' + id);
-  panel.classList.toggle('open');
+  const result = document.getElementById('agent-result-' + id);
+  const isOpen = panel.classList.contains('open');
+
+  if (!isOpen) {
+    const key = getPplxKey();
+    if (!key) {
+      openKeyModal();
+      return;
+    }
+    panel.classList.add('open');
+    const card = cards.find(c => c.id === id);
+    if (!card) return;
+
+    // Only fetch if not already loaded
+    if (result.dataset.loaded === 'true') return;
+
+    result.innerHTML = `<span class="agent-pulse"></span> Buscando novedades de <strong>${card.empresa}</strong>...`;
+
+    const prompt = `Investigá la empresa "${card.empresa}" del sector telecomunicaciones en Argentina/Latinoamérica.
+Dame en formato bullet points cortos:
+• Novedades o noticias recientes (2024-2026)
+• Expansiones de red o licitaciones activas
+• Tecnologías que están desplegando
+• Oportunidades comerciales detectadas
+• Cualquier señal de compra relevante
+Si no encontrás info específica, indicalo y dá contexto del mercado ISP/Telco regional.
+Respuesta en español, máximo 200 palabras.`;
+
+    try {
+      const res = await fetch('https://api.perplexity.ai/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'sonar',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 400
+        })
+      });
+      const data = await res.json();
+      if (data.choices) {
+        const text = data.choices[0].message.content;
+        result.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/•/g, '&bull;');
+        result.dataset.loaded = 'true';
+      } else {
+        result.innerHTML = `⚠️ Error: ${data.error?.message || 'Sin respuesta'}`;
+      }
+    } catch(e) {
+      result.innerHTML = `⚠️ Error de conexión: ${e.message}`;
+    }
+  } else {
+    panel.classList.remove('open');
+  }
 }
 
 // ─── INIT ────────────────────────────────────────────────
@@ -675,6 +744,30 @@ render();
 document.getElementById('modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+document.getElementById('key-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeKeyModal();
+});
+// Auto-open key modal if no key set
+if (!getPplxKey()) {
+  setTimeout(() => openKeyModal(), 800);
+}
 </script>
+
+<!-- KEY MODAL -->
+<div id="key-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:32px;width:440px;max-width:90vw;">
+    <h2 style="color:#f1f5f9;margin-bottom:8px;">🤖 Configurar Agente IA</h2>
+    <p style="color:#94a3b8;font-size:13px;margin-bottom:20px;">Ingresá tu API Key de Perplexity. Se guarda solo en este navegador (localStorage), nunca se sube a ningún servidor.</p>
+    <label style="color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.5px;">Perplexity API Key</label>
+    <input id="key-input" type="password" placeholder="pplx-..."
+      style="width:100%;margin-top:6px;margin-bottom:20px;padding:10px 14px;background:#0f1117;border:1px solid #334155;border-radius:8px;color:#f1f5f9;font-size:14px;outline:none;"
+      onkeydown="if(event.key==='Enter')saveKey()">
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeKeyModal()" style="flex:1;padding:10px;background:transparent;border:1px solid #334155;border-radius:8px;color:#94a3b8;font-size:13px;cursor:pointer;">Cancelar</button>
+      <button onclick="saveKey()" style="flex:2;padding:10px;background:#3b82f6;border:none;border-radius:8px;color:white;font-size:13px;font-weight:700;cursor:pointer;">Guardar y activar</button>
+    </div>
+    <p style="color:#475569;font-size:11px;margin-top:14px;">Obtenés tu key en <a href="https://www.perplexity.ai/settings/api" target="_blank" style="color:#3b82f6;">perplexity.ai/settings/api</a></p>
+  </div>
+</div>
 </body>
 </html>
