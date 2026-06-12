@@ -466,13 +466,13 @@
       <div class="brand-products">
         <div style="color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Portfolio</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          <span class="prod-tag hfc">Nodos RPD</span>
-          <span class="prod-tag hfc">Amplificadores HFC</span>
-          <span class="prod-tag hfc">cBR8 / CMTS</span>
-          <span class="prod-tag hfc">EDFA Óptico</span>
-          <span class="prod-tag hfc">WDM / DWDM</span>
-          <span class="prod-tag hfc">Transceptores</span>
-          <span class="prod-tag hfc">Remote PHY</span>
+          <span class="prod-tag hfc">SFP+ 8G/10G/25G</span>
+          <span class="prod-tag hfc">SFP28 eCPRI 25G</span>
+          <span class="prod-tag hfc">DWDM Tunable 80km</span>
+          <span class="prod-tag hfc">SONET/SDH 40km</span>
+          <span class="prod-tag hfc">AOC SFPwire/Quadwire</span>
+          <span class="prod-tag hfc">DAC 40G-400G</span>
+          <span class="prod-tag hfc">Z-Blocks CWDM/DWDM</span>
         </div>
       </div>
       <div id="brand-result-coherent" class="brand-result"></div>
@@ -789,6 +789,27 @@ function deleteCard(id) {
   render(currentFilter, currentSearch);
 }
 
+// ─── PRODUCT KNOWLEDGE ───────────────────────────────────
+const FIBERHOME_CONTEXT = `FIBERHOME (Representante exclusivo ISP Argentina) — Portfolio ODN FTTH:
+CABLES: ADSS Aéreo 12-144FO vanos 80-120m G.652D | Drop Oval/Fig-8 G.657A1/A2 acometida domiciliaria | Drop Circular 5mm LSZH G.657A2 | GYFS Anti-roedor ducto 12-48FO | EASYCONNS Cable pre-connectorizado fábrica
+CONECTORES: FAC Field Assembly Connector (SC/LC UPC/APC, mecánico en 60seg sin herramientas) | EASYCONNS IP68 SC/APC plug-and-play 300N | Mini-MH1 ultra-compacto <13mm IP68 | PLC Splitter 1x2 a 1x128 cassette/LGX/rack | Pigtails y Patch Cords SC/FC/LC/ST
+CAJAS NAP/FDB: FDP-420A IP55 40F splicing 18 adapters | FitDP-461C IP68 48F splicing 8F terminación | FitDP-461D IP68 16F pre-connectorizado | FitDP-462A IP68 12 adapters ultracompacto | FitDP-463A IP68 9 adapters H1V2 | FitDP-470A IP68+IK10 10F MH1 antivandálico | FitDP-470D IP68 96F splicing+8F pre-conn | FitDP-480C IP55 48F 7 DLC adapters
+MUFAS FOSC: FOSC-220J Ø220mm 144F IP68 mid-span sin cortar cable | FOSC-260J Ø260mm 288F IP68 ribbon fiber
+ODF: ODU Sub-rack 19"/21" 12-144F empalme+terminación
+SOLUCIÓN EASYCONNS: sistema end-to-end plug-and-play, reduce instalación de horas a minutos, 40% menos costo
+VENTAJAS: stock local Argentina, soporte técnico local, compatible con cualquier OLT (Huawei/Nokia/Calix/ZTE)`;
+
+const COHERENT_CONTEXT = `COHERENT (Distribuidor exclusivo ISP Argentina) — Portfolio Transceptores y Conectividad:
+TRANSCEPTORES DATACOM SFP/SFP+: FTLF8528P3BCV 8G FC 100m MMF 850nm | FTLF8524P2XNV 4G FC+GbE 550m MMF | FTLF8538P5BCZ 25GE Low-Latency SR 100m MMF 850nm
+TRANSCEPTORES SMF LARGO ALCANCE: FTLF1429P3BNV 16G FC 10km SMF 1310nm | FTLF1429P3BCE 16G FC 20km SMF | FTLF1323P1XTL OC-3 SONET/SDH CPRI 40km SMF -40°C a 85°C
+TRANSCEPTORES SFP28 25G: FTLF8536P5XYZ 25GE/10GE/eCPRI 100m MMF — CLAVE para fronthaul 5G
+TRANSCEPTORES TELECOM DWDM: FTLX6882MCC DWDM Tunable C-Band 80km SFP+ APD — para carriers y backbone
+AOC (Active Optical Cables): SFPwire 10G/25G SFP+ | Quadwire 40G/100G/200G/400G QSFP-DD | C.wire CXP 12x12.5G — interconexión datacenter hasta 100m
+DAC: SFPwire QSFP Direct Attach 40G-400G — bajo costo, baja latencia
+COMPONENTES WDM: Z-Blocks SWDM/CWDM/LWDM para transceptores 100G/400G/800G
+CLIENTES IDEALES: Carrier→DWDM tunable backbone | ISP datacenter→SFP+ 10G/25G NOC | ISP 5G→SFP28 eCPRI fronthaul | Distribuidor→AOC/DAC datacenter
+VENTAJAS: distribuidor exclusivo Argentina, stock local, compatible Cisco/Juniper/Nokia/Huawei, certificados IEEE/RoHS`;
+
 // ─── AGENT ───────────────────────────────────────────────
 function getPplxKey() { return localStorage.getItem('pplx_key') || ''; }
 
@@ -824,15 +845,20 @@ async function toggleAgent(id) {
 
     result.innerHTML = `<span class="agent-pulse"></span> Buscando novedades de <strong>${card.empresa}</strong>...`;
 
-    const prompt = `Investigá la empresa "${card.empresa}" del sector telecomunicaciones en Argentina/Latinoamérica.
-Dame en formato bullet points cortos:
-• Novedades o noticias recientes (2024-2026)
-• Expansiones de red o licitaciones activas
-• Tecnologías que están desplegando
-• Oportunidades comerciales detectadas
-• Cualquier señal de compra relevante
-Si no encontrás info específica, indicalo y dá contexto del mercado ISP/Telco regional.
-Respuesta en español, máximo 200 palabras.`;
+    const techUpper = (card.tech||'').toUpperCase();
+    const brandContext = (techUpper.includes('FTTH') ? '\n\nPRODUCTOS DISPONIBLES FIBERHOME:\n' + FIBERHOME_CONTEXT : '') +
+                         (techUpper.includes('HFC') ? '\n\nPRODUCTOS DISPONIBLES COHERENT:\n' + COHERENT_CONTEXT : '') +
+                         (!techUpper.includes('FTTH') && !techUpper.includes('HFC') ? '\n\nPRODUCTOS DISPONIBLES:\n' + FIBERHOME_CONTEXT + '\n\n' + COHERENT_CONTEXT : '');
+
+    const prompt = `Sos el asistente comercial de Horizon Trading para ${card.empresa} (${card.tipo}, tecnología: ${card.tech}).
+${brandContext}
+
+Investigá "${card.empresa}" en Argentina/Latinoamérica y respondé en bullets cortos:
+• Novedades o expansiones recientes (2024-2026)
+• Tecnologías que están desplegando o planean desplegar
+• 🎯 Oportunidad concreta: qué producto específico del portfolio arriba deberías ofrecerle y por qué ahora
+• Señal de compra detectada o próximo paso recomendado
+Respuesta en español, máximo 200 palabras. Sé muy específico con los modelos de producto.`;
 
     try {
       const res = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -909,29 +935,34 @@ async function openOutreach(id) {
     : `Empresa del sector ${card.tipo} en Argentina/Latinoamérica. Contacto: ${card.contacto}. Etapa comercial: ${card.etapa}.`;
 
   const contactName = card.contacto.split(' ')[0];
+  const techUpper2 = (card.tech||'').toUpperCase();
+  const productContext = (techUpper2.includes('FTTH') ? FIBERHOME_CONTEXT : '') +
+                         (techUpper2.includes('HFC') ? '\n' + COHERENT_CONTEXT : '') +
+                         (!techUpper2.includes('FTTH') && !techUpper2.includes('HFC') ? FIBERHOME_CONTEXT + '\n' + COHERENT_CONTEXT : '');
 
-  const emailPrompt = `Sos Matias Taddei, Director Comercial de Horizon Trading, empresa distribuidora de equipos de telecomunicaciones (FTTH, HFC, STB, routers, OLTs).
+  const emailPrompt = `Sos Matias Taddei, Director Comercial de Horizon Trading, distribuidor exclusivo de Fiberhome (ODN FTTH) y Coherent (transceptores) para ISPs en Argentina.
 Escribí un email comercial profesional en español para ${card.contacto} de ${card.empresa}.
-Contexto de la empresa: ${context}
+Contexto del cliente: ${context}
+Portfolio disponible: ${productContext.substring(0,600)}
 Reglas:
-- Asunto atractivo y concreto
+- Asunto específico mencionando UN producto concreto del portfolio que aplique a este cliente
 - Máximo 5 líneas de cuerpo
-- Mencionar algo específico de la empresa para mostrar que investigaste
+- Nombrar el producto específico (modelo) y por qué aplica a esta empresa
 - Proponer una reunión o llamada breve
-- Tono profesional pero cercano, no genérico
+- Tono profesional pero cercano
 - Firma: Matias Taddei | Horizon Trading | mt@horizon-trd.com
 Formato: primero "Asunto: ..." luego el cuerpo.`;
 
-  const waPrompt = `Sos Matias Taddei de Horizon Trading (equipos telco: FTTH, HFC, STB).
-Escribí un mensaje de WhatsApp comercial corto para ${contactName} de ${card.empresa}.
+  const waPrompt = `Sos Matias Taddei de Horizon Trading, distribuidor exclusivo de Fiberhome y Coherent para ISPs en Argentina.
+Escribí un mensaje de WhatsApp para ${contactName} de ${card.empresa}.
 Contexto: ${context}
+Portfolio: ${productContext.substring(0,300)}
 Reglas:
 - Máximo 4 líneas
+- Mencioná UN producto específico (con modelo) que aplique a este cliente
 - Tono informal pero profesional
-- Mencioná algo puntual de la empresa
 - Proponer una llamada rápida
-- Sin emojis exagerados, máximo 2
-- No uses "Estimado" ni fórmulas de email`;
+- Máximo 2 emojis`;
 
   // Fire both in parallel
   const [emailRes, waRes] = await Promise.all([
@@ -1025,7 +1056,7 @@ ARGUMENTOS DE VENTA CLAVE:
     role: 'Distribuidor exclusivo para ISP en Argentina',
     techs: ['HFC', 'DOCSIS', 'CMTS', 'Remote PHY'],
     matchTech: ['HFC'],
-    products: 'Nodos RPD (Remote PHY), amplificadores HFC, cBR8/CMTS, EDFA óptico, WDM/DWDM, transceptores, soluciones Remote PHY',
+    products: COHERENT_CONTEXT,
     color: '#38bdf8'
   }
 };
