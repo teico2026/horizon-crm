@@ -187,6 +187,8 @@
     .card-btn:hover { background: #334155; color: #e2e8f0; }
     .card-btn.agent-btn:hover { background: #1d3a5f; color: #38bdf8; }
     .card-btn.outreach-btn:hover { background: #1a3a2a; color: #4ade80; }
+    .card-btn.account-btn:hover { background: #1a2a3a; color: #60a5fa; }
+    .card-btn.persona-btn:hover { background: #2a1a3a; color: #c084fc; }
     .outreach-tab { padding: 8px 18px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; background: transparent; color: #64748b; }
     .outreach-tab.active { background: #1e293b; color: #f1f5f9; }
     .outreach-content { display:none; }
@@ -624,6 +626,8 @@ function buildCard(c) {
         <button class="card-btn" onclick="editCard(${c.id})" title="Editar">✏️</button>
         <button class="card-btn agent-btn" onclick="toggleAgent(${c.id})" title="Agente IA">🤖</button>
         <button class="card-btn outreach-btn" onclick="openOutreach(${c.id})" title="Generar outreach">✉️</button>
+        <button class="card-btn account-btn" onclick="openAccountIntel(${c.id})" title="Account Intelligence">🏢</button>
+        <button class="card-btn persona-btn" onclick="openPersonaIntel(${c.id})" title="Perfil Decisor">👤</button>
         <button class="card-btn" onclick="deleteCard(${c.id})" title="Eliminar">🗑️</button>
       </div>
     </div>
@@ -1255,6 +1259,201 @@ function closeScanModal() {
   document.getElementById('scan-modal').style.display = 'none';
 }
 
+// ─── ACCOUNT INTEL ───────────────────────────────────────
+function closeAccountIntel() { document.getElementById('account-intel-modal').style.display = 'none'; }
+function closePersonaIntel() { document.getElementById('persona-intel-modal').style.display = 'none'; }
+
+async function openAccountIntel(id) {
+  const key = getPplxKey();
+  if (!key) { openKeyModal(); return; }
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+
+  const modal = document.getElementById('account-intel-modal');
+  const title = document.getElementById('account-intel-title');
+  const body = document.getElementById('account-intel-body');
+  title.textContent = `🏢 Account Intel — ${card.empresa}`;
+  body.innerHTML = '<div style="color:#64748b;padding:20px 0;">🔍 Investigando en profundidad...</div>';
+  modal.style.display = 'flex';
+
+  const techUpper = (card.tech||'').toUpperCase();
+  const relevantProducts = techUpper.includes('FTTH') ? FIBERHOME_CONTEXT.substring(0,400) :
+                           techUpper.includes('HFC') ? COHERENT_CONTEXT.substring(0,400) :
+                           FIBERHOME_CONTEXT.substring(0,300);
+
+  const sections = [
+    {
+      id: 'ac-empresa', title: '🏭 Empresa & Operación',
+      prompt: `Investigá en profundidad a "${card.empresa}" en Argentina/Latinoamérica.
+Dame info detallada sobre:
+- Qué servicios ofrece exactamente (internet, TV, telefonía, datos, B2B)
+- Zona geográfica de cobertura y cantidad estimada de clientes/hogares
+- Tecnología de red actual (FTTH, HFC, DOCSIS, 4G/5G, mixto)
+- Infraestructura propia vs arrendada
+- Tamaño de empresa (empleados, facturación estimada si es público)
+- Accionistas, grupo económico o holdings que la controlan
+Respuesta en español, máximo 200 palabras, bullets concretos.`
+    },
+    {
+      id: 'ac-proyectos', title: '🚀 Proyectos & Expansión',
+      prompt: `Investigá proyectos activos y planes de expansión de "${card.empresa}" en Argentina.
+Buscá en:
+- Licitaciones públicas en Argentina (portal compras.gob.ar, boletín oficial)
+- Subsidios ENACOM (PNSC, PISF, conectividad rural) adjudicados o en curso
+- Noticias de expansión, nuevas zonas, adquisiciones de ISPs menores
+- Proyectos de migración tecnológica (HFC a FTTH, DOCSIS 3.1, XGS-PON)
+- Inversiones anunciadas o planes de capital expenditure
+Respuesta en español, máximo 200 palabras. Si hay licitaciones activas, mencioná montos.`
+    },
+    {
+      id: 'ac-competencia', title: '⚔️ Competencia & Posicionamiento',
+      prompt: `Analizá el posicionamiento competitivo de "${card.empresa}" en su mercado.
+- Principales competidores en su zona geográfica
+- Diferenciadores que usa (precio, velocidad, servicio, cobertura)
+- Cuota de mercado estimada o ranking regional
+- Amenazas: operadoras grandes que entran a su zona, fusiones del sector
+- Oportunidades: zonas sin competencia, demanda insatisfecha
+Respuesta en español, máximo 150 palabras, bullets.`
+    },
+    {
+      id: 'ac-oportunidad', title: '🎯 Oportunidad Comercial Horizon',
+      prompt: `Basándote en todo lo que sabés de "${card.empresa}" (${card.tipo}, tecnología: ${card.tech}, etapa: ${card.etapa}${card.notas ? ', notas: '+card.notas : ''}):
+
+Portfolio disponible de Horizon Trading:
+${relevantProducts}
+
+Generá una estrategia comercial concreta:
+- Qué producto específico (con modelo) es la oportunidad más urgente y por qué
+- Argumento de venta principal adaptado a la situación de esta empresa
+- Mejor momento para contactar y por qué ahora
+- Posibles objeciones y cómo rebatirlas
+- Tamaño de oportunidad estimado (pequeña/media/grande)
+Respuesta en español, máximo 200 palabras. Muy específico y accionable.`
+    }
+  ];
+
+  body.innerHTML = sections.map(s =>
+    `<div style="margin-bottom:16px;">
+      <div style="font-weight:700;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">${s.title}</div>
+      <div id="${s.id}" style="background:#0f1117;border:1px solid #1e293b;border-radius:8px;padding:14px;font-size:13px;color:#94a3b8;line-height:1.6;">
+        <span style="color:#475569;">🔄 Buscando...</span>
+      </div>
+    </div>`
+  ).join('');
+
+  await Promise.all(sections.map(async s => {
+    try {
+      const res = await fetch('https://api.perplexity.ai/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: s.prompt }], max_tokens: 400 })
+      });
+      const data = await res.json();
+      const el = document.getElementById(s.id);
+      if (el && data.choices) {
+        el.innerHTML = data.choices[0].message.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+        el.style.color = '#cbd5e1';
+      }
+    } catch(e) {
+      const el = document.getElementById(s.id);
+      if (el) el.innerHTML = '⚠️ Error: ' + e.message;
+    }
+  }));
+}
+
+async function openPersonaIntel(id) {
+  const key = getPplxKey();
+  if (!key) { openKeyModal(); return; }
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+
+  const modal = document.getElementById('persona-intel-modal');
+  const title = document.getElementById('persona-intel-title');
+  const body = document.getElementById('persona-intel-body');
+  title.textContent = `👤 Perfil Decisor — ${card.contacto}`;
+  body.innerHTML = '<div style="color:#64748b;padding:20px 0;">🔍 Construyendo perfil...</div>';
+  modal.style.display = 'flex';
+
+  const sections = [
+    {
+      id: 'pe-profesional', title: '💼 Perfil Profesional',
+      prompt: `Investigá a "${card.contacto}" que trabaja en "${card.empresa}" (${card.tipo} de telecomunicaciones en Argentina) con rol "${card.contacto}".
+Buscá en LinkedIn, medios, registros públicos:
+- Trayectoria profesional: empresas anteriores, cargos, años de experiencia
+- Educación y formación
+- Especialidades técnicas o comerciales
+- Publicaciones, ponencias, participación en eventos del sector
+- Grupos o asociaciones profesionales (CABASE, ATVC, etc.)
+Respuesta en español, máximo 150 palabras. Si no encontrás info específica, inferí perfil típico del cargo en el sector.`
+    },
+    {
+      id: 'pe-digital', title: '📱 Presencia Digital & Redes',
+      prompt: `Investigá la presencia digital pública de "${card.contacto}" de "${card.empresa}" en Argentina.
+Buscá:
+- LinkedIn: actividad reciente, posts, artículos publicados, conexiones notables
+- Twitter/X: cuenta, temas que comenta, opiniones del sector
+- Facebook/Instagram: perfil público, intereses visibles
+- Menciones en medios, entrevistas, notas de prensa
+- Participación en foros técnicos o grupos de la industria telco
+Respuesta en español, máximo 150 palabras.`
+    },
+    {
+      id: 'pe-personal', title: '🎯 Intereses & Estilo Personal',
+      prompt: `A partir de toda la información pública disponible sobre "${card.contacto}" de "${card.empresa}" en Argentina:
+- Hobbies e intereses personales visibles en redes sociales
+- Deporte, cultura, gastronomía, viajes — lo que sea público
+- Estilo de comunicación (formal/informal, técnico/comercial)
+- Qué valora en un proveedor según sus posts o declaraciones públicas
+- Cumpleaños u otras fechas relevantes si son públicas
+Si no hay info específica, construí un perfil basado en el segmento demográfico típico del cargo en Argentina.
+Respuesta en español, máximo 150 palabras.`
+    },
+    {
+      id: 'pe-estrategia', title: '🤝 Estrategia de Acercamiento',
+      prompt: `Sos un experto en relaciones públicas y ventas B2B en Argentina.
+El objetivo es que Matias Taddei de Horizon Trading construya una relación sólida con "${card.contacto}" (${card.contacto.split('(')[1]||'decisor'} de ${card.empresa}).
+Contexto: ${card.notas || 'Sin notas adicionales'}
+
+Diseñá una estrategia de acercamiento personalizada:
+- Canal ideal para primer contacto (LinkedIn, WhatsApp, email, llamada, evento)
+- Tono y enfoque recomendado para esta persona
+- Tema de conversación inicial que NO sea venta directa
+- Cómo usar sus intereses personales para generar rapport
+- Momento ideal para avanzar hacia propuesta comercial
+- Red flag o cosas a evitar con esta persona
+Respuesta en español, máximo 200 palabras. Muy específico y accionable.`
+    }
+  ];
+
+  body.innerHTML = sections.map(s =>
+    `<div style="margin-bottom:16px;">
+      <div style="font-weight:700;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">${s.title}</div>
+      <div id="${s.id}" style="background:#0f1117;border:1px solid #1e293b;border-radius:8px;padding:14px;font-size:13px;color:#94a3b8;line-height:1.6;">
+        <span style="color:#475569;">🔄 Investigando...</span>
+      </div>
+    </div>`
+  ).join('');
+
+  await Promise.all(sections.map(async s => {
+    try {
+      const res = await fetch('https://api.perplexity.ai/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: s.prompt }], max_tokens: 400 })
+      });
+      const data = await res.json();
+      const el = document.getElementById(s.id);
+      if (el && data.choices) {
+        el.innerHTML = data.choices[0].message.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+        el.style.color = '#cbd5e1';
+      }
+    } catch(e) {
+      const el = document.getElementById(s.id);
+      if (el) el.innerHTML = '⚠️ Error: ' + e.message;
+    }
+  }));
+}
+
 // ─── INIT ────────────────────────────────────────────────
 render();
 
@@ -1308,6 +1507,42 @@ if (!getPplxKey()) {
       🔴 Urgente &nbsp;·&nbsp; 🟡 Oportunidad &nbsp;·&nbsp; 🟢 Monitorear
     </div>
     <div id="scan-body"></div>
+  </div>
+</div>
+
+<!-- ACCOUNT INTEL MODAL -->
+<div id="account-intel-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;">
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:28px;width:680px;max-width:95vw;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <div>
+        <h2 id="account-intel-title" style="color:#f1f5f9;font-size:18px;">🏢 Account Intelligence</h2>
+        <p style="color:#64748b;font-size:12px;margin-top:4px;">Investigación profunda · Perplexity AI · Tiempo real</p>
+      </div>
+      <button onclick="closeAccountIntel()" style="background:transparent;border:1px solid #334155;border-radius:8px;color:#94a3b8;padding:6px 12px;cursor:pointer;font-size:13px;">✕ Cerrar</button>
+    </div>
+    <div style="margin-bottom:18px;padding:10px 14px;background:#0f1117;border-radius:8px;font-size:12px;color:#64748b;">
+      🏭 Empresa &nbsp;·&nbsp; 🚀 Proyectos &nbsp;·&nbsp; ⚔️ Competencia &nbsp;·&nbsp; 🎯 Oportunidad Horizon
+    </div>
+    <div id="account-intel-body"></div>
+    <p style="color:#475569;font-size:11px;margin-top:14px;">💡 Info compilada de fuentes públicas: ENACOM, licitaciones, prensa, LinkedIn, sitio oficial.</p>
+  </div>
+</div>
+
+<!-- PERSONA INTEL MODAL -->
+<div id="persona-intel-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;">
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:28px;width:680px;max-width:95vw;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <div>
+        <h2 id="persona-intel-title" style="color:#f1f5f9;font-size:18px;">👤 Perfil del Decisor</h2>
+        <p style="color:#64748b;font-size:12px;margin-top:4px;">Inteligencia relacional · Perplexity AI · Fuentes públicas</p>
+      </div>
+      <button onclick="closePersonaIntel()" style="background:transparent;border:1px solid #334155;border-radius:8px;color:#94a3b8;padding:6px 12px;cursor:pointer;font-size:13px;">✕ Cerrar</button>
+    </div>
+    <div style="margin-bottom:18px;padding:10px 14px;background:#0f1117;border-radius:8px;font-size:12px;color:#64748b;">
+      💼 Trayectoria &nbsp;·&nbsp; 📱 Presencia Digital &nbsp;·&nbsp; 🎯 Intereses &nbsp;·&nbsp; 🤝 Estrategia
+    </div>
+    <div id="persona-intel-body"></div>
+    <p style="color:#475569;font-size:11px;margin-top:14px;">⚖️ Información compilada exclusivamente de fuentes públicas para uso comercial profesional.</p>
   </div>
 </div>
 
