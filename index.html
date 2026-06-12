@@ -48,6 +48,9 @@
     .btn-primary:hover { background: #2563eb; }
     .btn-ghost { background: transparent; color: #94a3b8; border: 1px solid #334155; }
     .btn-ghost:hover { background: #1e293b; color: #e2e8f0; }
+    .btn-scan { background: linear-gradient(135deg, #7c3aed, #3b82f6); color: white; }
+    .btn-scan:hover { opacity: .85; }
+    .btn-scan:disabled { opacity: .5; cursor: not-allowed; }
 
     /* FILTERS */
     .filters {
@@ -241,6 +244,7 @@
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="openKeyModal()" title="Configurar API Key Perplexity">⚙️ API Key</button>
     <button class="btn btn-ghost">📊 Reportes</button>
+    <button class="btn btn-scan" onclick="scanAll()" id="scan-btn">🔍 Escanear Todo</button>
     <button class="btn btn-primary" onclick="openModal()">+ Nueva oportunidad</button>
   </div>
 </header>
@@ -737,6 +741,78 @@ Respuesta en español, máximo 200 palabras.`;
   }
 }
 
+// ─── SCAN ALL ────────────────────────────────────────────
+async function scanAll() {
+  const key = getPplxKey();
+  if (!key) { openKeyModal(); return; }
+
+  const btn = document.getElementById('scan-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Escaneando...';
+
+  const modal = document.getElementById('scan-modal');
+  const body = document.getElementById('scan-body');
+  modal.style.display = 'flex';
+  body.innerHTML = '';
+
+  // Create placeholder rows
+  cards.forEach(c => {
+    body.innerHTML += `
+      <div id="scan-row-${c.id}" style="border:1px solid #1e293b;border-radius:10px;padding:16px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-weight:700;color:#f1f5f9;font-size:15px;">${c.empresa}</span>
+          <span style="font-size:11px;color:#64748b;background:#0f1117;padding:2px 8px;border-radius:20px;">${c.tipo}</span>
+          <span style="font-size:11px;color:#64748b;background:#0f1117;padding:2px 8px;border-radius:20px;">${c.etapa}</span>
+        </div>
+        <div id="scan-result-${c.id}" style="color:#94a3b8;font-size:13px;">
+          <span style="animation:pulse 1.5s infinite;">🔄 Analizando...</span>
+        </div>
+      </div>`;
+  });
+
+  // Fire all requests in parallel
+  await Promise.all(cards.map(async c => {
+    const resultEl = document.getElementById('scan-result-' + c.id);
+    const rowEl = document.getElementById('scan-row-' + c.id);
+    const prompt = `Investigá la empresa "${c.empresa}" del sector telecomunicaciones en Argentina/Latinoamérica.
+Dame SOLO en este formato exacto:
+🔴 URGENTE / 🟡 OPORTUNIDAD / 🟢 MONITOREAR (elegí uno según el nivel de oportunidad comercial detectada)
+• Situación actual en 1 línea
+• Principal oportunidad comercial detectada
+• Acción recomendada para el vendedor
+Respuesta en español, máximo 60 palabras. Sé muy concreto.`;
+
+    try {
+      const res = await fetch('https://api.perplexity.ai/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 200 })
+      });
+      const data = await res.json();
+      if (data.choices) {
+        const text = data.choices[0].message.content;
+        const isUrgent = text.includes('🔴');
+        const isOpp = text.includes('🟡');
+        if (isUrgent) rowEl.style.borderColor = '#ef4444';
+        else if (isOpp) rowEl.style.borderColor = '#f59e0b';
+        else rowEl.style.borderColor = '#22c55e';
+        resultEl.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      } else {
+        resultEl.innerHTML = '⚠️ Sin respuesta';
+      }
+    } catch(e) {
+      resultEl.innerHTML = `⚠️ Error: ${e.message}`;
+    }
+  }));
+
+  btn.disabled = false;
+  btn.textContent = '🔍 Escanear Todo';
+}
+
+function closeScanModal() {
+  document.getElementById('scan-modal').style.display = 'none';
+}
+
 // ─── INIT ────────────────────────────────────────────────
 render();
 
@@ -752,6 +828,23 @@ if (!getPplxKey()) {
   setTimeout(() => openKeyModal(), 800);
 }
 </script>
+
+<!-- SCAN MODAL -->
+<div id="scan-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;">
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:28px;width:640px;max-width:95vw;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <h2 style="color:#f1f5f9;font-size:18px;">🔍 Reporte de Oportunidades</h2>
+        <p style="color:#64748b;font-size:12px;margin-top:4px;">Análisis en tiempo real · Perplexity AI</p>
+      </div>
+      <button onclick="closeScanModal()" style="background:transparent;border:1px solid #334155;border-radius:8px;color:#94a3b8;padding:6px 12px;cursor:pointer;font-size:13px;">✕ Cerrar</button>
+    </div>
+    <div style="margin-bottom:16px;padding:10px 14px;background:#0f1117;border-radius:8px;font-size:12px;color:#64748b;">
+      🔴 Urgente &nbsp;·&nbsp; 🟡 Oportunidad &nbsp;·&nbsp; 🟢 Monitorear
+    </div>
+    <div id="scan-body"></div>
+  </div>
+</div>
 
 <!-- KEY MODAL -->
 <div id="key-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;">
