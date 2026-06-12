@@ -54,6 +54,14 @@
     .view-tab.active { color:#1e40af;border-bottom-color:#1e40af; }
     .view-tab:hover { color:#1e293b; }
 
+    /* DASHBOARD KPI */
+    .dash-kpi { background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.05); }
+    .dash-kpi-label { font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px; }
+    .dash-kpi-value { font-size:26px;font-weight:800;color:#1e293b;line-height:1; }
+    .dash-kpi-sub { font-size:12px;color:#64748b;margin-top:4px; }
+    #kpi-gap .dash-kpi-value { color:#dc2626; }
+    #kpi-ritmo .dash-kpi-value { color:#16a34a; }
+
     /* BRAND CARDS */
     .brand-card { background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;transition:border-color .2s;box-shadow:0 1px 3px rgba(0,0,0,.06); }
     .brand-card:hover { border-color:#93c5fd; }
@@ -288,6 +296,7 @@
 <!-- VIEW TABS -->
 <div style="background:#0f1117;border-bottom:1px solid #1e293b;padding:0 28px;display:flex;gap:4px;">
   <button id="tab-pipeline" class="view-tab active" onclick="switchView('pipeline')">📋 Pipeline</button>
+  <button id="tab-dashboard" class="view-tab" onclick="switchView('dashboard')">📊 Dashboard</button>
   <button id="tab-marcas" class="view-tab" onclick="switchView('marcas')">🏭 Marcas & Productos</button>
 </div>
 
@@ -495,6 +504,87 @@
   </div>
 
 </div><!-- /section-marcas -->
+
+<!-- DASHBOARD -->
+<div id="section-dashboard" style="display:none;padding:28px;background:#f1f5f9;min-height:calc(100vh - 120px);">
+
+  <!-- KPI Row -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+    <div class="dash-kpi" id="kpi-ejecutado">
+      <div class="dash-kpi-label">💰 Vendido 2026</div>
+      <div class="dash-kpi-value" id="kv-ejecutado">—</div>
+      <div class="dash-kpi-sub" id="ks-ejecutado"></div>
+    </div>
+    <div class="dash-kpi" id="kpi-proyectado">
+      <div class="dash-kpi-label">🎯 Proyección anual</div>
+      <div class="dash-kpi-value" id="kv-proyectado">—</div>
+      <div class="dash-kpi-sub" id="ks-proyectado"></div>
+    </div>
+    <div class="dash-kpi" id="kpi-gap">
+      <div class="dash-kpi-label">📉 Gap restante</div>
+      <div class="dash-kpi-value" id="kv-gap">—</div>
+      <div class="dash-kpi-sub" id="ks-gap"></div>
+    </div>
+    <div class="dash-kpi" id="kpi-ritmo">
+      <div class="dash-kpi-label">📈 Forecast al 31/12</div>
+      <div class="dash-kpi-value" id="kv-ritmo">—</div>
+      <div class="dash-kpi-sub" id="ks-ritmo"></div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div style="background:#fff;border-radius:12px;padding:20px 24px;margin-bottom:24px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-weight:700;color:#1e293b;font-size:15px;">Ejecución del objetivo anual</span>
+      <span id="pct-label" style="font-weight:800;font-size:18px;color:#1e40af;">—</span>
+    </div>
+    <div style="background:#e2e8f0;border-radius:99px;height:18px;overflow:hidden;">
+      <div id="progress-bar" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#1e40af,#3b82f6);transition:width .8s ease;width:0%;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;">
+      <span style="font-size:11px;color:#64748b;">Ene 2026</span>
+      <span id="today-label" style="font-size:11px;color:#64748b;"></span>
+      <span style="font-size:11px;color:#64748b;">Dic 2026</span>
+    </div>
+  </div>
+
+  <!-- Monthly bars + Client semaphore -->
+  <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:24px;">
+
+    <!-- Monthly chart -->
+    <div style="background:#fff;border-radius:12px;padding:20px 24px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+      <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:16px;">Ventas mensuales — Real vs Proyectado</div>
+      <canvas id="monthly-chart" height="200"></canvas>
+      <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;color:#64748b;">
+        <span><span style="display:inline-block;width:12px;height:12px;background:#1e40af;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Real</span>
+        <span><span style="display:inline-block;width:12px;height:12px;background:#bfdbfe;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Proyectado</span>
+      </div>
+    </div>
+
+    <!-- Client semaphore -->
+    <div style="background:#fff;border-radius:12px;padding:20px 24px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05);overflow-y:auto;max-height:340px;">
+      <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:14px;">Semáforo de clientes</div>
+      <div id="semaforo-list"></div>
+    </div>
+  </div>
+
+  <!-- Bottom row: by family + alert -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+    <!-- By family -->
+    <div style="background:#fff;border-radius:12px;padding:20px 24px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+      <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:14px;">Ventas por familia de producto</div>
+      <div id="family-bars"></div>
+    </div>
+
+    <!-- Alerts + extra clients -->
+    <div style="background:#fff;border-radius:12px;padding:20px 24px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+      <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:14px;">⚡ Alertas y oportunidades</div>
+      <div id="alerts-panel"></div>
+    </div>
+  </div>
+
+</div><!-- /section-dashboard -->
 
 <!-- MODAL NUEVA OPORTUNIDAD -->
 <div class="modal-overlay" id="modal">
@@ -2102,8 +2192,258 @@ function switchView(view) {
   document.getElementById('section-board').style.display = view === 'pipeline' ? '' : 'none';
   document.getElementById('section-filters').style.display = view === 'pipeline' ? '' : 'none';
   document.getElementById('section-marcas').style.display = view === 'marcas' ? '' : 'none';
+  document.getElementById('section-dashboard').style.display = view === 'dashboard' ? '' : 'none';
   document.getElementById('tab-pipeline').classList.toggle('active', view === 'pipeline');
   document.getElementById('tab-marcas').classList.toggle('active', view === 'marcas');
+  document.getElementById('tab-dashboard').classList.toggle('active', view === 'dashboard');
+  if (view === 'dashboard') renderDashboard();
+}
+
+// ─── DASHBOARD DATA ───────────────────────────────────────────────────────────
+const PIPELINE_2026 = {
+  total: 3187923,
+  porCliente: {
+    'Sion S.A.':          { proyectado: 1000000, real: 35426  },
+    'SuperCanal S A':     { proyectado: 575000,  real: 134988 },
+    'Comworks SA':        { proyectado: 351000,  real: 221627 },
+    'Pogliotti':          { proyectado: 214435,  real: 53040  },
+    'Cascada Blanca':     { proyectado: 210000,  real: 0      },
+    'Obercom':            { proyectado: 167370,  real: 115859 },
+    'Telviso':            { proyectado: 132882,  real: 0      },
+    'Gigared':            { proyectado: 124758,  real: 92332  },
+    'Generacion Wifi':    { proyectado: 117000,  real: 37500  },
+    'Witel':              { proyectado: 100108,  real: 19371  },
+    'Mantelectric':       { proyectado: 96750,   real: 0      },
+    'Full Sat':           { proyectado: 49000,   real: 0      },
+    'Swissnet':           { proyectado: 30150,   real: 49462  },
+    'Fibernext':          { proyectado: 19470,   real: 3476   },
+  },
+  porMesProyectado: {
+    '2026/01':0,'2026/02':7800,'2026/03':458162,'2026/04':58160,
+    '2026/05':61040,'2026/06':1003516,'2026/07':321790,'2026/08':61040,
+    '2026/09':375165,'2026/10':561040,'2026/11':61040,'2026/12':219165
+  },
+  porMesReal: {
+    '2026/01':195180,'2026/02':30102,'2026/03':399660,
+    '2026/04':181167,'2026/05':174910,'2026/06':43216
+  },
+  porFamilia: {
+    'FTTH': { proyectado: 2302000, real: 687813 },
+    'FIBRA': { proyectado: 586185, real: 171284 },
+    'CARRIER': { proyectado: 147876, real: 109066 },
+    'SP/Coherent': { proyectado: 96750, real: 0 },
+    'ODN': { proyectado: 17100, real: 25525 },
+  },
+  extraProyeccion: 260665,
+  vendedores: {
+    'Matias Taddei': 2378230,
+    'Federico Núñez': 809693
+  }
+};
+
+const TOTAL_REAL_2026 = 1024690;
+const MESES_TRANSCURRIDOS = 5.4; // a jun-12
+
+// ─── DASHBOARD RENDER ─────────────────────────────────────────────────────────
+function renderDashboard() {
+  const proy = PIPELINE_2026.total;
+  const real = TOTAL_REAL_2026;
+  const gap = proy - real;
+  const pct = real / proy * 100;
+  const ritmoMensual = real / MESES_TRANSCURRIDOS;
+  const forecast = real + ritmoMensual * (12 - MESES_TRANSCURRIDOS);
+
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+
+  // KPIs
+  document.getElementById('kv-ejecutado').textContent = fmt(real);
+  document.getElementById('ks-ejecutado').textContent = `${pct.toFixed(1)}% del objetivo anual`;
+  document.getElementById('kv-proyectado').textContent = fmt(proy);
+  document.getElementById('ks-proyectado').textContent = '14 clientes · 151 oportunidades';
+  document.getElementById('kv-gap').textContent = fmt(gap);
+  document.getElementById('ks-gap').textContent = `Faltan ${(12 - MESES_TRANSCURRIDOS).toFixed(1)} meses`;
+  document.getElementById('kv-ritmo').textContent = fmt(forecast);
+  const ritmoVsProy = forecast / proy * 100;
+  document.getElementById('ks-ritmo').innerHTML = `<span style="color:${ritmoVsProy>=80?'#16a34a':'#dc2626'}">${ritmoVsProy.toFixed(0)}% del objetivo</span> al ritmo actual`;
+
+  // Progress bar
+  document.getElementById('progress-bar').style.width = Math.min(pct, 100) + '%';
+  document.getElementById('pct-label').textContent = pct.toFixed(1) + '%';
+  document.getElementById('today-label').textContent = '← Hoy (jun-12)';
+
+  // Monthly chart (canvas)
+  drawMonthlyChart();
+
+  // Semaphore
+  renderSemaforo();
+
+  // Family bars
+  renderFamilyBars();
+
+  // Alerts
+  renderAlerts(gap, forecast, proy, ritmoMensual);
+}
+
+function drawMonthlyChart() {
+  const canvas = document.getElementById('monthly-chart');
+  const ctx = canvas.getContext('2d');
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const keys = ['2026/01','2026/02','2026/03','2026/04','2026/05','2026/06','2026/07','2026/08','2026/09','2026/10','2026/11','2026/12'];
+  const reales = keys.map(k => PIPELINE_2026.porMesReal[k] || 0);
+  const proyect = keys.map(k => PIPELINE_2026.porMesProyectado[k] || 0);
+
+  const W = canvas.parentElement.clientWidth - 48;
+  canvas.width = W;
+  canvas.height = 200;
+  ctx.clearRect(0, 0, W, 200);
+
+  const maxVal = Math.max(...reales, ...proyect, 1);
+  const padL = 60, padR = 10, padT = 10, padB = 30;
+  const chartW = W - padL - padR;
+  const chartH = 200 - padT - padB;
+  const barW = chartW / 12;
+
+  // Grid lines
+  ctx.strokeStyle = '#f1f5f9';
+  ctx.lineWidth = 1;
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    const y = padT + chartH * (1 - f);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('$' + Math.round(maxVal * f / 1000) + 'k', padL - 4, y + 3);
+  });
+
+  keys.forEach((k, i) => {
+    const x = padL + i * barW;
+    const bw = barW * 0.35;
+
+    // Proyectado (light blue)
+    const hP = (proyect[i] / maxVal) * chartH;
+    ctx.fillStyle = '#bfdbfe';
+    ctx.fillRect(x + barW * 0.05, padT + chartH - hP, bw, hP);
+
+    // Real (dark blue)
+    const hR = (reales[i] / maxVal) * chartH;
+    const isReal = reales[i] > 0;
+    ctx.fillStyle = isReal ? '#1e40af' : 'transparent';
+    if (isReal) ctx.fillRect(x + barW * 0.45, padT + chartH - hR, bw, hR);
+
+    // Label
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(meses[i], x + barW / 2, 200 - 8);
+  });
+
+  // Today line
+  const todayX = padL + 5.4 * barW;
+  ctx.strokeStyle = '#ef4444';
+  ctx.setLineDash([3, 3]);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(todayX, padT); ctx.lineTo(todayX, padT + chartH); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ef4444';
+  ctx.font = 'bold 10px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Hoy', todayX, padT - 2);
+}
+
+function renderSemaforo() {
+  const el = document.getElementById('semaforo-list');
+  const rows = Object.entries(PIPELINE_2026.porCliente)
+    .sort((a, b) => b[1].proyectado - a[1].proyectado);
+
+  el.innerHTML = rows.map(([nombre, d]) => {
+    const pct = d.proyectado > 0 ? d.real / d.proyectado * 100 : 0;
+    const color = pct >= 60 ? '#16a34a' : pct >= 20 ? '#d97706' : '#dc2626';
+    const emoji = pct >= 60 ? '🟢' : pct >= 20 ? '🟡' : '🔴';
+    const barPct = Math.min(pct, 100);
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+        <span style="font-size:12px;font-weight:600;color:#1e293b;">${emoji} ${nombre}</span>
+        <span style="font-size:11px;color:${color};font-weight:700;">${pct.toFixed(0)}%</span>
+      </div>
+      <div style="background:#f1f5f9;border-radius:99px;height:6px;">
+        <div style="width:${barPct}%;height:100%;border-radius:99px;background:${color};transition:width .6s;"></div>
+      </div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:1px;">$${Math.round(d.real/1000)}k real · $${Math.round(d.proyectado/1000)}k proy</div>
+    </div>`;
+  }).join('');
+}
+
+function renderFamilyBars() {
+  const el = document.getElementById('family-bars');
+  const maxV = Math.max(...Object.values(PIPELINE_2026.porFamilia).map(v => v.proyectado));
+  el.innerHTML = Object.entries(PIPELINE_2026.porFamilia).map(([fam, v]) => {
+    const pR = v.real / maxV * 100;
+    const pP = v.proyectado / maxV * 100;
+    const pct = v.proyectado > 0 ? v.real / v.proyectado * 100 : 0;
+    return `<div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:13px;font-weight:600;color:#1e293b;">${fam}</span>
+        <span style="font-size:12px;color:#64748b;">$${Math.round(v.real/1000)}k / $${Math.round(v.proyectado/1000)}k</span>
+      </div>
+      <div style="background:#f1f5f9;border-radius:99px;height:10px;position:relative;">
+        <div style="width:${pP}%;height:100%;border-radius:99px;background:#bfdbfe;position:absolute;"></div>
+        <div style="width:${pR}%;height:100%;border-radius:99px;background:#1e40af;position:absolute;"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAlerts(gap, forecast, proy, ritmoMensual) {
+  const el = document.getElementById('alerts-panel');
+  const alerts = [];
+
+  // Sion alert
+  const sion = PIPELINE_2026.porCliente['Sion S.A.'];
+  alerts.push({
+    tipo: 'danger',
+    icon: '🚨',
+    titulo: 'Concentración crítica: Sion S.A.',
+    texto: `$1,000,000 proyectados, solo $${Math.round(sion.real/1000)}k ejecutados (4%). Representa el 31% del objetivo anual. Sin este deal el forecast cae a $${Math.round((forecast - sion.proyectado + sion.real)/1000)}k.`
+  });
+
+  // Clients beating projection
+  const superando = Object.entries(PIPELINE_2026.porCliente).filter(([n,d]) => d.real > d.proyectado);
+  if (superando.length) {
+    alerts.push({
+      tipo: 'success',
+      icon: '🚀',
+      titulo: `${superando.length} cliente(s) superaron la proyección`,
+      texto: superando.map(([n,d]) => `${n}: $${Math.round(d.real/1000)}k (${Math.round(d.real/d.proyectado*100)}% del obj)`).join(' · ')
+    });
+  }
+
+  // Extra pipeline
+  alerts.push({
+    tipo: 'info',
+    icon: '💡',
+    titulo: 'Ventas fuera del pipeline: $261k',
+    texto: 'Iplus, Telefonía Pública, NE.SAR, FESACOM y otros 30 clientes generaron $261k no proyectados. Considerar incorporarlos al pipeline formal.'
+  });
+
+  // Pace alert
+  const mesesRest = 12 - MESES_TRANSCURRIDOS;
+  const necesarioPorMes = gap / mesesRest;
+  alerts.push({
+    tipo: necesarioPorMes > ritmoMensual * 1.5 ? 'danger' : 'warning',
+    icon: '📆',
+    titulo: 'Ritmo necesario para cerrar el objetivo',
+    texto: `Vendiste $${Math.round(ritmoMensual/1000)}k/mes en promedio. Para cerrar el gap ($${Math.round(gap/1000)}k en ${mesesRest.toFixed(1)} meses) necesitás $${Math.round(necesarioPorMes/1000)}k/mes — ${Math.round(necesarioPorMes/ritmoMensual)}x el ritmo actual.`
+  });
+
+  const colorMap = { danger:'#fef2f2', success:'#f0fdf4', info:'#eff6ff', warning:'#fffbeb' };
+  const borderMap = { danger:'#fecaca', success:'#bbf7d0', info:'#bfdbfe', warning:'#fde68a' };
+  const textMap   = { danger:'#991b1b', success:'#166534', info:'#1e40af', warning:'#92400e' };
+
+  el.innerHTML = alerts.map(a => `
+    <div style="background:${colorMap[a.tipo]};border:1px solid ${borderMap[a.tipo]};border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="font-weight:700;font-size:13px;color:${textMap[a.tipo]};margin-bottom:3px;">${a.icon} ${a.titulo}</div>
+      <div style="font-size:12px;color:#374151;line-height:1.5;">${a.texto}</div>
+    </div>`).join('');
 }
 
 // ─── BRAND DATA ──────────────────────────────────────────
