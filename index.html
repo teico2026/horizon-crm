@@ -275,6 +275,7 @@
   </div>
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="openKeyModal()" title="Configurar API Key Perplexity">⚙️ API Key</button>
+    <button class="btn btn-ghost" onclick="resetData()" title="Recargar datos del ERP">🔄 Recargar</button>
     <button class="btn btn-ghost">📊 Reportes</button>
     <button class="btn btn-scan" onclick="scanAll()" id="scan-btn">🔍 Escanear Todo</button>
     <button class="btn btn-primary" onclick="openModal()">+ Nueva oportunidad</button>
@@ -586,6 +587,17 @@ if (cards.length === 0 || storedVersion < DATA_VERSION) {
 // ─── SAVE ────────────────────────────────────────────────
 function save() {
   localStorage.setItem('horizon-crm', JSON.stringify(cards));
+}
+
+function resetData() {
+  if (!confirm(`¿Recargar los ${INITIAL_DATA.length} clientes del ERP?\n\nSe preservan los contactos y notas que editaste manualmente.`)) return;
+  const manualEdits = {};
+  cards.forEach(c => { if (c.contacto || c.cel || c.email) manualEdits[c.empresa] = c; });
+  cards = INITIAL_DATA.map(c => manualEdits[c.empresa] ? {...c, ...manualEdits[c.empresa], id: c.id} : c);
+  localStorage.setItem('horizon-crm-version', DATA_VERSION);
+  save();
+  render();
+  alert(`✅ ${cards.length} clientes cargados.`);
 }
 
 // ─── RENDER ─────────────────────────────────────────────
