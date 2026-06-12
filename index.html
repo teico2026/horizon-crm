@@ -436,13 +436,15 @@
       <div class="brand-products">
         <div style="color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Portfolio</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          <span class="prod-tag ftth">OLT AN5516</span>
-          <span class="prod-tag ftth">OLT AN6000-H</span>
-          <span class="prod-tag ftth">ONT/ONU Serie H</span>
-          <span class="prod-tag ftth">GPON / XGS-PON</span>
-          <span class="prod-tag ftth">Fibra óptica</span>
-          <span class="prod-tag ftth">NMS EMS</span>
-          <span class="prod-tag ftth">Splitters / Closures</span>
+          <span class="prod-tag ftth">Cable ADSS Aéreo</span>
+          <span class="prod-tag ftth">Drop FTTH G.657</span>
+          <span class="prod-tag ftth">FAC Conector Campo</span>
+          <span class="prod-tag ftth">EASYCONNS ODN</span>
+          <span class="prod-tag ftth">NAP FitDP IP68</span>
+          <span class="prod-tag ftth">FOSC Mufas IP68</span>
+          <span class="prod-tag ftth">PLC Splitters</span>
+          <span class="prod-tag ftth">ODF / Sub-rack</span>
+          <span class="prod-tag ftth">Pigtails / Patchcords</span>
         </div>
       </div>
       <div id="brand-result-fiberhome" class="brand-result"></div>
@@ -972,8 +974,51 @@ const BRANDS = {
     role: 'Representante exclusivo para ISP en Argentina',
     techs: ['FTTH', 'GPON', 'XGS-PON'],
     matchTech: ['FTTH'],
-    products: 'OLT AN5516, OLT AN6000-H, ONT/ONU Serie H, GPON/XGS-PON, fibra óptica, NMS/EMS, splitters, closures',
-    color: '#f59e0b'
+    color: '#f59e0b',
+    products: `PORTFOLIO ODN FTTH COMPLETO (todos con stock local en Argentina):
+
+CABLES DE FIBRA:
+- ADSS Aéreo Autosoportado PK/PKP: 12-144FO, vanos 80m y 120m, G.652D — red de distribución entre postes sin puesta a tierra
+- ADSS MINI-RA/RA: 6-24FO, compacto, bajo peso 34kg/km — zonas urbanas densas
+- Drop Oval Fig-8 / Flat: 1-12FO G.657A1/A2 — acometida domiciliaria aérea
+- Drop Circular 5mm: G.657A2 LSZH, radio mínimo 7.5mm — interiores y últimas millas con curvas
+- GYFS Anti-roedor: 12-48FO con banda acero — ducto subterráneo en zonas con roedores
+- EASYCONNS Cable: drop pre-connectorizado de fábrica — instalación sin empalme
+
+CONECTORES Y EMPALME:
+- FAC Field Assembly Connector: mecánico y fusión, SC/LC UPC/APC, ensamble en campo 60 segundos sin herramientas especiales, 98% éxito en primer intento
+- EASYCONNS Connector: outdoor SC/APC IP68, plug-and-play, 300N tensión — red ODN exterior
+- Mini-EASYCONNS MH1: ultra-compacto <13mm diámetro, IP68 — ductos pequeños
+- Pigtails y Patch Cords: SC/FC/LC/ST/E2000/DIN, SM y MM, 1-999m
+- PLC Splitter Óptico: 1x2 a 1x128, cassette/rack 19"/LGX/micro-S, certificado Telcordia GR-1209/1221
+
+CAJAS DE DISTRIBUCIÓN (NAP/FDB/FDP) — todas IP68:
+- FDP-420A: IP55, 40F splicing, 18 adapters, splitter 1:4/1:8/1:16
+- FitDP-461C: IP68, 48F splicing, 8F terminación, splitter 1:8 — compacto outdoor
+- FitDP-461D: IP68, 16F pre-connectorizado, splitter hasta 1:16
+- FitDP-462A: IP68, 12 adapters, splitter 1:4+1:8 — ultra-compacto 219x190x75mm
+- FitDP-463A: IP68, 9 adapters H1V2, splitter 1:8 — el más compacto
+- FitDP-470A: IP68 + IK10, 10F, splitter 1:8/1:9, conector MH1 — zonas de vandalismo
+- FitDP-470D: IP68, 96F splicing + 8F pre-connectorizado — nodos principales
+- FitDP-480C: IP55, 48F splicing, 7 DLC adapters
+
+CIERRES DE EMPALME (MUFA/FOSC):
+- FOSC-220J: Ø220mm, hasta 144F, IP68, aéreo/enterrado/ducto/pozo — re-entrada sin cortar cable
+- FOSC-260J: Ø260mm, hasta 288F, IP68, compatible ribbon fiber — alta capacidad troncal
+
+ODF Y CENTRAL:
+- ODU Series Sub-rack: rack 19"/21", 12-144F por módulo, empalme + terminación integrado
+
+SOLUCIÓN EASYCONNS ODN COMPLETA:
+Sistema end-to-end plug-and-play: cable pre-connectorizado de fábrica + EASYCONNS connector IP68 + MH1 + FitDP-470A/462A. Reduce instalación de horas a minutos. Ideal para ISPs escalando rápido.
+
+ARGUMENTOS DE VENTA CLAVE:
+- Solución ODN 100% integrada: cable + conector + caja + splitter + ODF de un solo fabricante
+- Representante exclusivo: soporte técnico local, stock en Argentina, sin importación directa
+- EASYCONNS reduce costo de instalación hasta 40% al eliminar empalmes en campo
+- IP68 garantizado en exteriores, IK10 en zonas de vandalismo
+- Certificado ITU-T G.652D/G.657A2, Telcordia GR-1209/1221
+- Compatible con cualquier OLT del mercado (Huawei, Nokia, Calix, ZTE, etc.)`
   },
   coherent: {
     name: 'Coherent',
@@ -998,13 +1043,15 @@ async function scanBrand(brandId) {
   result.innerHTML = '<span style="color:#64748b">🔄 Buscando novedades de ' + brand.name + '...</span>';
 
   const prompt = `Sos el Product Manager de ${brand.name} para Horizon Trading (${brand.role}).
-Analizá la situación actual de ${brand.name} en el mercado telco de Argentina y Latinoamérica.
+Conocés en detalle el portfolio: ${brand.products.substring(0, 400)}...
+
+Investigá la situación actual de ${brand.name} y el mercado telco de Argentina/Latinoamérica en 2025-2026.
 Dame en bullets cortos:
-• Últimos lanzamientos de producto relevantes para ISPs (2024-2026)
-• Tendencias del mercado que favorecen el portfolio de ${brand.name}
-• Argumentos de venta clave para ISPs argentinos que migren o expandan redes
-• Competidores principales y diferenciadores
-Respuesta en español, máximo 150 palabras. Sé muy concreto y comercial.`;
+• Últimas noticias o lanzamientos de ${brand.name} relevantes para ISPs
+• Tendencias del mercado que generan demanda de los productos del portfolio
+• Qué tipo de cliente argentino debería comprar ahora y por qué
+• Señales de mercado: licitaciones, subsidios, migraciones tecnológicas activas
+Respuesta en español, máximo 150 palabras. Sé muy concreto y accionable.`;
 
   try {
     const res = await fetch('https://api.perplexity.ai/chat/completions', {
