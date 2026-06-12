@@ -755,6 +755,7 @@ function buildCard(c) {
         <button class="card-btn outreach-btn" onclick="openOutreach(${c.id})" title="Generar outreach">✉️</button>
         <button class="card-btn account-btn" onclick="openAccountIntel(${c.id})" title="Account Intelligence">🏢</button>
         <button class="card-btn persona-btn" onclick="openPersonaIntel(${c.id})" title="Perfil Decisor">👤</button>
+        <button class="card-btn" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;font-size:11px;padding:4px 8px;border-radius:6px;font-weight:700;" onclick="openAccountManager(${c.id})" title="Account Manager IA">👔 AM</button>
         <button class="card-btn" onclick="deleteCard(${c.id})" title="Eliminar">🗑️</button>
       </div>
     </div>
@@ -2807,6 +2808,351 @@ function closeScanModal() {
 function closeAccountIntel() { document.getElementById('account-intel-modal').style.display = 'none'; }
 function closePersonaIntel() { document.getElementById('persona-intel-modal').style.display = 'none'; }
 
+// ═══════════════════════ ACCOUNT MANAGER ═══════════════════════════════════
+
+let amCardId = null;
+let amConversation = [];  // {role, content}[]
+
+function closeAM() {
+  document.getElementById('am-modal').style.display = 'none';
+  amConversation = [];
+  amCardId = null;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function amFindPipeline(empresa) {
+  const key = empresa.toLowerCase().substring(0, 8);
+  for (const [name, data] of Object.entries(PIPELINE_2026.porCliente)) {
+    if (name.toLowerCase().includes(key) || key.includes(name.toLowerCase().substring(0, 6))) return { name, ...data };
+  }
+  return null;
+}
+
+function amFindH2(empresa) {
+  const key = empresa.toLowerCase().split(' ')[0];
+  return PIPELINE_2026.h2Forecast.find(r => r.nombre.toLowerCase().includes(key));
+}
+
+function amFindIntel(empresa) {
+  const key = empresa.toLowerCase().substring(0, 6);
+  const block = HORIZON_INTEL.split('=== ').find(s => s.toLowerCase().startsWith(key));
+  return block ? block.split('===')[0].trim() : null;
+}
+
+function amFindHistory(empresa) {
+  const key = empresa.toLowerCase().substring(0, 9);
+  return HORIZON_SALES_HISTORY.split('\n').find(l => l.toLowerCase().includes(key)) || null;
+}
+
+function amDetectRedFlags(card, pipeline, histLine) {
+  const flags = [];
+  const etapaLabel = { frio:'Frío', contactado:'Contactado', conversacion:'En conversación',
+    propuesta:'Propuesta enviada', negociacion:'Negociación', ganado:'Ganado', perdido:'Perdido' };
+
+  if (pipeline) {
+    const pct = pipeline.proyectado > 0 ? pipeline.real / pipeline.proyectado * 100 : null;
+    if (pipeline.real === 0) flags.push({ tipo:'danger', msg:'🔴 Sin ventas registradas en 2026' });
+    else if (pct !== null && pct < 20) flags.push({ tipo:'danger', msg:`🔴 Ejecución crítica: ${pct.toFixed(0)}% del objetivo 2026` });
+    else if (pct !== null && pct < 50) flags.push({ tipo:'warning', msg:`🟡 Ejecución baja: ${pct.toFixed(0)}% del objetivo — requiere acción` });
+    else if (pct !== null && pct >= 100) flags.push({ tipo:'ok', msg:`🟢 Superó el objetivo 2026 (${pct.toFixed(0)}%)` });
+  }
+
+  if (card.etapa === 'frio' || card.etapa === 'contactado')
+    flags.push({ tipo:'warning', msg:`🟡 Etapa: ${etapaLabel[card.etapa] || card.etapa} — sin avance comercial reciente` });
+
+  if (histLine && pipeline && pipeline.real === 0)
+    flags.push({ tipo:'danger', msg:'🔴 Tiene historial de compras pero no compró en 2026 — posible pérdida de cuenta' });
+
+  if (!card.contacto && !card.cel && !card.email)
+    flags.push({ tipo:'warning', msg:'🟡 Sin datos de contacto cargados' });
+
+  if (!pipeline && histLine)
+    flags.push({ tipo:'warning', msg:'🟡 Fuera del pipeline formal — cliente con historial sin objetivo asignado' });
+
+  if (flags.length === 0)
+    flags.push({ tipo:'ok', msg:'🟢 Sin alertas críticas detectadas' });
+
+  return flags;
+}
+
+// ── Build static brief panel ──────────────────────────────────────────────────
+
+function amBuildBrief(card) {
+  const pipeline = amFindPipeline(card.empresa);
+  const h2       = amFindH2(card.empresa);
+  const intel    = amFindIntel(card.empresa);
+  const histLine = amFindHistory(card.empresa);
+  const flags    = amDetectRedFlags(card, pipeline, histLine);
+
+  // Subtitle
+  document.getElementById('am-subtitle').textContent =
+    `${card.tipo} · ${card.tech || 'Sin tecnología'} · Etapa: ${card.etapa}`;
+
+  // Status badge
+  const anyDanger = flags.some(f => f.tipo === 'danger');
+  const anyWarn   = flags.some(f => f.tipo === 'warning');
+  document.getElementById('am-status').textContent = anyDanger ? '⚠️ Requiere atención' : anyWarn ? '👀 Monitorear' : '✅ Cuenta sana';
+
+  // Red flags
+  document.getElementById('am-flags').innerHTML = flags.map(f =>
+    `<div class="am-flag-${f.tipo}" style="margin-bottom:6px;">${f.msg}</div>`).join('');
+
+  // KPIs
+  const pct = pipeline && pipeline.proyectado > 0 ? (pipeline.real / pipeline.proyectado * 100).toFixed(0) + '%' : '—';
+  const realFmt = pipeline ? 'USD ' + Math.round(pipeline.real).toLocaleString('es-AR') : '—';
+  const proyFmt = pipeline ? 'USD ' + Math.round(pipeline.proyectado).toLocaleString('es-AR') : 'Sin objetivo asignado';
+  const scoreStars = '⭐'.repeat(card.score || 0);
+  document.getElementById('am-kpis').innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">📊 Métricas 2026</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      ${[
+        ['Vendido 2026', realFmt],
+        ['Objetivo 2026', proyFmt],
+        ['Ejecución', pct],
+        ['Score', scoreStars || '—'],
+        ['H2 esperado', h2 ? 'USD ' + Math.round(h2.monto * h2.prob / 1000) + 'k (' + Math.round(h2.prob*100) + '%)' : '—'],
+        ['Historial total', histLine ? histLine.split('|')[1]?.trim() || '—' : '—'],
+      ].map(([k,v]) => `
+        <div style="background:#f8fafc;border-radius:8px;padding:8px 10px;">
+          <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;">${k}</div>
+          <div style="font-size:12px;font-weight:700;color:#1e293b;margin-top:2px;">${v}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // Contacts
+  const contactLines = intel ? (intel.match(/Contactos: ([^\n]+)/) || [])[1] : null;
+  document.getElementById('am-contacts').innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">👤 Contactos</div>
+    ${card.contacto ? `<div style="font-size:12px;color:#1e293b;font-weight:600;margin-bottom:4px;">📌 ${card.contacto}</div>` : ''}
+    ${card.cel ? `<div style="font-size:11px;color:#64748b;">📱 ${card.cel}</div>` : ''}
+    ${card.email ? `<div style="font-size:11px;color:#64748b;">✉️ ${card.email}</div>` : ''}
+    ${contactLines ? `<div style="font-size:11px;color:#64748b;margin-top:6px;line-height:1.5;border-top:1px solid #f1f5f9;padding-top:6px;">${contactLines}</div>` : ''}
+    ${!card.contacto && !contactLines ? '<div style="font-size:11px;color:#94a3b8;font-style:italic;">Sin datos de contacto cargados</div>' : ''}`;
+
+  // Intel relacional
+  if (intel) {
+    const relLines = (intel.match(/Relación: ([^\n]+(?:\n(?!Necesidades:|Tecnología:|Marcas:|Contactos:)[^\n]+)*)/)?.[1] || '').substring(0, 400);
+    const needLines = (intel.match(/Necesidades: ([^\n]+)/)?.[1] || '').substring(0, 200);
+    document.getElementById('am-intel').innerHTML = `
+      <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">🧠 Inteligencia relacional</div>
+      ${relLines ? `<div style="font-size:11px;color:#374151;line-height:1.55;margin-bottom:8px;">${relLines}...</div>` : ''}
+      ${needLines ? `<div style="font-size:11px;color:#374151;line-height:1.55;border-top:1px solid #f1f5f9;padding-top:8px;"><strong>Necesidades:</strong> ${needLines}</div>` : ''}
+      ${!relLines && !needLines ? '<div style="font-size:11px;color:#94a3b8;font-style:italic;">Sin intel relacional en la base de conocimiento</div>' : ''}`;
+  } else {
+    document.getElementById('am-intel').innerHTML = `
+      <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">🧠 Inteligencia relacional</div>
+      <div style="font-size:11px;color:#94a3b8;font-style:italic;">Sin datos en la base de conocimiento 2024.<br>El AM puede buscar información pública.</div>`;
+  }
+
+  // Objective H2
+  const objText = h2
+    ? `Deal H2 esperado: USD ${Math.round(h2.monto * h2.prob / 1000)}k (${Math.round(h2.prob*100)}% prob)<br><em style="font-size:10px;color:#3b82f6;">${h2.nota}</em>`
+    : pipeline
+      ? `Objetivo anual: ${proyFmt}<br>Ejecutado: ${realFmt} (${pct})`
+      : 'Cliente fuera del pipeline formal 2026.<br>Oportunidad de incorporar al plan.';
+  document.getElementById('am-objective').innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">🎯 Objetivo 2026</div>
+    <div style="font-size:12px;color:#1e293b;line-height:1.6;">${objText}</div>`;
+}
+
+// ── Build AI system prompt ────────────────────────────────────────────────────
+
+function amBuildSystemPrompt(card) {
+  const pipeline  = amFindPipeline(card.empresa);
+  const h2        = amFindH2(card.empresa);
+  const intel     = amFindIntel(card.empresa);
+  const histLine  = amFindHistory(card.empresa);
+  const techUpper = (card.tech || '').toUpperCase();
+  const brandCtx  = (techUpper.includes('FTTH') ? FIBERHOME_CONTEXT.substring(0, 800) : '') +
+                    (techUpper.includes('HFC') ? '\n' + COHERENT_CONTEXT.substring(0, 600) : '') +
+                    (!techUpper.includes('FTTH') && !techUpper.includes('HFC') ? FIBERHOME_CONTEXT.substring(0, 600) + '\n' + COHERENT_CONTEXT.substring(0, 400) : '');
+
+  return `Sos el Account Manager senior de Horizon Trading, asignado exclusivamente a la cuenta de ${card.empresa}.
+Tu rol es ser el especialista más completo de esta cuenta: conocés cada detalle de la relación comercial, el historial, los contactos, los riesgos y las oportunidades. Respondés en español, de forma directa, ejecutiva y accionable. Sin paja.
+
+═══ DATOS DEL CLIENTE ═══
+Empresa: ${card.empresa}
+Tipo: ${card.tipo}
+Tecnología: ${card.tech || 'No especificada'}
+Etapa CRM: ${card.etapa}
+Score: ${card.score || '—'}/5
+Contacto principal: ${card.contacto || 'Sin datos'}
+Celular: ${card.cel || '—'}
+Email: ${card.email || '—'}
+Notas CRM: ${card.notas || 'Sin notas'}
+
+═══ HISTORIAL DE COMPRAS HORIZON (2020-2026) ═══
+${histLine || 'Sin historial previo con Horizon — potencial cliente nuevo.'}
+
+═══ PIPELINE 2026 ═══
+Objetivo anual: ${pipeline ? 'USD ' + pipeline.proyectado.toLocaleString('es-AR') : 'No asignado'}
+Vendido H1 2026: ${pipeline ? 'USD ' + pipeline.real.toLocaleString('es-AR') : '—'}
+Ejecución: ${pipeline && pipeline.proyectado > 0 ? (pipeline.real / pipeline.proyectado * 100).toFixed(1) + '%' : '—'}
+Forecast H2: ${h2 ? 'USD ' + Math.round(h2.monto * h2.prob).toLocaleString('es-AR') + ' esperados (' + Math.round(h2.prob*100) + '% prob) — ' + h2.nota : 'Sin deal H2 proyectado'}
+
+═══ INTELIGENCIA COMERCIAL (base de conocimiento 2024) ═══
+${intel || 'Sin datos en la base de conocimiento.'}
+
+═══ STOCK DISPONIBLE PARA OFERTA INMEDIATA ═══
+${HORIZON_STOCK.substring(0, 1000)}
+
+═══ PORTFOLIO Y PRECIOS (Subdistribuidor / ISP VOL / Lista Regular) ═══
+${brandCtx}
+${HORIZON_PRICES.substring(0, 600)}
+
+═══ REGLAS DE TRABAJO ═══
+- Siempre que hables de números, citá fuentes: "según el historial", "en la proyección 2026", etc.
+- Si detectás un red flag (caída de consumo, silencio prolongado, dispersión de compras), nombrarlo explícitamente y sugerir una acción concreta.
+- Si el cliente tiene intel relacional, usala: mencioná los nombres de los contactos, su estilo de negociación, qué evitar.
+- Cuando sugieras un producto, siempre incluí modelo específico, precio de referencia según el segmento del cliente, y si hay stock.
+- Podés hacer búsquedas en internet para traer novedades recientes de la empresa, expansiones, licitaciones, o señales de compra.
+- Respondé de forma estructurada con bullet points o secciones cuando la respuesta es larga.
+- Si no tenés datos suficientes, decilo claramente y sugerí cómo conseguirlos.`;
+}
+
+// ── Open Account Manager ──────────────────────────────────────────────────────
+
+function openAccountManager(id) {
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+
+  const key = localStorage.getItem('horizon-perplexity-key');
+  if (!key) { openKeyModal(); return; }
+
+  amCardId = id;
+  amConversation = [];
+
+  // Show modal
+  const modal = document.getElementById('am-modal');
+  modal.style.display = 'flex';
+  document.getElementById('am-title').textContent = '👔 Account Manager — ' + card.empresa;
+  document.getElementById('am-messages').innerHTML = '';
+
+  // Build brief panel
+  amBuildBrief(card);
+
+  // Auto-generate initial brief via AI
+  const initPrompt = `Hacé un brief ejecutivo completo de la cuenta ${card.empresa} para un ejecutivo comercial que va a llamarla hoy. Incluí: 1) Situación actual y estado de la relación, 2) Red flags o señales de alerta detectadas, 3) Historial y tendencia de compras, 4) Quiénes son los decisores y cómo tratarlos, 5) La mejor oportunidad de venta concreta para hoy (producto, modelo, precio), 6) Primer paso recomendado. Sé directo y accionable.`;
+
+  amRunMessage(card, initPrompt, false);
+}
+
+// ── Quick action ──────────────────────────────────────────────────────────────
+
+function amQuick(text) {
+  document.getElementById('am-input').value = text;
+  sendAMMessage();
+}
+
+// ── Send message ──────────────────────────────────────────────────────────────
+
+async function sendAMMessage() {
+  const input = document.getElementById('am-input');
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const card = cards.find(c => c.id === amCardId);
+  if (!card) return;
+
+  // Show user bubble
+  appendAMMessage('user', text);
+  amRunMessage(card, text, true);
+}
+
+function appendAMMessage(role, content) {
+  const container = document.getElementById('am-messages');
+  const div = document.createElement('div');
+  div.className = role === 'user' ? 'am-msg-user' : 'am-msg-am';
+  if (role === 'user') {
+    div.textContent = content;
+  } else {
+    div.innerHTML = content
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^# (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^• (.+)$/gm, '<li>$1</li>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/^(\d+)\. (.+)$/gm, '<li><strong>$1.</strong> $2</li>')
+      .replace(/(<li>.*<\/li>)/gs, m => '<ul>' + m + '</ul>')
+      .replace(/<\/ul>\s*<ul>/g, '')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+  }
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+async function amRunMessage(card, userText, addToHistory) {
+  const key = localStorage.getItem('horizon-perplexity-key');
+  if (!key) return;
+
+  if (addToHistory) amConversation.push({ role: 'user', content: userText });
+
+  // Typing indicator
+  const container = document.getElementById('am-messages');
+  const typing = document.createElement('div');
+  typing.className = 'am-typing';
+  typing.id = 'am-typing';
+  typing.innerHTML = '<span style="animation:pulse 1.2s infinite">💭 Analizando la cuenta...</span>';
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+
+  document.getElementById('am-status').textContent = '⏳ Pensando...';
+  document.getElementById('am-send-btn').disabled = true;
+
+  const systemPrompt = amBuildSystemPrompt(card);
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...amConversation.slice(-10),  // max 10 turns for context
+  ];
+  if (!addToHistory) messages.push({ role: 'user', content: userText });
+
+  try {
+    const resp = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model: 'sonar',
+        messages,
+        max_tokens: 1200,
+        temperature: 0.3,
+        search_recency_filter: 'year',
+      })
+    });
+
+    const data = await resp.json();
+    const reply = data.choices?.[0]?.message?.content || 'Sin respuesta del servidor.';
+
+    typing.remove();
+    appendAMMessage('assistant', reply);
+    amConversation.push({ role: 'assistant', content: reply });
+
+    document.getElementById('am-status').textContent = '✅ Listo';
+    setTimeout(() => {
+      const anyDanger = document.querySelector('.am-flag-danger');
+      document.getElementById('am-status').textContent = anyDanger ? '⚠️ Requiere atención' : '✅ Cuenta analizada';
+    }, 2000);
+
+  } catch(e) {
+    typing.remove();
+    appendAMMessage('assistant', '❌ Error al conectar con el agente. Verificá tu API key de Perplexity.');
+    document.getElementById('am-status').textContent = '❌ Error';
+  }
+
+  document.getElementById('am-send-btn').disabled = false;
+  document.getElementById('am-input').focus();
+}
+
+// Close AM modal on backdrop click
+document.getElementById('am-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeAM();
+});
+
 async function openAccountIntel(id) {
   const key = getPplxKey();
   if (!key) { openKeyModal(); return; }
@@ -3102,6 +3448,94 @@ if (!getPplxKey()) {
 </div>
 
 <!-- KEY MODAL -->
+<!-- ═══════════════════════ ACCOUNT MANAGER MODAL ═══════════════════════ -->
+<div id="am-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;align-items:flex-start;justify-content:center;padding:16px;overflow:hidden;">
+  <div style="background:#ffffff;border-radius:16px;width:100%;max-width:1380px;height:calc(100vh - 32px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.5);">
+
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#1e3a5f,#1e40af);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-radius:16px 16px 0 0;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;">👔</div>
+        <div>
+          <div id="am-title" style="color:#fff;font-size:17px;font-weight:800;"></div>
+          <div id="am-subtitle" style="color:#93c5fd;font-size:12px;margin-top:1px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span id="am-status" style="font-size:11px;color:#93c5fd;padding:4px 10px;background:rgba(255,255,255,.1);border-radius:20px;"></span>
+        <button onclick="closeAM()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;">✕</button>
+      </div>
+    </div>
+
+    <!-- Body: Brief + Chat -->
+    <div style="display:grid;grid-template-columns:360px 1fr;flex:1;overflow:hidden;">
+
+      <!-- LEFT: Client Brief -->
+      <div id="am-brief" style="background:#f8fafc;border-right:1px solid #e2e8f0;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;">
+        <!-- Red flags -->
+        <div id="am-flags"></div>
+        <!-- KPIs -->
+        <div id="am-kpis" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;"></div>
+        <!-- Contacts -->
+        <div id="am-contacts" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;"></div>
+        <!-- Relationship intel -->
+        <div id="am-intel" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;"></div>
+        <!-- H2 objective -->
+        <div id="am-objective" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px;"></div>
+      </div>
+
+      <!-- RIGHT: Chat -->
+      <div style="display:flex;flex-direction:column;overflow:hidden;">
+
+        <!-- Quick actions -->
+        <div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;background:#fafbfc;">
+          <button class="am-quick" onclick="amQuick('Hacé un brief completo de la cuenta para prepararme para una llamada hoy.')">📋 Brief para llamada</button>
+          <button class="am-quick" onclick="amQuick('¿Hay alguna señal de riesgo en esta cuenta? Detectá red flags de consumo, silencio o dispersión de compras.')">🚨 Detectar red flags</button>
+          <button class="am-quick" onclick="amQuick('¿Cuál es la mejor oportunidad de venta hoy para este cliente? Teniendo en cuenta stock disponible y su historial.')">🎯 Oportunidad hoy</button>
+          <button class="am-quick" onclick="amQuick('Redactá un mensaje de seguimiento para retomar contacto con este cliente. Hacelo cálido, breve y con un gancho comercial concreto.')">✉️ Mensaje de seguimiento</button>
+          <button class="am-quick" onclick="amQuick('¿Cómo preparo la negociación con este cliente? Dame un playbook: qué conceder, qué no, cómo manejar la conversación de precio.')">🤝 Playbook de negociación</button>
+          <button class="am-quick" onclick="amQuick('Analizá la evolución del consumo de este cliente. ¿Creció, cayó o se mantuvo? ¿Qué explica los cambios?')">📊 Análisis de consumo</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="am-messages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;"></div>
+
+        <!-- Input -->
+        <div style="padding:14px 16px;border-top:1px solid #e2e8f0;background:#fff;flex-shrink:0;">
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <textarea id="am-input" placeholder="Preguntale al Account Manager sobre este cliente..." rows="2"
+              style="flex:1;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:13px;resize:none;outline:none;font-family:inherit;color:#1e293b;background:#f8fafc;transition:border .2s;"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAMMessage();}"
+              onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
+            <button onclick="sendAMMessage()" id="am-send-btn"
+              style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;height:44px;">
+              Enviar ↵
+            </button>
+          </div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:6px;">Enter para enviar · Shift+Enter para nueva línea · Powered by Perplexity AI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.am-quick { padding:6px 12px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;font-size:11px;font-weight:600;color:#334155;cursor:pointer;transition:all .15s;white-space:nowrap; }
+.am-quick:hover { background:#dbeafe;border-color:#93c5fd;color:#1e40af; }
+.am-msg-user { align-self:flex-end;background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border-radius:14px 14px 4px 14px;padding:12px 16px;max-width:72%;font-size:13px;line-height:1.55; }
+.am-msg-am { align-self:flex-start;background:#f1f5f9;border:1px solid #e2e8f0;color:#1e293b;border-radius:4px 14px 14px 14px;padding:14px 18px;max-width:85%;font-size:13px;line-height:1.65; }
+.am-msg-am h3,.am-msg-am h4 { color:#1e40af;font-size:13px;font-weight:700;margin:10px 0 4px; }
+.am-msg-am strong { color:#1e293b; }
+.am-msg-am ul { padding-left:18px;margin:6px 0; }
+.am-msg-am li { margin-bottom:4px; }
+.am-msg-am p { margin:6px 0; }
+.am-typing { align-self:flex-start;color:#94a3b8;font-size:13px;padding:10px 16px;background:#f1f5f9;border-radius:4px 14px 14px 14px;border:1px solid #e2e8f0; }
+.am-flag-danger { background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;font-size:12px;color:#991b1b;font-weight:600; }
+.am-flag-warning { background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:12px;color:#92400e;font-weight:600; }
+.am-flag-info { background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:12px;color:#1e40af;font-weight:600; }
+.am-flag-ok { background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:12px;color:#166534;font-weight:600; }
+</style>
+
 <div id="key-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:32px;width:440px;max-width:90vw;">
     <h2 style="color:#f1f5f9;margin-bottom:8px;">🤖 Configurar Agente IA</h2>
