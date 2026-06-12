@@ -48,6 +48,29 @@
     .btn-primary:hover { background: #2563eb; }
     .btn-ghost { background: transparent; color: #94a3b8; border: 1px solid #334155; }
     .btn-ghost:hover { background: #1e293b; color: #e2e8f0; }
+    /* VIEW TABS */
+    .view-tab { padding:10px 18px;border:none;background:transparent;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s; }
+    .view-tab.active { color:#f1f5f9;border-bottom-color:#3b82f6; }
+    .view-tab:hover { color:#e2e8f0; }
+
+    /* BRAND CARDS */
+    .brand-card { background:#1e293b;border:1px solid #334155;border-radius:14px;padding:20px;transition:border-color .2s; }
+    .brand-card:hover { border-color:#475569; }
+    .brand-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; }
+    .brand-agent-btn { padding:7px 14px;background:#0f1117;border:1px solid #334155;border-radius:8px;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s; }
+    .brand-agent-btn:hover { background:#1e3a5f;color:#38bdf8;border-color:#3b82f6; }
+    .brand-products { margin-bottom:14px; }
+    .prod-tag { padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
+    .prod-tag.ftth { background:#1a2e1a;color:#4ade80; }
+    .prod-tag.hfc { background:#1a2a3a;color:#38bdf8; }
+    .prod-tag.stb { background:#2a1a3a;color:#a78bfa; }
+    .brand-result { font-size:13px;color:#94a3b8;line-height:1.6;min-height:0;margin-top:8px; }
+    .brand-matches { margin-top:12px; }
+    .match-item { display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#0f1117;border-radius:8px;margin-bottom:6px;border-left:3px solid #334155; }
+    .match-item.high { border-left-color:#ef4444; }
+    .match-item.med { border-left-color:#f59e0b; }
+    .match-item.low { border-left-color:#22c55e; }
+
     .btn-scan { background: linear-gradient(135deg, #7c3aed, #3b82f6); color: white; }
     .btn-scan:hover { opacity: .85; }
     .btn-scan:disabled { opacity: .5; cursor: not-allowed; }
@@ -256,8 +279,14 @@
   </div>
 </header>
 
+<!-- VIEW TABS -->
+<div style="background:#0f1117;border-bottom:1px solid #1e293b;padding:0 28px;display:flex;gap:4px;">
+  <button id="tab-pipeline" class="view-tab active" onclick="switchView('pipeline')">📋 Pipeline</button>
+  <button id="tab-marcas" class="view-tab" onclick="switchView('marcas')">🏭 Marcas & Productos</button>
+</div>
+
 <!-- FILTERS -->
-<div class="filters">
+<div class="filters" id="section-filters">
   <span class="filter-label">Filtrar:</span>
   <button class="filter-tag active" onclick="filterCards('all', this)">Todos</button>
   <button class="filter-tag" onclick="filterCards('ISP', this)">ISP</button>
@@ -268,6 +297,7 @@
 </div>
 
 <!-- BOARD -->
+<div id="section-board">
 <div class="board-wrapper">
   <div class="board" id="board">
 
@@ -374,6 +404,88 @@
 
   </div>
 </div>
+</div><!-- /section-board -->
+
+<!-- MARCAS SECTION -->
+<div id="section-marcas" style="display:none;padding:24px 28px 40px;">
+
+  <!-- Match bar -->
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div style="color:#f1f5f9;font-weight:700;font-size:15px;">🔗 Cruzar Marcas con Pipeline</div>
+      <div style="color:#64748b;font-size:12px;margin-top:2px;">Detecta qué productos de cada marca aplican a cada cliente según sus tecnologías</div>
+    </div>
+    <button onclick="crossMatch()" id="cross-btn" style="padding:10px 20px;background:linear-gradient(135deg,#7c3aed,#3b82f6);border:none;border-radius:8px;color:white;font-weight:700;font-size:13px;cursor:pointer;">⚡ Cruzar ahora</button>
+  </div>
+
+  <!-- Brand cards grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;" id="brand-grid">
+
+    <!-- FIBERHOME -->
+    <div class="brand-card" id="brand-fiberhome">
+      <div class="brand-header" style="border-left:4px solid #f59e0b;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;background:#1a1f2e;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;">🌐</div>
+          <div>
+            <div style="font-weight:800;font-size:16px;color:#f1f5f9;">Fiberhome</div>
+            <div style="font-size:11px;color:#f59e0b;font-weight:600;">Representante exclusivo ISP · Argentina</div>
+          </div>
+        </div>
+        <button onclick="scanBrand('fiberhome')" class="brand-agent-btn" id="brand-btn-fiberhome">🤖 Analizar</button>
+      </div>
+      <div class="brand-products">
+        <div style="color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Portfolio</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="prod-tag ftth">OLT AN5516</span>
+          <span class="prod-tag ftth">OLT AN6000-H</span>
+          <span class="prod-tag ftth">ONT/ONU Serie H</span>
+          <span class="prod-tag ftth">GPON / XGS-PON</span>
+          <span class="prod-tag ftth">Fibra óptica</span>
+          <span class="prod-tag ftth">NMS EMS</span>
+          <span class="prod-tag ftth">Splitters / Closures</span>
+        </div>
+      </div>
+      <div id="brand-result-fiberhome" class="brand-result"></div>
+      <div id="brand-matches-fiberhome" class="brand-matches"></div>
+    </div>
+
+    <!-- COHERENT -->
+    <div class="brand-card" id="brand-coherent">
+      <div class="brand-header" style="border-left:4px solid #38bdf8;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;background:#1a1f2e;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;">📡</div>
+          <div>
+            <div style="font-weight:800;font-size:16px;color:#f1f5f9;">Coherent</div>
+            <div style="font-size:11px;color:#38bdf8;font-weight:600;">Distribuidor exclusivo ISP · Argentina</div>
+          </div>
+        </div>
+        <button onclick="scanBrand('coherent')" class="brand-agent-btn" id="brand-btn-coherent">🤖 Analizar</button>
+      </div>
+      <div class="brand-products">
+        <div style="color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Portfolio</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="prod-tag hfc">Nodos RPD</span>
+          <span class="prod-tag hfc">Amplificadores HFC</span>
+          <span class="prod-tag hfc">cBR8 / CMTS</span>
+          <span class="prod-tag hfc">EDFA Óptico</span>
+          <span class="prod-tag hfc">WDM / DWDM</span>
+          <span class="prod-tag hfc">Transceptores</span>
+          <span class="prod-tag hfc">Remote PHY</span>
+        </div>
+      </div>
+      <div id="brand-result-coherent" class="brand-result"></div>
+      <div id="brand-matches-coherent" class="brand-matches"></div>
+    </div>
+
+  </div>
+
+  <!-- Cross-match results -->
+  <div id="cross-results" style="display:none;">
+    <div style="color:#f1f5f9;font-weight:700;font-size:15px;margin-bottom:14px;">⚡ Oportunidades detectadas por cruce</div>
+    <div id="cross-body"></div>
+  </div>
+
+</div><!-- /section-marcas -->
 
 <!-- MODAL NUEVA OPORTUNIDAD -->
 <div class="modal-overlay" id="modal">
@@ -842,6 +954,155 @@ Reglas:
   waEl.innerHTML = waData.choices
     ? waData.choices[0].message.content.replace(/\n/g, '<br>')
     : '⚠️ Error generando mensaje';
+}
+
+// ─── VIEW SWITCHER ───────────────────────────────────────
+function switchView(view) {
+  document.getElementById('section-board').style.display = view === 'pipeline' ? '' : 'none';
+  document.getElementById('section-filters').style.display = view === 'pipeline' ? '' : 'none';
+  document.getElementById('section-marcas').style.display = view === 'marcas' ? '' : 'none';
+  document.getElementById('tab-pipeline').classList.toggle('active', view === 'pipeline');
+  document.getElementById('tab-marcas').classList.toggle('active', view === 'marcas');
+}
+
+// ─── BRAND DATA ──────────────────────────────────────────
+const BRANDS = {
+  fiberhome: {
+    name: 'Fiberhome',
+    role: 'Representante exclusivo para ISP en Argentina',
+    techs: ['FTTH', 'GPON', 'XGS-PON'],
+    matchTech: ['FTTH'],
+    products: 'OLT AN5516, OLT AN6000-H, ONT/ONU Serie H, GPON/XGS-PON, fibra óptica, NMS/EMS, splitters, closures',
+    color: '#f59e0b'
+  },
+  coherent: {
+    name: 'Coherent',
+    role: 'Distribuidor exclusivo para ISP en Argentina',
+    techs: ['HFC', 'DOCSIS', 'CMTS', 'Remote PHY'],
+    matchTech: ['HFC'],
+    products: 'Nodos RPD (Remote PHY), amplificadores HFC, cBR8/CMTS, EDFA óptico, WDM/DWDM, transceptores, soluciones Remote PHY',
+    color: '#38bdf8'
+  }
+};
+
+async function scanBrand(brandId) {
+  const key = getPplxKey();
+  if (!key) { openKeyModal(); return; }
+
+  const brand = BRANDS[brandId];
+  const btn = document.getElementById('brand-btn-' + brandId);
+  const result = document.getElementById('brand-result-' + brandId);
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Analizando...';
+  result.innerHTML = '<span style="color:#64748b">🔄 Buscando novedades de ' + brand.name + '...</span>';
+
+  const prompt = `Sos el Product Manager de ${brand.name} para Horizon Trading (${brand.role}).
+Analizá la situación actual de ${brand.name} en el mercado telco de Argentina y Latinoamérica.
+Dame en bullets cortos:
+• Últimos lanzamientos de producto relevantes para ISPs (2024-2026)
+• Tendencias del mercado que favorecen el portfolio de ${brand.name}
+• Argumentos de venta clave para ISPs argentinos que migren o expandan redes
+• Competidores principales y diferenciadores
+Respuesta en español, máximo 150 palabras. Sé muy concreto y comercial.`;
+
+  try {
+    const res = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 300 })
+    });
+    const data = await res.json();
+    if (data.choices) {
+      result.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    } else {
+      result.innerHTML = '⚠️ Sin respuesta';
+    }
+  } catch(e) {
+    result.innerHTML = '⚠️ Error: ' + e.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔄 Re-analizar';
+}
+
+async function crossMatch() {
+  const key = getPplxKey();
+  if (!key) { openKeyModal(); return; }
+
+  const btn = document.getElementById('cross-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Cruzando...';
+
+  const resultsDiv = document.getElementById('cross-results');
+  const body = document.getElementById('cross-body');
+  resultsDiv.style.display = 'block';
+  body.innerHTML = '';
+
+  // For each brand, find matching clients
+  for (const [brandId, brand] of Object.entries(BRANDS)) {
+    const matchingClients = cards.filter(c => {
+      const tech = (c.tech || '').toUpperCase();
+      return brand.matchTech.some(t => tech.includes(t.toUpperCase()));
+    });
+
+    if (matchingClients.length === 0) continue;
+
+    body.innerHTML += `
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <div style="width:3px;height:20px;background:${brand.color};border-radius:2px;"></div>
+          <span style="font-weight:700;color:#f1f5f9;font-size:14px;">${brand.name}</span>
+          <span style="font-size:11px;color:#64748b;">${matchingClients.length} cliente${matchingClients.length>1?'s':''} compatibles</span>
+        </div>
+        <div id="cross-${brandId}"></div>
+      </div>`;
+
+    // Analyze each matching client in parallel for this brand
+    await Promise.all(matchingClients.map(async client => {
+      const clientEl = document.createElement('div');
+      clientEl.className = 'match-item med';
+      clientEl.innerHTML = `
+        <div style="min-width:110px;">
+          <div style="font-weight:700;color:#f1f5f9;font-size:13px;">${client.empresa}</div>
+          <div style="font-size:11px;color:#64748b;">${client.tech} · ${client.etapa}</div>
+        </div>
+        <div id="cross-${brandId}-${client.id}" style="color:#94a3b8;font-size:12px;flex:1;">
+          <span style="color:#475569">🔄 Analizando...</span>
+        </div>`;
+      document.getElementById('cross-' + brandId).appendChild(clientEl);
+
+      const prompt = `Sos el PM de ${brand.name} (${brand.role}).
+El cliente es ${client.empresa} (${client.tipo}), tecnología: ${client.tech}, etapa comercial: ${client.etapa}.
+${client.notas ? 'Contexto: ' + client.notas : ''}
+Portfolio disponible: ${brand.products}.
+En máximo 2 líneas: ¿cuál es la oportunidad concreta de venta de ${brand.name} para este cliente? ¿Qué producto específico y por qué ahora?
+Sé muy directo y accionable.`;
+
+      try {
+        const res = await fetch('https://api.perplexity.ai/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 150 })
+        });
+        const data = await res.json();
+        const el = document.getElementById('cross-' + brandId + '-' + client.id);
+        if (el && data.choices) {
+          el.innerHTML = data.choices[0].message.content.replace(/\n/g, ' ').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+          // Color by stage
+          if (['conversacion','propuesta','ganado'].includes(client.etapa)) {
+            clientEl.className = 'match-item high';
+          }
+        }
+      } catch(e) {
+        const el = document.getElementById('cross-' + brandId + '-' + client.id);
+        if (el) el.innerHTML = '⚠️ Error';
+      }
+    }));
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⚡ Cruzar ahora';
 }
 
 // ─── SCAN ALL ────────────────────────────────────────────
