@@ -3148,9 +3148,9 @@ async function amRunMessage(card, userText, addToHistory) {
   document.getElementById('am-input').focus();
 }
 
-// Close AM modal on backdrop click
-document.getElementById('am-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeAM();
+// Close AM modal on backdrop click (delegated — element loads after script)
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.id === 'am-modal') closeAM();
 });
 
 async function openAccountIntel(id) {
