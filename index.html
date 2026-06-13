@@ -3121,11 +3121,18 @@ async function amRunMessage(card, userText, addToHistory) {
         messages,
         max_tokens: 1200,
         temperature: 0.3,
-        search_recency_filter: 'year',
       })
     });
 
     const data = await resp.json();
+    if (!resp.ok) {
+      typing.remove();
+      const errMsg = data?.error?.message || data?.detail || JSON.stringify(data).substring(0, 200);
+      appendAMMessage('assistant', `❌ Error API (${resp.status}): ${errMsg}\n\nVerificá que tu API key de Perplexity sea válida y tenga crédito disponible.`);
+      document.getElementById('am-status').textContent = '❌ Error';
+      document.getElementById('am-send-btn').disabled = false;
+      return;
+    }
     const reply = data.choices?.[0]?.message?.content || 'Sin respuesta del servidor.';
 
     typing.remove();
