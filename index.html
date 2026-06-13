@@ -3519,22 +3519,35 @@ async function crossMatch() {
       const clientEl = document.createElement('div');
       clientEl.id = 'cross-item-' + brandId + '-' + client.id;
       clientEl.className = 'match-item med';
-      // Show detected signals as inline tags
+      clientEl.style.cssText = 'display:block;padding:14px 16px;margin-bottom:10px;border-radius:10px;border:1px solid #1e293b;background:#0f1117;';
+
+      // Etapa color
+      const etapaColor = {conversacion:'#3b82f6',contactado:'#f59e0b',propuesta:'#8b5cf6',ganado:'#22c55e',frio:'#475569',prospecto:'#f97316'}[client.etapa] || '#475569';
+
+      // Signal tags
       const sigTags = [
-        sig.oltType ? `<span style="font-size:9px;padding:1px 5px;background:#1e293b;color:#7dd3fc;border-radius:4px;">${sig.oltType}</span>` : '',
-        sig.prevProducts.length ? `<span style="font-size:9px;padding:1px 5px;background:#1e293b;color:#fcd34d;border-radius:4px;">↺ ${sig.prevProducts[0]}</span>` : '',
-        sig.needsODN ? `<span style="font-size:9px;padding:1px 5px;background:#052e16;color:#4ade80;border-radius:4px;">🔧 Desplegando</span>` : '',
-        sig.isCarrier ? `<span style="font-size:9px;padding:1px 5px;background:#1e1b4b;color:#a78bfa;border-radius:4px;">📡 Carrier</span>` : '',
-      ].filter(Boolean).join(' ');
+        sig.oltType       ? `<span style="font-size:10px;padding:2px 7px;background:#0c1a2e;color:#7dd3fc;border-radius:5px;border:1px solid #1e3a5f;">🖥 ${sig.oltType}</span>` : '',
+        sig.prevProducts.length ? `<span style="font-size:10px;padding:2px 7px;background:#1c1400;color:#fcd34d;border-radius:5px;border:1px solid #422006;">↺ ${sig.prevProducts[0]}</span>` : '',
+        sig.needsODN      ? `<span style="font-size:10px;padding:2px 7px;background:#052e16;color:#4ade80;border-radius:5px;border:1px solid #166534;">🔧 En despliegue</span>` : '',
+        sig.isCarrier     ? `<span style="font-size:10px;padding:2px 7px;background:#1e1b4b;color:#a78bfa;border-radius:5px;border:1px solid #3730a3;">📡 Carrier</span>` : '',
+        sig.sensitivity==='precio' ? `<span style="font-size:10px;padding:2px 7px;background:#1c0a00;color:#fb923c;border-radius:5px;border:1px solid #7c2d12;">💲 Sensible precio</span>` : '',
+      ].filter(Boolean).join('');
+
       clientEl.innerHTML = `
-        <div style="min-width:130px;">
-          <div style="font-weight:700;color:#f1f5f9;font-size:13px;">${client.empresa}</div>
-          <div style="font-size:11px;color:#64748b;">${client.tech} · ${client.etapa}</div>
-          <div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:3px;">${sigTags}</div>
-          <div style="margin-top:3px;">${scanAgeLabel(client.id)}</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:12px;">
+          <div>
+            <div style="font-weight:800;color:#f1f5f9;font-size:14px;line-height:1.2;">${client.empresa}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+              <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:${etapaColor}22;color:${etapaColor};border:1px solid ${etapaColor}44;">${client.etapa}</span>
+              <span style="font-size:10px;color:#475569;">${client.tipo} · ${client.tech}</span>
+              <span style="font-size:10px;color:#475569;">⭐ ${client.score}</span>
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">${scanAgeLabel(client.id)}</div>
         </div>
-        <div id="cross-${brandId}-${client.id}" style="color:#94a3b8;font-size:12px;flex:1;">
-          <span style="color:#475569">🔄 Analizando...</span>
+        ${sigTags ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">${sigTags}</div>` : ''}
+        <div id="cross-${brandId}-${client.id}" style="font-size:12px;color:#64748b;">
+          <span style="color:#475569;font-style:italic;">🔄 Analizando...</span>
         </div>`;
       document.getElementById('cross-' + brandId).appendChild(clientEl);
     });
@@ -3544,10 +3557,9 @@ async function crossMatch() {
       const clientEl = document.getElementById('cross-item-' + brandId + '-' + client.id);
       const sig = extractClientSignals(client);
 
-      // Build a context-aware prompt using detected signals
       const signalCtx = sig.keySignal
-        ? `SEÑALES DETECTADAS EN ESTE CLIENTE: ${sig.keySignal}`
-        : 'Sin señales históricas detectadas — basar propuesta en perfil general.';
+        ? `SEÑALES DETECTADAS: ${sig.keySignal}`
+        : 'Sin historial detectado — propuesta basada en perfil general.';
 
       const prompt = `Sos el PM de ${brand.name} para Horizon Trading Argentina (${brand.role}).
 
@@ -3555,36 +3567,73 @@ CONOCIMIENTO DE PRODUCTO:
 ${knowledgeBlock.substring(0, 1200)}
 
 CLIENTE: ${client.empresa} (${client.tipo})
-Tech instalada: ${client.tech} | Etapa comercial: ${client.etapa} | Score: ${client.score}
-${client.notas ? 'Notas CRM: ' + client.notas.substring(0, 300) : ''}
-
+Tech: ${client.tech} | Etapa: ${client.etapa} | Score: ${client.score}
+${client.notas ? 'Notas: ' + client.notas.substring(0, 300) : ''}
 ${signalCtx}
 
-TAREA: En máximo 2 líneas, indicá el producto ESPECÍFICO (con código/modelo) de ${brand.name} que le proponés a este cliente, por qué ese y no otro, y cuál es el argumento de venta concreto basado en su historial o perfil. Sin preámbulos, directo al producto.`;
+RESPONDÉ EXACTAMENTE en este formato (sin texto extra antes ni después):
+PRODUCTO: [modelo/código exacto]
+POR QUÉ ESTE CLIENTE: [1 línea — qué señal o historial lo justifica]
+ARGUMENTO: [1 línea — qué le decís al cliente para cerrar]`;
 
       try {
         const res = await fetchWithTimeout('https://api.perplexity.ai/chat/completions', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 180 })
+          body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 200 })
         });
         const data = await res.json();
         const el = document.getElementById('cross-' + brandId + '-' + client.id);
         if (el && data.choices) {
-          el.innerHTML = data.choices[0].message.content.replace(/\n/g, ' ').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-          if (clientEl && ['conversacion','propuesta','ganado'].includes(client.etapa)) {
-            clientEl.className = 'match-item high';
+          const raw = data.choices[0].message.content;
+
+          // Parse structured response
+          const getField = (label) => {
+            const match = raw.match(new RegExp(label + ':\\s*(.+?)(?=\\n[A-Z]+:|$)', 's'));
+            return match ? match[1].trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : null;
+          };
+          const producto  = getField('PRODUCTO');
+          const porQue    = getField('POR QUÉ ESTE CLIENTE') || getField('POR QUE ESTE CLIENTE');
+          const argumento = getField('ARGUMENTO');
+
+          if (producto) {
+            el.innerHTML = `
+              <div style="display:grid;gap:6px;">
+                <div style="display:flex;align-items:baseline;gap:8px;padding:8px 10px;background:#0a1628;border-radius:8px;border-left:3px solid ${brand.color};">
+                  <span style="font-size:10px;font-weight:800;color:${brand.color};white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;">Producto</span>
+                  <span style="font-size:13px;font-weight:800;color:#f1f5f9;">${producto}</span>
+                </div>
+                ${porQue ? `<div style="display:flex;gap:8px;align-items:flex-start;">
+                  <span style="font-size:10px;font-weight:700;color:#64748b;white-space:nowrap;padding-top:1px;min-width:70px;">Por qué</span>
+                  <span style="font-size:12px;color:#94a3b8;line-height:1.4;">${porQue}</span>
+                </div>` : ''}
+                ${argumento ? `<div style="display:flex;gap:8px;align-items:flex-start;padding:7px 10px;background:#0d1f0d;border-radius:7px;">
+                  <span style="font-size:10px;font-weight:700;color:#4ade80;white-space:nowrap;padding-top:1px;min-width:70px;">Argumento</span>
+                  <span style="font-size:12px;color:#86efac;line-height:1.4;font-style:italic;">"${argumento}"</span>
+                </div>` : ''}
+              </div>`;
+          } else {
+            // Fallback: plain text with some formatting
+            el.innerHTML = `<div style="font-size:12px;color:#94a3b8;line-height:1.5;">${raw.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
           }
-          // Mark as scanned and refresh the age label
+
+          // Highlight active stages
+          if (clientEl && ['conversacion','propuesta','ganado'].includes(client.etapa)) {
+            clientEl.style.borderColor = '#3b82f6';
+          }
           markScanned(client.id);
-          const ageLabelEl = clientEl ? clientEl.querySelector('div:nth-child(1) > div:nth-child(3)') : null;
-          if (ageLabelEl) ageLabelEl.innerHTML = scanAgeLabel(client.id);
+          const ageEl = clientEl ? clientEl.querySelector('[id^="cross-"] ~ *') : null;
+          // Refresh scan age label
+          const topRight = clientEl ? clientEl.querySelector('div > div:last-child') : null;
+          if (topRight && topRight.innerHTML.includes('Sin escanear') || topRight?.innerHTML.includes('⚡')) {
+            topRight.innerHTML = scanAgeLabel(client.id);
+          }
         } else if (el) {
-          el.innerHTML = '⚠️ Sin respuesta';
+          el.innerHTML = '<span style="color:#ef4444;font-size:12px;">⚠️ Sin respuesta</span>';
         }
       } catch(e) {
         const el = document.getElementById('cross-' + brandId + '-' + client.id);
-        if (el) el.innerHTML = e.name === 'AbortError' ? '⏱️ Timeout' : '⚠️ Error';
+        if (el) el.innerHTML = `<span style="color:#ef4444;font-size:12px;">${e.name === 'AbortError' ? '⏱️ Timeout — reintentá' : '⚠️ Error: ' + e.message}</span>`;
       }
     }, 5, 800);
   }
