@@ -3017,7 +3017,7 @@ function openAccountManager(id) {
   const card = cards.find(c => c.id === id);
   if (!card) return;
 
-  const key = localStorage.getItem('horizon-perplexity-key');
+  const key = getPplxKey();
   if (!key) { openKeyModal(); return; }
 
   amCardId = id;
@@ -3087,7 +3087,7 @@ function appendAMMessage(role, content) {
 }
 
 async function amRunMessage(card, userText, addToHistory) {
-  const key = localStorage.getItem('horizon-perplexity-key');
+  const key = getPplxKey();
   if (!key) return;
 
   if (addToHistory) amConversation.push({ role: 'user', content: userText });
