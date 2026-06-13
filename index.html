@@ -1342,6 +1342,157 @@ Si el ISP tiene:
 
 const COHERENT_CONTEXT = BRAND_INTEL_COHERENT;
 
+// ─── PM TRAINING: PRODUCT MAPPING (reemplazos e upgrades) ────────────────────
+const PRODUCT_MAPPING_FH = `
+## TABLA DE REEMPLAZOS Y UPGRADES — FiberHome (PM FiberHome debe conocer de memoria)
+
+### OLT COMPATIBLE — MA5800 (Huawei) — el 80% del mercado local
+La OLT más usada en Argentina es la Huawei MA5800-X2/X7/X15/X17.
+FiberHome ONTs son GPON estándar ITU-T G.984 → 100% interoperables con MA5800.
+No requieren licencia, no requieren registro previo en la OLT si se usa modo OMCI estándar.
+Argumento clave de venta: "Son tan compatibles como las Huawei, sin pagar precio Huawei."
+
+### OLT COMPATIBLE — ZTE C300/C600/C650 (minoría, pero existente)
+También compatibles al 100% con ONTs FiberHome en modo GPON estándar.
+Mismo argumento de interoperabilidad.
+
+### MAPA DE REEMPLAZOS (histórico → nuevo)
+
+| Producto histórico del cliente | Reemplazo FiberHome recomendado | Argumento principal |
+|---|---|---|
+| ICON ONT single band (WiFi 4/5, 1GE) | **HG6145F3** (dual band AC1200) | Upgrade obligado: dual band 2.4+5GHz, misma OLT, sin reconfigurar |
+| Chinamobile ONT (blanco, básico) | **AN5506-04-F** o **HG6145F3** | Reemplazo directo mismo segmento; Chinamobile era Huawei disfrazado, FiberHome compatible |
+| ONT ZTE F601/F609 single band | **HG6145F3** (dual band) | El mercado ya exige dual band; el cliente ya perdió abonados por calidad WiFi |
+| ONT ZTE dual band básica | **HG6543D** (dual band AX1800 WiFi 6) | Upgrade tecnológico, diferenciación frente a competencia |
+| ONT Huawei HG8145V5 (gama media) | **HG6543D** o **HG6144F** | Mismo tier, mejor precio, sin romper red |
+| ONT Huawei HG8245 (gama alta) | **HG6144F** (4GE + 2POTS + WiFi 6) | Directo replacement premium, ideal para clientes corporativos del ISP |
+| Modem HFC / DOCSIS (ya obsoleto) | **HG6145F3** + propuesta migración FTTH | El ISP está en plena transición; proponer kit completo de conversión |
+
+### EXPANSIÓN DE OLT (no cambiar la OLT, agregar capacidad)
+
+| Situación del cliente | Propuesta FiberHome |
+|---|---|
+| MA5800 con puertos GPON llenos | Placa **GPOA C+** (16 puertos, 2.040 USD) o **GPOA C++** (16p, 2.190 USD) |
+| Necesita más de 16p adicionales | **OLT AN6001-G16** (16p GPON nueva OLT, 2.670 USD) — ideal segunda ubicación |
+| Despliegue masivo nuevo barrio | **OLT AN6000-7** (7 slots, escalable, 4.550 USD) + placas GPOA |
+| Proyecto grande llave en mano | **OLT AN6000-15** (15 slots, carrier grade, 4.850 USD) |
+
+### INFERENCIA DE NECESIDAD ODN (si el cliente está instalando/desplegando)
+Señales en notas: "instalando", "desplegando", "nueva zona", "tendido", "planta externa"
+→ Proponer kit completo:
+1. Cable FiberHome AS80-S (48F más vendido: 1.50 USD/m) — rollo 4km
+2. Conectores SC/APC EASYCONNS IP68 para empalme en campo (sin fusión)
+3. NAP/FitDP outdoor IP68 (FitDP-461C o FitDP-462A para zonas compactas)
+4. FOSC-220J para empalmes troncales (hasta 144F, re-entrada sin cortar cable)
+5. Splitters PLC 1x8 o 1x16 según diseño de red
+
+### INFERENCIA DE NECESIDAD DE SFP PARA UPLINKS DE OLT
+ISPs con MA5800 o ZTE C300 necesitan SFPs para el uplink al core de red.
+→ Derivar al PM de Coherent/Finisar para cotizar:
+- FTLX8574D3BCL (10G MM 300m): para tramos cortos datacenter/central
+- FTLX1475D3BCL (10G SM 10km): para uplinks a nodo o PoP
+`;
+
+// ─── PM TRAINING: COHERENT CARRIER INTEL ─────────────────────────────────────
+const COHERENT_CARRIER_INTEL = `
+## INTELIGENCIA DE SEGMENTO — Coherent/Finisar (PM Coherent debe conocer de memoria)
+
+### SEGMENTO OBJETIVO EXCLUSIVO
+Coherent/Finisar NO es para el segmento de acceso ISP (eso es FiberHome).
+Target exclusivo: **Carriers, Carrier-of-Carriers, operadores de backbone y datacenter**.
+
+En Argentina, los clientes de Coherent son:
+- **Carriers nacionales**: Gigared, Silica Networks, Backbone SA, Sinectis, Casilda Digital, D-Byte
+- **Operadores con backbone propio**: ISPs grandes con red troncal larga distancia (ej. Sion, Comworks si tienen backbone)
+- **Integradores de proyectos carrier**: Mantelectric, Frappa (proyectos llave en mano)
+
+### MAPA DE NECESIDADES POR PERFIL CARRIER
+
+| Tipo de carrier | Necesidad típica | Producto Coherent |
+|---|---|---|
+| Metro carrier (anillos urbanos 10–40km) | SFP+ 10G SM 10km o 40km | **FTLX1475D3BCL** (10km) · **FTLX6673MCC** (40km) |
+| Backbone larga distancia (>40km) | SFP+ DWDM tunable o fijo 80km | **FTLX6882MCC** (tunable CDR, TOP) · **FTLX6872MCC** (80km sin CDR) · **FTLX6872MNC-FL** (FlexTune) |
+| Core 100G (datacenter/backbone) | QSFP28 100G | **FTLC1156RDPLB** (eLR4 >20km, 10 uds stock) |
+| Ultra long haul / coherente 120km | QSFP28 ZR DCO | **FTLC3353R3PL1** (120km, 3 uds stock) |
+| 400G datacenter / carrier futuro | QSFP-DD 400G | **FDCD3313E1PCL** (ZR 80km, precio: 9.673 USD) |
+
+### SEÑALES DE OPORTUNIDAD CARRIER EN NOTAS CRM
+Buscar en notas: "backbone", "larga distancia", "carrier", "datacenter", "fibra troncal", "anillo", "PoP", "nodo core", "DWDM", "100G", "400G", "enlace"
+
+### STOCK DISPONIBLE CON URGENCIA DE VENTA
+- FTLX6872MNC-FL FlexTune 80km: **2 uds — prioridad ALTA**
+- FTLC1156RDPLB QSFP28 100G eLR4: **10 uds — stock para proyecto mediano**
+- FTLC3353R3PL1 QSFP28 ZR 120km: **3 uds — oportunidad llave en mano**
+
+### LO QUE COHERENT NO ES
+- ❌ NO proponer para uplinks de OLT ISP (usar Finisar SFP estándar si aplica, pero derivar bien el caso)
+- ❌ NO Ousent BiDi — ese es stock de liquidación en campaña separada, no parte del portfolio activo
+- ❌ NO clientes sin backbone propio o sin links de más de 10km
+`;
+
+// ─── PM TRAINING: SIGNAL EXTRACTOR ───────────────────────────────────────────
+function extractClientSignals(client) {
+  const notas = (client.notas || '').toLowerCase();
+  const empresa = (client.empresa || '').toLowerCase();
+  const tech = (client.tech || '').toUpperCase();
+  const signals = {
+    prevProducts: [],    // productos históricos detectados
+    replacements: [],    // reemplazos sugeridos
+    needsODN: false,     // señales de despliegue activo
+    needsSFP: false,     // señales de uplink/carrier
+    isCarrier: false,    // perfil carrier
+    oltType: null,       // OLT detectada
+    sensitivity: null,   // sensibilidad (precio, financiación, calidad)
+    urgency: null,       // urgencia detectada
+    keySignal: '',       // señal más relevante para el prompt
+  };
+
+  // Productos históricos
+  if (/\bicon\b/.test(notas))        { signals.prevProducts.push('ONT ICON single band'); signals.replacements.push('HG6145F3 dual band (reemplazo directo, upgrade WiFi)'); }
+  if (/chinamobile/.test(notas))     { signals.prevProducts.push('ONT Chinamobile'); signals.replacements.push('AN5506-04-F o HG6145F3 (reemplazo compatible)'); }
+  if (/\bzte\b/.test(notas))         { signals.prevProducts.push('ONT/OLT ZTE'); signals.replacements.push('HG6145F3 dual band o HG6543D WiFi 6 según gama'); }
+  if (/huawei oficial/.test(notas))  { signals.prevProducts.push('ONT Huawei oficial'); signals.replacements.push('HG6543D o HG6144F (mismo tier, mejor precio)'); }
+  if (/modem|hfc|docsis/.test(notas)){ signals.prevProducts.push('Modems HFC/DOCSIS'); signals.replacements.push('HG6145F3 + propuesta migración FTTH end-to-end'); }
+  if (/dual band/.test(notas))       { signals.prevProducts.push('ya adoptó dual band'); signals.replacements.push('HG6543D WiFi 6 para diferenciación premium'); }
+  if (/placa|gpoa|c300|c600/.test(notas)) { signals.prevProducts.push('placas OLT'); signals.replacements.push('GPOA C+ o GPOA C++ para expansión MA5800'); }
+
+  // OLT detectada
+  if (/ma5800|ma 5800/.test(notas))  signals.oltType = 'Huawei MA5800';
+  else if (/ma5600/.test(notas))     signals.oltType = 'Huawei MA5600 (legacy)';
+  else if (/c300|c600|c650/.test(notas) && /zte/.test(notas)) signals.oltType = 'ZTE C300/C600';
+
+  // Despliegue activo
+  if (/instalando|desplegando|nueva zona|tendido|planta externa|expansi[oó]n/.test(notas)) {
+    signals.needsODN = true;
+  }
+
+  // Necesidad SFP/carrier
+  if (/backbone|larga distancia|datacenter|dwdm|100g|400g|enlace|carrier|anillo|pop|nodo core/.test(notas) || tech.includes('CARRIER')) {
+    signals.needsSFP = true;
+    signals.isCarrier = true;
+  }
+
+  // Sensibilidad
+  if (/precio|financiaci[oó]n|costo|económico|barato/.test(notas)) signals.sensitivity = 'precio';
+  else if (/calidad|premium|compatib/.test(notas)) signals.sensitivity = 'calidad';
+
+  // Urgencia
+  if (/urgente|ya|ahora|r[aá]pido|inmediato|necesita/.test(notas)) signals.urgency = 'alta';
+  if (/fr[ií]o|no responde|desaparece|hace mucho/.test(notas)) signals.urgency = 'baja';
+
+  // Key signal summary para prompt
+  const parts = [];
+  if (signals.oltType) parts.push(`OLT detectada: ${signals.oltType}`);
+  if (signals.prevProducts.length) parts.push(`Histórico: ${signals.prevProducts.join(', ')}`);
+  if (signals.replacements.length) parts.push(`Upgrade path: ${signals.replacements.join(' / ')}`);
+  if (signals.needsODN) parts.push('SEÑAL ACTIVA: cliente en despliegue → necesita ODN completa');
+  if (signals.isCarrier) parts.push('PERFIL CARRIER → derivar a Coherent para SFPs backbone');
+  if (signals.sensitivity) parts.push(`Sensible a: ${signals.sensitivity}`);
+  signals.keySignal = parts.join(' | ');
+
+  return signals;
+}
+
 // ─── LISTA DE PRECIOS HORIZON (3 segmentos + IVA) ────────────────────────────
 const HORIZON_PRICES = `LISTA DE PRECIOS HORIZON TRADING (USD neto s/IVA) — 3 segmentos: Subdistribuidor | ISP VOL | Lista Regular
 
@@ -3197,10 +3348,10 @@ ARGUMENTOS DE VENTA CLAVE:
 - Compatible con cualquier OLT del mercado (Huawei, Nokia, Calix, ZTE, etc.)`
   },
   coherent: {
-    name: 'Coherent',
-    role: 'Distribuidor exclusivo para ISP en Argentina',
-    techs: ['HFC', 'DOCSIS', 'CMTS', 'Remote PHY'],
-    matchTech: ['HFC'],
+    name: 'Coherent / Finisar',
+    role: 'Distribuidor exclusivo de transceivers ópticos para carriers y carrier-of-carriers en Argentina',
+    techs: ['Carrier', 'HFC', 'FTTH'],
+    matchTech: ['Carrier', 'HFC'],
     products: COHERENT_CONTEXT,
     color: '#38bdf8'
   }
@@ -3347,8 +3498,10 @@ async function crossMatch() {
       ? `<span style="color:#f59e0b;font-size:11px;"> · ${neverScanned} sin escanear aún</span>`
       : `<span style="color:#22c55e;font-size:11px;"> · todos escaneados</span>`;
 
-    // Compact brand intel for prompt (first 500 chars)
-    const brandSummary = brand.products.substring(0, 500);
+    // Choose knowledge block by brand
+    const knowledgeBlock = brandId === 'fiberhome'
+      ? PRODUCT_MAPPING_FH
+      : COHERENT_CARRIER_INTEL;
 
     body.innerHTML += `
       <div style="margin-bottom:20px;">
@@ -3362,14 +3515,23 @@ async function crossMatch() {
 
     // Pre-render all client placeholders
     matchingClients.forEach(client => {
+      const sig = extractClientSignals(client);
       const clientEl = document.createElement('div');
       clientEl.id = 'cross-item-' + brandId + '-' + client.id;
       clientEl.className = 'match-item med';
+      // Show detected signals as inline tags
+      const sigTags = [
+        sig.oltType ? `<span style="font-size:9px;padding:1px 5px;background:#1e293b;color:#7dd3fc;border-radius:4px;">${sig.oltType}</span>` : '',
+        sig.prevProducts.length ? `<span style="font-size:9px;padding:1px 5px;background:#1e293b;color:#fcd34d;border-radius:4px;">↺ ${sig.prevProducts[0]}</span>` : '',
+        sig.needsODN ? `<span style="font-size:9px;padding:1px 5px;background:#052e16;color:#4ade80;border-radius:4px;">🔧 Desplegando</span>` : '',
+        sig.isCarrier ? `<span style="font-size:9px;padding:1px 5px;background:#1e1b4b;color:#a78bfa;border-radius:4px;">📡 Carrier</span>` : '',
+      ].filter(Boolean).join(' ');
       clientEl.innerHTML = `
-        <div style="min-width:120px;">
+        <div style="min-width:130px;">
           <div style="font-weight:700;color:#f1f5f9;font-size:13px;">${client.empresa}</div>
           <div style="font-size:11px;color:#64748b;">${client.tech} · ${client.etapa}</div>
-          <div style="margin-top:2px;">${scanAgeLabel(client.id)}</div>
+          <div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:3px;">${sigTags}</div>
+          <div style="margin-top:3px;">${scanAgeLabel(client.id)}</div>
         </div>
         <div id="cross-${brandId}-${client.id}" style="color:#94a3b8;font-size:12px;flex:1;">
           <span style="color:#475569">🔄 Analizando...</span>
@@ -3380,17 +3542,31 @@ async function crossMatch() {
     // Process in batches of 5
     await runInBatches(matchingClients, async (client) => {
       const clientEl = document.getElementById('cross-item-' + brandId + '-' + client.id);
-      const prompt = `Sos el PM de ${brand.name} (${brand.role}).
-Cliente: ${client.empresa} (${client.tipo}), tech: ${client.tech}, etapa: ${client.etapa}.
-${client.notas ? 'Contexto: ' + client.notas.substring(0,200) : ''}
-Portfolio ${brand.name}: ${brandSummary}
-En 2 líneas máximo: ¿qué producto específico de ${brand.name} le vendés a este cliente y por qué ahora? Sin preámbulos.`;
+      const sig = extractClientSignals(client);
+
+      // Build a context-aware prompt using detected signals
+      const signalCtx = sig.keySignal
+        ? `SEÑALES DETECTADAS EN ESTE CLIENTE: ${sig.keySignal}`
+        : 'Sin señales históricas detectadas — basar propuesta en perfil general.';
+
+      const prompt = `Sos el PM de ${brand.name} para Horizon Trading Argentina (${brand.role}).
+
+CONOCIMIENTO DE PRODUCTO:
+${knowledgeBlock.substring(0, 1200)}
+
+CLIENTE: ${client.empresa} (${client.tipo})
+Tech instalada: ${client.tech} | Etapa comercial: ${client.etapa} | Score: ${client.score}
+${client.notas ? 'Notas CRM: ' + client.notas.substring(0, 300) : ''}
+
+${signalCtx}
+
+TAREA: En máximo 2 líneas, indicá el producto ESPECÍFICO (con código/modelo) de ${brand.name} que le proponés a este cliente, por qué ese y no otro, y cuál es el argumento de venta concreto basado en su historial o perfil. Sin preámbulos, directo al producto.`;
 
       try {
         const res = await fetchWithTimeout('https://api.perplexity.ai/chat/completions', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 120 })
+          body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: prompt }], max_tokens: 180 })
         });
         const data = await res.json();
         const el = document.getElementById('cross-' + brandId + '-' + client.id);
