@@ -3137,6 +3137,9 @@ async function amRunMessage(card, userText, addToHistory) {
 
     typing.remove();
     appendAMMessage('assistant', reply);
+    // If this was the silent init call (addToHistory=false), save the user prompt too
+    // so future turns have a valid user→assistant sequence
+    if (!addToHistory) amConversation.push({ role: 'user', content: userText });
     amConversation.push({ role: 'assistant', content: reply });
 
     document.getElementById('am-status').textContent = '✅ Listo';
