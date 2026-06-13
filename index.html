@@ -298,6 +298,7 @@
   <button id="tab-pipeline" class="view-tab active" onclick="switchView('pipeline')">📋 Pipeline</button>
   <button id="tab-dashboard" class="view-tab" onclick="switchView('dashboard')">📊 Dashboard</button>
   <button id="tab-marcas" class="view-tab" onclick="switchView('marcas')">🏭 Marcas & Productos</button>
+  <button id="tab-cobertura" class="view-tab" onclick="switchView('cobertura')">🎯 Cobertura IA</button>
 </div>
 
 <!-- FILTERS -->
@@ -610,6 +611,46 @@
 
 </div><!-- /section-dashboard -->
 
+<!-- COBERTURA IA -->
+<div id="section-cobertura" style="display:none;padding:28px;background:#f1f5f9;min-height:calc(100vh - 120px);">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <!-- Title -->
+    <div style="margin-bottom:24px;">
+      <h2 style="font-size:22px;font-weight:800;color:#1e293b;">🎯 Cobertura de Inteligencia IA</h2>
+      <p style="font-size:13px;color:#64748b;margin-top:4px;">Seguimiento de qué clientes fueron analizados por el agente y cuándo.</p>
+    </div>
+
+    <!-- KPI row -->
+    <div id="cob-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;"></div>
+
+    <!-- Coverage bar per brand -->
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px;margin-bottom:22px;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+      <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:18px;">📡 Cobertura por marca</div>
+      <div id="cob-brands"></div>
+    </div>
+
+    <!-- Coverage by etapa -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;">
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+        <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:16px;">🔄 Cobertura por etapa</div>
+        <div id="cob-etapas"></div>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+        <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:16px;">📅 Antigüedad del escaneo</div>
+        <div id="cob-age"></div>
+      </div>
+    </div>
+
+    <!-- Pending priority list -->
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+      <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:16px;">⚡ Próximos a escanear (prioridad)</div>
+      <div id="cob-pending"></div>
+    </div>
+
+  </div>
+</div><!-- /section-cobertura -->
+
 <!-- MODAL NUEVA OPORTUNIDAD -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -748,7 +789,10 @@ function buildCard(c) {
     </div>
     ${c.notas ? `<div style="font-size:11px;color:#64748b;margin-bottom:8px;line-height:1.4">${c.notas.slice(0,80)}${c.notas.length>80?'…':''}</div>` : ''}
     <div class="card-footer">
-      <span class="card-date">🕐 ${c.fecha}</span>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <span class="card-date">🕐 ${c.fecha}</span>
+        ${(()=>{const h=getScanHistory();const t=h[c.id];if(!t)return '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#422006;color:#fb923c;font-weight:600;">⚡ Sin IA</span>';const d=Math.floor((Date.now()-t)/86400000);if(d===0)return '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#052e16;color:#4ade80;font-weight:600;">🤖 Hoy</span>';if(d<=7)return `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#0c1a2e;color:#7dd3fc;font-weight:600;">🤖 ${d}d</span>`;return `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#1e1b4b;color:#a78bfa;font-weight:600;">🤖 ${d}d</span>`;})()}
+      </div>
       <div class="card-actions">
         <button class="card-btn" onclick="editCard(${c.id})" title="Editar">✏️</button>
         <button class="card-btn agent-btn" onclick="toggleAgent(${c.id})" title="Agente IA">🤖</button>
@@ -2491,10 +2535,155 @@ function switchView(view) {
   document.getElementById('section-filters').style.display = view === 'pipeline' ? '' : 'none';
   document.getElementById('section-marcas').style.display = view === 'marcas' ? '' : 'none';
   document.getElementById('section-dashboard').style.display = view === 'dashboard' ? '' : 'none';
+  document.getElementById('section-cobertura').style.display = view === 'cobertura' ? '' : 'none';
   document.getElementById('tab-pipeline').classList.toggle('active', view === 'pipeline');
   document.getElementById('tab-marcas').classList.toggle('active', view === 'marcas');
   document.getElementById('tab-dashboard').classList.toggle('active', view === 'dashboard');
+  document.getElementById('tab-cobertura').classList.toggle('active', view === 'cobertura');
   if (view === 'dashboard') renderDashboard();
+  if (view === 'cobertura') renderCobertura();
+}
+
+// ─── COBERTURA IA DASHBOARD ──────────────────────────────
+function renderCobertura() {
+  const h = getScanHistory();
+  const total = cards.length;
+  const scanned = cards.filter(c => h[c.id]).length;
+  const never = total - scanned;
+  const pct = Math.round((scanned / total) * 100);
+
+  // Recent: scanned in last 7 days
+  const recent = cards.filter(c => h[c.id] && (Date.now() - h[c.id]) < 7*86400000).length;
+  const stale  = cards.filter(c => h[c.id] && (Date.now() - h[c.id]) >= 7*86400000).length;
+
+  // ── KPIs ──
+  document.getElementById('cob-kpis').innerHTML = `
+    ${cobKpi('Total clientes', total, '#1e40af', '👥')}
+    ${cobKpi('Escaneados IA', scanned, '#16a34a', '🤖')}
+    ${cobKpi('Sin escanear', never, never > 0 ? '#dc2626' : '#16a34a', '⚡')}
+    ${cobKpi('Cobertura', pct + '%', pct >= 80 ? '#16a34a' : pct >= 40 ? '#d97706' : '#dc2626', '📊')}
+  `;
+
+  // ── Brands coverage ──
+  const brandDefs = [
+    { name: 'FiberHome', color: '#22c55e', techs: ['FTTH'] },
+    { name: 'Coherent / Finisar', color: '#38bdf8', techs: ['HFC'] },
+  ];
+  let brandsHtml = '';
+  brandDefs.forEach(b => {
+    const matching = cards.filter(c => b.techs.some(t => (c.tech||'').toUpperCase().includes(t)));
+    const bScanned = matching.filter(c => h[c.id]).length;
+    const bPct = matching.length ? Math.round((bScanned / matching.length) * 100) : 0;
+    brandsHtml += `
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="font-size:13px;font-weight:600;color:#1e293b;">${b.name}</div>
+          <div style="font-size:12px;color:#64748b;">${bScanned} / ${matching.length} · <strong style="color:${b.color}">${bPct}%</strong></div>
+        </div>
+        <div style="height:10px;background:#f1f5f9;border-radius:99px;overflow:hidden;">
+          <div style="height:100%;width:${bPct}%;background:${b.color};border-radius:99px;transition:width .6s ease;"></div>
+        </div>
+      </div>`;
+  });
+  // Overall bar
+  brandsHtml = `
+    <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #f1f5f9;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;color:#1e293b;">📋 Total base</div>
+        <div style="font-size:12px;color:#64748b;">${scanned} / ${total} · <strong style="color:#1e40af">${pct}%</strong></div>
+      </div>
+      <div style="height:14px;background:#f1f5f9;border-radius:99px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#1e40af,#3b82f6);border-radius:99px;transition:width .6s ease;"></div>
+      </div>
+    </div>` + brandsHtml;
+  document.getElementById('cob-brands').innerHTML = brandsHtml;
+
+  // ── By etapa ──
+  const etapas = ['conversacion','contactado','propuesta','ganado','frio','prospecto'];
+  const etapaColors = { conversacion:'#3b82f6', contactado:'#f59e0b', propuesta:'#8b5cf6', ganado:'#22c55e', frio:'#94a3b8', prospecto:'#f97316' };
+  const etapaLabels = { conversacion:'Conversación', contactado:'Contactado', propuesta:'Propuesta', ganado:'Ganado', frio:'Frío', prospecto:'Prospecto' };
+  let etapaHtml = '';
+  etapas.forEach(e => {
+    const group = cards.filter(c => c.etapa === e);
+    if (!group.length) return;
+    const gs = group.filter(c => h[c.id]).length;
+    const gp = Math.round((gs / group.length) * 100);
+    etapaHtml += `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="min-width:90px;font-size:12px;color:#475569;">${etapaLabels[e]}</div>
+        <div style="flex:1;height:8px;background:#f1f5f9;border-radius:99px;overflow:hidden;">
+          <div style="height:100%;width:${gp}%;background:${etapaColors[e]};border-radius:99px;"></div>
+        </div>
+        <div style="min-width:60px;text-align:right;font-size:12px;color:#475569;">${gs}/${group.length}</div>
+      </div>`;
+  });
+  document.getElementById('cob-etapas').innerHTML = etapaHtml || '<p style="color:#94a3b8;font-size:13px;">Sin datos</p>';
+
+  // ── Age distribution ──
+  const buckets = [
+    { label: 'Hoy',       color: '#22c55e', count: cards.filter(c => h[c.id] && (Date.now()-h[c.id]) < 86400000).length },
+    { label: '2–7 días',  color: '#3b82f6', count: cards.filter(c => h[c.id] && (Date.now()-h[c.id]) >= 86400000 && (Date.now()-h[c.id]) < 7*86400000).length },
+    { label: '8–30 días', color: '#f59e0b', count: cards.filter(c => h[c.id] && (Date.now()-h[c.id]) >= 7*86400000 && (Date.now()-h[c.id]) < 30*86400000).length },
+    { label: '+30 días',  color: '#ef4444', count: cards.filter(c => h[c.id] && (Date.now()-h[c.id]) >= 30*86400000).length },
+    { label: 'Sin IA',    color: '#94a3b8', count: never },
+  ];
+  const maxBucket = Math.max(...buckets.map(b => b.count), 1);
+  let ageHtml = '';
+  buckets.forEach(b => {
+    const w = Math.round((b.count / maxBucket) * 100);
+    ageHtml += `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="min-width:72px;font-size:12px;color:#475569;">${b.label}</div>
+        <div style="flex:1;height:8px;background:#f1f5f9;border-radius:99px;overflow:hidden;">
+          <div style="height:100%;width:${w}%;background:${b.color};border-radius:99px;"></div>
+        </div>
+        <div style="min-width:30px;text-align:right;font-size:12px;font-weight:700;color:${b.color};">${b.count}</div>
+      </div>`;
+  });
+  document.getElementById('cob-age').innerHTML = ageHtml;
+
+  // ── Pending priority list ──
+  const etapaPri = { ganado:5, propuesta:4, conversacion:3, contactado:2, prospecto:1, frio:0 };
+  const pending = cards
+    .sort((a,b) => {
+      const ageA = h[a.id] ? Date.now() - h[a.id] : Infinity;
+      const ageB = h[b.id] ? Date.now() - h[b.id] : Infinity;
+      if (ageA === Infinity && ageB !== Infinity) return -1;
+      if (ageB === Infinity && ageA !== Infinity) return 1;
+      if (ageA === Infinity && ageB === Infinity) return (b.score||0) - (a.score||0);
+      return ageB - ageA; // oldest first
+    })
+    .slice(0, 20);
+
+  let pendHtml = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+  pending.forEach((c, i) => {
+    const ago = h[c.id] ? Math.floor((Date.now()-h[c.id])/86400000) : null;
+    const badge = ago === null
+      ? '<span style="font-size:10px;padding:2px 8px;border-radius:8px;background:#422006;color:#fb923c;font-weight:700;">⚡ Sin IA</span>'
+      : ago === 0 ? '<span style="font-size:10px;padding:2px 8px;border-radius:8px;background:#052e16;color:#4ade80;font-weight:700;">Hoy</span>'
+      : `<span style="font-size:10px;padding:2px 8px;border-radius:8px;background:#fef3c7;color:#92400e;font-weight:700;">Hace ${ago}d</span>`;
+    const rank = i < 5 ? `<span style="font-size:10px;font-weight:800;color:#ef4444;min-width:16px;">#${i+1}</span>` : `<span style="font-size:10px;color:#94a3b8;min-width:16px;">#${i+1}</span>`;
+    pendHtml += `
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;">
+        ${rank}
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.empresa}</div>
+          <div style="font-size:10px;color:#64748b;">${c.etapa} · score ${c.score}</div>
+        </div>
+        ${badge}
+      </div>`;
+  });
+  pendHtml += '</div>';
+  document.getElementById('cob-pending').innerHTML = pendHtml;
+}
+
+function cobKpi(label, value, color, icon) {
+  return `
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+      <div style="font-size:24px;margin-bottom:6px;">${icon}</div>
+      <div style="font-size:28px;font-weight:800;color:${color};line-height:1;">${value}</div>
+      <div style="font-size:12px;color:#64748b;margin-top:4px;font-weight:600;">${label}</div>
+    </div>`;
 }
 
 // ─── DASHBOARD DATA ───────────────────────────────────────────────────────────
