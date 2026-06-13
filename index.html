@@ -1344,53 +1344,60 @@ const COHERENT_CONTEXT = BRAND_INTEL_COHERENT;
 
 // ─── PM TRAINING: PRODUCT MAPPING (reemplazos e upgrades) ────────────────────
 const PRODUCT_MAPPING_FH = `
-## TABLA DE REEMPLAZOS Y UPGRADES — FiberHome (PM FiberHome debe conocer de memoria)
+## ESTRATEGIA COMERCIAL FIBERHOME — Horizon Trading (PM debe conocer de memoria)
 
-### OLT COMPATIBLE — MA5800 (Huawei) — el 80% del mercado local
-La OLT más usada en Argentina es la Huawei MA5800-X2/X7/X15/X17.
-FiberHome ONTs son GPON estándar ITU-T G.984 → 100% interoperables con MA5800.
-No requieren licencia, no requieren registro previo en la OLT si se usa modo OMCI estándar.
-Argumento clave de venta: "Son tan compatibles como las Huawei, sin pagar precio Huawei."
+### PRIORIDAD 1 (OPORTUNIDAD PRINCIPAL) — ODN / PASIVOS / FIBRA ÓPTICA
+Esta es la oportunidad universal: aplica a TODO ISP, independientemente de qué OLT usa.
+No competimos contra Huawei ni ZTE en activos — competimos en planta externa donde no hay marca dominante.
 
-### OLT COMPATIBLE — ZTE C300/C600/C650 (minoría, pero existente)
-También compatibles al 100% con ONTs FiberHome en modo GPON estándar.
-Mismo argumento de interoperabilidad.
+**CATÁLOGO ODN FiberHome disponible:**
+- Cable ADSS troncal: AS80 12F / 24F / 48F / 144F (precio desde 0.68 USD/m lista)
+- Cable drop 1F FRP compacto: 0.11 USD/m lista — el más vendido para última milla
+- Conectores SC/APC EASYCONNS IP68: para empalme en campo sin fusión → argumento: velocidad de instalación
+- FOSC-220J caja de empalme troncal: hasta 144F, re-entrada sin cortar cable → para troncales
+- FitDP NAP boxes outdoor IP68: FitDP-461C (compacta) / FitDP-462A — para distribución en barrio
+- PLC Splitters 1x8 / 1x16 / 1x32 — para distribución GPON desde la NAP
+- Solución pre-connectorizada (EASYCONNS): reduce tiempo de instalación 60%, sin fusionadora
 
-### MAPA DE REEMPLAZOS (histórico → nuevo)
+**Señales de oportunidad ODN en notas del cliente:**
+"instalando", "desplegando", "nueva zona", "tendido", "planta externa", "expansión",
+"nuevo barrio", "cables", "fibra", "empalmando", "nap", "empalme", "ultima milla", "drop"
+→ Si detectás alguna de estas señales: proponer kit ODN completo
 
-| Producto histórico del cliente | Reemplazo FiberHome recomendado | Argumento principal |
+**Kit tipo para ISP en expansión:**
+1. Cable AS80 48F (rollo 4km) — troncal de barrio
+2. Cable drop 1F FRP — última milla a cada abonado
+3. FitDP-461C NAP boxes — 1 cada 16–32 abonados
+4. FOSC-220J — empalmes troncales
+5. PLC Splitters 1x16 — distribución GPON
+
+### PRIORIDAD 2 (RETENCIÓN) — ONTs FiberHome para clientes con OLT FiberHome
+Solo aplica a ISPs que ya tienen OLTs FiberHome propias.
+Objetivo: no perder el volumen existente, no ganar terreno agresivo.
+
+| ONT en cartera del ISP | Renovación recomendada | Argumento |
 |---|---|---|
-| ICON ONT single band (WiFi 4/5, 1GE) | **HG6145F3** (dual band AC1200) | Upgrade obligado: dual band 2.4+5GHz, misma OLT, sin reconfigurar |
-| Chinamobile ONT (blanco, básico) | **AN5506-04-F** o **HG6145F3** | Reemplazo directo mismo segmento; Chinamobile era Huawei disfrazado, FiberHome compatible |
-| ONT ZTE F601/F609 single band | **HG6145F3** (dual band) | El mercado ya exige dual band; el cliente ya perdió abonados por calidad WiFi |
-| ONT ZTE dual band básica | **HG6543D** (dual band AX1800 WiFi 6) | Upgrade tecnológico, diferenciación frente a competencia |
-| ONT Huawei HG8145V5 (gama media) | **HG6543D** o **HG6144F** | Mismo tier, mejor precio, sin romper red |
-| ONT Huawei HG8245 (gama alta) | **HG6144F** (4GE + 2POTS + WiFi 6) | Directo replacement premium, ideal para clientes corporativos del ISP |
-| Modem HFC / DOCSIS (ya obsoleto) | **HG6145F3** + propuesta migración FTTH | El ISP está en plena transición; proponer kit completo de conversión |
+| HG6145F3 (WiFi 6 dual band) | Reponer mismo modelo | Consistencia de red, sin reconfigurar OLT |
+| HG6543D (WiFi 5 dual band) | Upgrade a **HG6145F3** | El mercado ya adoptó WiFi 6, reducís quejas |
+| AN5506-01ABG (bridge) | Reponer igual o HG6145F3 | Bridge sigue siendo útil para clientes corporativos |
 
-### EXPANSIÓN DE OLT (no cambiar la OLT, agregar capacidad)
+### PRIORIDAD 3 (NICHO) — Venta de OLTs FiberHome a ISPs sin OLT propia
+Mercado muy reducido pero existe. Solo cerrar oportunidades que se presenten solas.
 
-| Situación del cliente | Propuesta FiberHome |
+| Situación | Propuesta |
 |---|---|
-| MA5800 con puertos GPON llenos | Placa **GPOA C+** (16 puertos, 2.040 USD) o **GPOA C++** (16p, 2.190 USD) |
-| Necesita más de 16p adicionales | **OLT AN6001-G16** (16p GPON nueva OLT, 2.670 USD) — ideal segunda ubicación |
-| Despliegue masivo nuevo barrio | **OLT AN6000-7** (7 slots, escalable, 4.550 USD) + placas GPOA |
-| Proyecto grande llave en mano | **OLT AN6000-15** (15 slots, carrier grade, 4.850 USD) |
+| ISP pequeño sin OLT, empieza FTTH | OLT **AN6001-G16** (16p, 2.670 USD) — entrada accesible |
+| ISP mediano con MA5800 llena | Placa **GPOA C+** (16p, 2.040 USD) como alternativa de expansión |
+| Proyecto barrio nuevo llave en mano | OLT **AN6000-7** (7 slots, 4.550 USD) + placas + ODN completo |
 
-### INFERENCIA DE NECESIDAD ODN (si el cliente está instalando/desplegando)
-Señales en notas: "instalando", "desplegando", "nueva zona", "tendido", "planta externa"
-→ Proponer kit completo:
-1. Cable FiberHome AS80-S (48F más vendido: 1.50 USD/m) — rollo 4km
-2. Conectores SC/APC EASYCONNS IP68 para empalme en campo (sin fusión)
-3. NAP/FitDP outdoor IP68 (FitDP-461C o FitDP-462A para zonas compactas)
-4. FOSC-220J para empalmes troncales (hasta 144F, re-entrada sin cortar cable)
-5. Splitters PLC 1x8 o 1x16 según diseño de red
+### LO QUE NO HACER
+- ❌ NO intentar reemplazar ONTs Huawei o ZTE en ISPs que no son clientes de FiberHome — no es el momento
+- ❌ NO proponer OLTs como apertura de conversación en ISPs con OLT competidora ya instalada
+- ❌ La oportunidad de activos (ONTs) en clientes de Huawei/ZTE es marginal — priorizá siempre ODN primero
 
-### INFERENCIA DE NECESIDAD DE SFP PARA UPLINKS DE OLT
-ISPs con MA5800 o ZTE C300 necesitan SFPs para el uplink al core de red.
-→ Derivar al PM de Coherent/Finisar para cotizar:
-- FTLX8574D3BCL (10G MM 300m): para tramos cortos datacenter/central
-- FTLX1475D3BCL (10G SM 10km): para uplinks a nodo o PoP
+### COHERENT/FINISAR — si el cliente tiene perfil carrier
+Si detectás señales carrier (backbone, larga distancia, datacenter, DWDM, 100G):
+→ Derivar al PM de Coherent/Finisar — esa oportunidad no es de esta línea
 `;
 
 // ─── PM TRAINING: COHERENT CARRIER INTEL ─────────────────────────────────────
@@ -1447,27 +1454,27 @@ function extractClientSignals(client) {
     keySignal: '',       // señal más relevante para el prompt
   };
 
-  // Productos históricos
-  if (/\bicon\b/.test(notas))        { signals.prevProducts.push('ONT ICON single band'); signals.replacements.push('HG6145F3 dual band (reemplazo directo, upgrade WiFi)'); }
-  if (/chinamobile/.test(notas))     { signals.prevProducts.push('ONT Chinamobile'); signals.replacements.push('AN5506-04-F o HG6145F3 (reemplazo compatible)'); }
-  if (/\bzte\b/.test(notas))         { signals.prevProducts.push('ONT/OLT ZTE'); signals.replacements.push('HG6145F3 dual band o HG6543D WiFi 6 según gama'); }
-  if (/huawei oficial/.test(notas))  { signals.prevProducts.push('ONT Huawei oficial'); signals.replacements.push('HG6543D o HG6144F (mismo tier, mejor precio)'); }
-  if (/modem|hfc|docsis/.test(notas)){ signals.prevProducts.push('Modems HFC/DOCSIS'); signals.replacements.push('HG6145F3 + propuesta migración FTTH end-to-end'); }
-  if (/dual band/.test(notas))       { signals.prevProducts.push('ya adoptó dual band'); signals.replacements.push('HG6543D WiFi 6 para diferenciación premium'); }
-  if (/placa|gpoa|c300|c600/.test(notas)) { signals.prevProducts.push('placas OLT'); signals.replacements.push('GPOA C+ o GPOA C++ para expansión MA5800'); }
+  // P1: Señales de despliegue ODN (prioridad máxima — aplica a cualquier ISP)
+  if (/instalando|desplegando|nueva zona|tendido|planta externa|expansi[oó]n|nuevo barrio|empalmando|\bnap\b|empalme|ultima milla|\bdrop\b|\bfibra\b/.test(notas)) {
+    signals.needsODN = true;
+    signals.prevProducts.push('en despliegue activo de red');
+    signals.replacements.push('Kit ODN completo: cable AS80, drop 1F, FitDP NAP, FOSC-220J, splitters PLC');
+  }
 
-  // OLT detectada
+  // P2: Retención — ONTs FiberHome existentes
+  if (/fiberhome|hg6145|hg6543|an5506|an6001|an6000/.test(notas)) {
+    signals.prevProducts.push('cliente FiberHome activo');
+    signals.replacements.push('Reponer HG6145F3 o upgrade según gama (retención)');
+  }
+
+  // P3: OLT detectada (contexto, no para pitch agresivo)
   if (/ma5800|ma 5800/.test(notas))  signals.oltType = 'Huawei MA5800';
   else if (/ma5600/.test(notas))     signals.oltType = 'Huawei MA5600 (legacy)';
   else if (/c300|c600|c650/.test(notas) && /zte/.test(notas)) signals.oltType = 'ZTE C300/C600';
+  else if (/olt fiberhome|an6000|an6001/.test(notas)) signals.oltType = 'FiberHome OLT';
 
-  // Despliegue activo
-  if (/instalando|desplegando|nueva zona|tendido|planta externa|expansi[oó]n/.test(notas)) {
-    signals.needsODN = true;
-  }
-
-  // Necesidad SFP/carrier
-  if (/backbone|larga distancia|datacenter|dwdm|100g|400g|enlace|carrier|anillo|pop|nodo core/.test(notas) || tech.includes('CARRIER')) {
+  // Señales carrier → derivar a Coherent
+  if (/backbone|larga distancia|datacenter|dwdm|100g|400g|enlace|carrier|anillo|pop|nodo core/.test(notas) || tech.includes('CARRIER') || tech.includes('HFC')) {
     signals.needsSFP = true;
     signals.isCarrier = true;
   }
@@ -1480,12 +1487,12 @@ function extractClientSignals(client) {
   if (/urgente|ya|ahora|r[aá]pido|inmediato|necesita/.test(notas)) signals.urgency = 'alta';
   if (/fr[ií]o|no responde|desaparece|hace mucho/.test(notas)) signals.urgency = 'baja';
 
-  // Key signal summary para prompt
+  // Key signal summary para prompt (orden: ODN primero, luego retención, luego contexto)
   const parts = [];
+  if (signals.needsODN) parts.push('⚡ OPORTUNIDAD ODN: cliente en despliegue → proponer kit completo pasivos');
+  if (signals.prevProducts.length) parts.push(`Señales: ${signals.prevProducts.join(', ')}`);
+  if (signals.replacements.length) parts.push(`Propuesta: ${signals.replacements.join(' / ')}`);
   if (signals.oltType) parts.push(`OLT detectada: ${signals.oltType}`);
-  if (signals.prevProducts.length) parts.push(`Histórico: ${signals.prevProducts.join(', ')}`);
-  if (signals.replacements.length) parts.push(`Upgrade path: ${signals.replacements.join(' / ')}`);
-  if (signals.needsODN) parts.push('SEÑAL ACTIVA: cliente en despliegue → necesita ODN completa');
   if (signals.isCarrier) parts.push('PERFIL CARRIER → derivar a Coherent para SFPs backbone');
   if (signals.sensitivity) parts.push(`Sensible a: ${signals.sensitivity}`);
   signals.keySignal = parts.join(' | ');
