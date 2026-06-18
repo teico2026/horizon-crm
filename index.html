@@ -2696,7 +2696,7 @@ Respuesta en español, máximo 230 palabras. Incluí precio de referencia del pr
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
+          model: 'claude-haiku-4-5',
           messages: [{ role: 'user', content: prompt }],
           max_tokens: 400
         })
@@ -2809,12 +2809,12 @@ Reglas:
     fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: emailPrompt }], max_tokens: 300 })
+      body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: emailPrompt }], max_tokens: 300 })
     }),
     fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: waPrompt }], max_tokens: 200 })
+      body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: waPrompt }], max_tokens: 200 })
     })
   ]);
 
@@ -3452,7 +3452,7 @@ Respuesta en español, máximo 150 palabras. Sé muy concreto y accionable.`;
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: prompt }], max_tokens: 300 })
+      body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: prompt }], max_tokens: 300 })
     });
     const data = await res.json();
     if (data.content) {
@@ -3648,7 +3648,7 @@ ARGUMENTO: [1 línea — qué le decís al cliente para cerrar]`;
         const res = await fetchWithTimeout('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: prompt }], max_tokens: 200 })
+          body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: prompt }], max_tokens: 200 })
         });
         const data = await res.json();
         const el = document.getElementById('cross-' + brandId + '-' + client.id);
@@ -3755,7 +3755,7 @@ Respuesta en español, máximo 60 palabras. Sé muy concreto.`;
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: prompt }], max_tokens: 200 })
+        body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: prompt }], max_tokens: 200 })
       });
       const data = await res.json();
       if (data.content) {
@@ -4095,7 +4095,7 @@ async function amRunMessage(card, userText, addToHistory) {
       method: 'POST',
       headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-haiku-4-5',
         system: systemPrompt,
         messages,
         max_tokens: 1200,
@@ -4238,7 +4238,7 @@ Respuesta en español, máximo 250 palabras. Incluí números reales.`
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: s.prompt }], max_tokens: 400 })
+        body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: s.prompt }], max_tokens: 400 })
       });
       const data = await res.json();
       const el = document.getElementById(s.id);
@@ -4331,7 +4331,7 @@ Respuesta en español, máximo 200 palabras. Muy específico y accionable.`
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', messages: [{ role: 'user', content: s.prompt }], max_tokens: 400 })
+        body: JSON.stringify({ model: 'claude-haiku-4-5', messages: [{ role: 'user', content: s.prompt }], max_tokens: 400 })
       });
       const data = await res.json();
       const el = document.getElementById(s.id);
