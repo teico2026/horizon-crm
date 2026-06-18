@@ -800,6 +800,15 @@
       <label class="form-label">Notas</label>
       <input class="form-input" id="f-notas" placeholder="Contexto, oportunidad, próximo paso..." />
     </div>
+    <div id="pm-section" style="margin-top:12px;padding:12px;background:#0f172a;border-radius:8px;border:1px solid #1e293b;">
+      <div style="color:#64748b;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📦 Product Match IA</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" onclick="openPM('fiberhome')" style="flex:1;min-width:120px;padding:8px;background:#1e3a5f;border:1px solid #1d4ed8;border-radius:8px;color:#93c5fd;font-size:12px;font-weight:600;cursor:pointer;">🌐 PM Fiberhome</button>
+        <button type="button" onclick="openPM('coherent')" style="flex:1;min-width:120px;padding:8px;background:#1a2535;border:1px solid #334155;border-radius:8px;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;">📡 PM Coherent</button>
+        <button type="button" onclick="openPM('unirim')" style="flex:1;min-width:120px;padding:8px;background:#1a2535;border:1px solid #334155;border-radius:8px;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;">🔗 PM Unirim</button>
+      </div>
+      <div id="pm-result" style="margin-top:10px;font-size:12px;color:#cbd5e1;line-height:1.6;display:none;background:#020617;border-radius:6px;padding:10px;max-height:180px;overflow-y:auto;"></div>
+    </div>
     <div style="display:flex;gap:10px;margin-top:8px">
       <button class="btn btn-ghost" onclick="closeModal()" style="flex:1">Cancelar</button>
       <button class="btn btn-primary" onclick="saveCard()" style="flex:2">Guardar oportunidad</button>
@@ -932,11 +941,12 @@ function buildCard(c) {
       </div>
       <div class="card-actions">
         <button class="card-btn" onclick="editCard('${c.id}')" title="Editar">✏️</button>
-        <button class="card-btn agent-btn" onclick="toggleAgent('${c.id}')" title="Agente IA">🤖</button>
-        <button class="card-btn outreach-btn" onclick="openOutreach('${c.id}')" title="Generar outreach">✉️</button>
         <button class="card-btn account-btn" onclick="openAccountIntel('${c.id}')" title="Account Intelligence">🏢</button>
         <button class="card-btn persona-btn" onclick="openPersonaIntel('${c.id}')" title="Perfil Decisor">👤</button>
+        <button class="card-btn" style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0;" onclick="openOutreach('${c.id}','wa')" title="WhatsApp">💬</button>
+        <button class="card-btn outreach-btn" onclick="openOutreach('${c.id}','email')" title="Email">✉️</button>
         <button class="card-btn" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;font-size:11px;padding:4px 8px;border-radius:6px;font-weight:700;" onclick="openAccountManager('${c.id}')" title="Account Manager IA">👔 AM</button>
+        <button class="card-btn" style="background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;font-size:11px;padding:4px 8px;border-radius:6px;font-weight:700;" onclick="alert('OPP próximamente')" title="Oportunidades IA">⚡ OPP</button>
         <button class="card-btn" onclick="deleteCard('${c.id}')" title="Eliminar">🗑️</button>
       </div>
     </div>
@@ -1103,6 +1113,43 @@ async function deleteCard(id) {
   if (error) { alert('Error al eliminar: ' + error.message); return; }
   cards = cards.filter(c => c.id !== id);
   render(currentFilter, currentSearch);
+}
+
+async function openPM(brand) {
+  const key = getClaudeKey();
+  if (!key) { openKeyModal(); return; }
+  const empresa = document.getElementById('f-empresa').value.trim() || 'este cliente';
+  const tech = document.getElementById('f-tech').value.trim() || '';
+  const notas = document.getElementById('f-notas').value.trim() || '';
+  const resultEl = document.getElementById('pm-result');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = '<span style="color:#64748b">⏳ Analizando match de productos...</span>';
+  const brandNames = { fiberhome: 'Fiberhome (ODN/FTTH/OLT)', coherent: 'Coherent (transceptores ópticos)', unirim: 'Unirim' };
+  const brandContext = brand === 'fiberhome' ? FIBERHOME_CONTEXT : brand === 'coherent' ? COHERENT_CONTEXT : 'Marca Unirim — portafolio de accesorios de red';
+  const prompt = `Sos asesor comercial de Horizon Trading. Analizá qué productos de ${brandNames[brand]} aplican mejor para el cliente ${empresa}.
+Tecnología del cliente: ${tech || 'no especificada'}
+Notas/contexto: ${notas.substring(0, 300) || 'sin notas'}
+Portafolio disponible: ${brandContext.substring(0, 600)}
+Respondé en formato:
+🎯 TOP 3 PRODUCTOS RECOMENDADOS:
+1. [Modelo] — [razón concreta en 1 línea]
+2. [Modelo] — [razón concreta en 1 línea]  
+3. [Modelo] — [razón concreta en 1 línea]
+💡 ARGUMENTO DE VENTA: [1 párrafo corto, directo]
+Sé específico con modelos y precios si los conocés.`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5', system: 'Sos asesor comercial experto en telecomunicaciones para ISPs en Argentina.', messages: [{ role: 'user', content: prompt }], max_tokens: 400 })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || 'Sin respuesta';
+    resultEl.innerHTML = text.replace(/
+/g, '<br>');
+  } catch(e) {
+    resultEl.innerHTML = '❌ Error: ' + e.message;
+  }
 }
 
 // ─── PRODUCT KNOWLEDGE ───────────────────────────────────
@@ -2738,7 +2785,7 @@ function closeOutreach() {
   document.getElementById('outreach-modal').style.display = 'none';
 }
 
-async function openOutreach(id) {
+async function openOutreach(id, tab='email') {
   const key = getClaudeKey();
   if (!key) { openKeyModal(); return; }
 
@@ -2754,7 +2801,7 @@ async function openOutreach(id) {
   emailEl.innerHTML = '<span style="color:#64748b">⏳ Generando mail...</span>';
   waEl.innerHTML = '<span style="color:#64748b">⏳ Generando WhatsApp...</span>';
   modal.style.display = 'flex';
-  switchTab('email');
+  switchTab(tab);
 
   // Get agent context if available
   const agentResult = document.getElementById('agent-result-' + id);
@@ -3942,52 +3989,28 @@ function amBuildSystemPrompt(card) {
   const intel     = amFindIntel(card.empresa);
   const histLine  = amFindHistory(card.empresa);
   const techUpper = (card.tech || '').toUpperCase();
-  // Inyectar memoria completa de marca según tecnología del cliente
-  const brandCtx  = (techUpper.includes('FTTH') ? BRAND_INTEL_FH : '') +
-                    (techUpper.includes('HFC') ? '\n' + COHERENT_CONTEXT : '') +
-                    (!techUpper.includes('FTTH') && !techUpper.includes('HFC') ? BRAND_INTEL_FH + '\n' + COHERENT_CONTEXT.substring(0, 800) : '');
+  // Contexto de producto recortado según tecnología
+  const brandCtx = techUpper.includes('FTTH')
+    ? BRAND_INTEL_FH.substring(0, 400)
+    : techUpper.includes('HFC') || techUpper.includes('CARRIER')
+    ? COHERENT_CONTEXT.substring(0, 400)
+    : BRAND_INTEL_FH.substring(0, 250) + '\n' + COHERENT_CONTEXT.substring(0, 250);
 
-  return `Sos el Account Manager senior de Horizon Trading, asignado exclusivamente a la cuenta de ${card.empresa}.
-Tu rol es ser el especialista más completo de esta cuenta: conocés cada detalle de la relación comercial, el historial, los contactos, los riesgos y las oportunidades. Respondés en español, de forma directa, ejecutiva y accionable. Sin paja.
+  return `Sos el Account Manager de Horizon Trading para la cuenta ${card.empresa}. Respondés en español, directo y accionable.
 
-═══ DATOS DEL CLIENTE ═══
-Empresa: ${card.empresa}
-Tipo: ${card.tipo}
-Tecnología: ${card.tech || 'No especificada'}
-Etapa CRM: ${card.etapa}
-Score: ${card.score || '—'}/5
-Contacto principal: ${card.contacto || 'Sin datos'}
-Celular: ${card.cel || '—'}
-Email: ${card.email || '—'}
-Notas CRM: ${card.notas || 'Sin notas'}
+CLIENTE: ${card.empresa} | ${card.tipo} | Tech: ${card.tech || 'N/E'} | Etapa: ${card.etapa} | Score: ${card.score || '—'}/5
+Contacto: ${card.contacto || '—'} | Cel: ${card.cel || '—'} | Email: ${card.email || '—'}
+Notas: ${(card.notas || 'Sin notas').substring(0, 300)}
 
-═══ HISTORIAL DE COMPRAS HORIZON (2020-2026) ═══
-${histLine || 'Sin historial previo con Horizon — potencial cliente nuevo.'}
+HISTORIAL: ${histLine || 'Sin historial previo.'}
+PIPELINE: Objetivo ${pipeline ? 'USD '+pipeline.proyectado.toLocaleString('es-AR') : 'N/A'} | Vendido ${pipeline ? 'USD '+pipeline.real.toLocaleString('es-AR') : '—'} | ${pipeline && pipeline.proyectado > 0 ? (pipeline.real/pipeline.proyectado*100).toFixed(0)+'%' : '—'}
+H2: ${h2 ? 'USD '+Math.round(h2.monto*h2.prob).toLocaleString('es-AR')+' ('+Math.round(h2.prob*100)+'%) — '+h2.nota : 'Sin deal H2'}
+INTEL: ${(intel || 'Sin datos').substring(0, 300)}
 
-═══ PIPELINE 2026 ═══
-Objetivo anual: ${pipeline ? 'USD ' + pipeline.proyectado.toLocaleString('es-AR') : 'No asignado'}
-Vendido H1 2026: ${pipeline ? 'USD ' + pipeline.real.toLocaleString('es-AR') : '—'}
-Ejecución: ${pipeline && pipeline.proyectado > 0 ? (pipeline.real / pipeline.proyectado * 100).toFixed(1) + '%' : '—'}
-Forecast H2: ${h2 ? 'USD ' + Math.round(h2.monto * h2.prob).toLocaleString('es-AR') + ' esperados (' + Math.round(h2.prob*100) + '% prob) — ' + h2.nota : 'Sin deal H2 proyectado'}
+PORTFOLIO/STOCK: ${brandCtx}
+${HORIZON_STOCK.substring(0, 300)}
 
-═══ INTELIGENCIA COMERCIAL (base de conocimiento 2024) ═══
-${intel || 'Sin datos en la base de conocimiento.'}
-
-═══ STOCK DISPONIBLE PARA OFERTA INMEDIATA ═══
-${HORIZON_STOCK.substring(0, 1000)}
-
-═══ PORTFOLIO Y PRECIOS (Subdistribuidor / ISP VOL / Lista Regular) ═══
-${brandCtx}
-${HORIZON_PRICES.substring(0, 600)}
-
-═══ REGLAS DE TRABAJO ═══
-- Siempre que hables de números, citá fuentes: "según el historial", "en la proyección 2026", etc.
-- Si detectás un red flag (caída de consumo, silencio prolongado, dispersión de compras), nombrarlo explícitamente y sugerir una acción concreta.
-- Si el cliente tiene intel relacional, usala: mencioná los nombres de los contactos, su estilo de negociación, qué evitar.
-- Cuando sugieras un producto, siempre incluí modelo específico, precio de referencia según el segmento del cliente, y si hay stock.
-- Podés hacer búsquedas en internet para traer novedades recientes de la empresa, expansiones, licitaciones, o señales de compra.
-- Respondé de forma estructurada con bullet points o secciones cuando la respuesta es larga.
-- Si no tenés datos suficientes, decilo claramente y sugerí cómo conseguirlos.`;
+REGLAS: Citá fuentes. Nombrá red flags con acción concreta. Siempre modelo+precio+stock al sugerir producto. Bullets cuando la respuesta es larga.`;
 }
 
 // ── Open Account Manager ──────────────────────────────────────────────────────
@@ -4011,10 +4034,12 @@ function openAccountManager(id) {
   // Build brief panel
   amBuildBrief(card);
 
-  // Auto-generate initial brief via AI
-  const initPrompt = `Hacé un brief ejecutivo completo de la cuenta ${card.empresa} para un ejecutivo comercial que va a llamarla hoy. Incluí: 1) Situación actual y estado de la relación, 2) Red flags o señales de alerta detectadas, 3) Historial y tendencia de compras, 4) Quiénes son los decisores y cómo tratarlos, 5) La mejor oportunidad de venta concreta para hoy (producto, modelo, precio), 6) Primer paso recomendado. Sé directo y accionable.`;
-
-  amRunMessage(card, initPrompt, false);
+  // Show placeholder — no auto-call, user inicia la conversación
+  const container = document.getElementById('am-messages');
+  const placeholder = document.createElement('div');
+  placeholder.className = 'am-msg-am';
+  placeholder.innerHTML = `Listo para analizar <strong>${card.empresa}</strong>. Usá los botones de acción rápida o escribí tu pregunta.`;
+  container.appendChild(placeholder);
 }
 
 // ── Quick action ──────────────────────────────────────────────────────────────
