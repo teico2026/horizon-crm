@@ -872,13 +872,15 @@ async function initApp() {
   if (!session) { showLoginScreen(); return; }
 
   // Check allowlist
-  const { data: allowed } = await _supabase
+  const { data: allowed, error: allowErr } = await _supabase
     .from('allowed_emails')
     .select('email')
     .eq('email', session.user.email)
     .maybeSingle();
 
-  if (!allowed) {
+  console.log('[initApp] email:', session.user.email, 'allowed:', allowed, 'error:', allowErr);
+
+  if (!allowed && !allowErr) {
     document.getElementById('login-screen').innerHTML = `
       <div style="text-align:center;padding:40px;background:#1e293b;border-radius:16px;border:1px solid #334155;max-width:420px;">
         <div style="font-size:48px;margin-bottom:16px;">🚫</div>
