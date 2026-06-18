@@ -1129,8 +1129,7 @@ Sé específico con modelos y precios si los conocés.`;
     });
     const data = await resp.json();
     const text = data.content?.[0]?.text || 'Sin respuesta';
-    resultEl.innerHTML = text.replace(/
-/g, '<br>');
+    resultEl.innerHTML = text.replace(/\n/g, '<br>');
   } catch(e) {
     resultEl.innerHTML = '❌ Error: ' + e.message;
   }
