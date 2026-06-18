@@ -800,6 +800,16 @@
       <label class="form-label">Notas</label>
       <input class="form-input" id="f-notas" placeholder="Contexto, oportunidad, próximo paso..." />
     </div>
+    <div style="margin-top:4px;padding:12px;background:#0f1f0f;border-radius:8px;border:1px solid #166534;">
+      <div style="color:#4ade80;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">⚡ Próxima acción</div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <input class="form-input" id="f-proxima-accion" placeholder="Ej: Llamar para seguimiento propuesta, Enviar demo, Reunión técnica..." />
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" style="color:#86efac;font-size:11px;">Fecha límite</label>
+        <input class="form-input" type="date" id="f-proxima-accion-fecha" />
+      </div>
+    </div>
     <div id="pm-section" style="margin-top:12px;padding:12px;background:#0f172a;border-radius:8px;border:1px solid #1e293b;">
       <div style="color:#64748b;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📦 Product Match IA</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -932,6 +942,18 @@ function buildCard(c) {
       ${c.notas ? '<span class="tag" style="color:#f59e0b;border-color:#422006">💡 Oportunidad</span>' : ''}
     </div>
     ${c.notas ? `<div style="font-size:11px;color:#64748b;margin-bottom:8px;line-height:1.4">${c.notas.slice(0,80)}${c.notas.length>80?'…':''}</div>` : ''}
+    ${(()=>{
+      if (!c.proxima_accion) return '<div style="font-size:11px;padding:4px 8px;border-radius:6px;background:#1c1400;border:1px solid #713f12;color:#fbbf24;margin-bottom:8px;">⚠️ Sin próxima acción</div>';
+      const today = new Date().toISOString().split('T')[0];
+      const fecha = c.proxima_accion_fecha;
+      let bg, color, border, prefix;
+      if (!fecha) { bg='#0f172a'; color='#94a3b8'; border='#1e293b'; prefix='📌'; }
+      else if (fecha < today) { bg='#1f0606'; color='#f87171'; border='#7f1d1d'; prefix='🔴'; }
+      else if (fecha === today) { bg='#1c1400'; color='#fbbf24'; border='#713f12'; prefix='🟡'; }
+      else { bg='#0a1628'; color='#7dd3fc'; border='#1e3a5f'; prefix='🔵'; }
+      const label = fecha ? ` · ${fecha}` : '';
+      return `<div style="font-size:11px;padding:4px 8px;border-radius:6px;background:${bg};border:1px solid ${border};color:${color};margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${prefix} ${c.proxima_accion.slice(0,50)}${c.proxima_accion.length>50?'…':''}${label}</div>`;
+    })()}
     <div class="card-footer">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
         <span class="card-date">🕐 ${c.fecha}</span>
@@ -1003,6 +1025,7 @@ function initSortable() {
   const cols = ['frio','contactado','conversacion','propuesta','ganado','perdido'];
   cols.forEach(colId => {
     const el = document.getElementById('col-' + colId);
+    if (!el) return;
     if (el._sortable) el._sortable.destroy();
     el._sortable = Sortable.create(el, {
       group: 'cards',
@@ -1010,14 +1033,30 @@ function initSortable() {
       ghostClass: 'sortable-ghost',
       chosenClass: 'sortable-chosen',
       onEnd(evt) {
-        const cardId = parseInt(evt.item.dataset.id);
+        const cardId = evt.item.dataset.id; // UUID string, no parseInt
         const newCol = evt.to.dataset.col;
+        const oldCol = evt.from.dataset.col;
+        if (!cardId || newCol === oldCol) return;
         const card = cards.find(c => c.id === cardId);
-        if (card) {
-          card.etapa = newCol;
-          save();
-          render(currentFilter, currentSearch);
-        }
+        if (!card) return;
+        const prevEtapa = card.etapa;
+        // Optimistic update
+        card.etapa = newCol;
+        // Persist to Supabase in background
+        _supabase.from('clientes').update({ etapa: newCol }).eq('id', cardId)
+          .then(({ error }) => {
+            if (error) {
+              console.error('Error saving etapa:', error);
+              card.etapa = prevEtapa; // revert
+              render(currentFilter, currentSearch);
+              alert('Error al mover la tarjeta. Se revirtió el cambio.');
+            }
+          });
+        // Update counts without full re-render (card already moved in DOM)
+        const cntOld = document.getElementById('count-' + oldCol);
+        const cntNew = document.getElementById('count-' + newCol);
+        if (cntOld) cntOld.textContent = Math.max(0, (parseInt(cntOld.textContent)||0) - 1);
+        if (cntNew) cntNew.textContent = (parseInt(cntNew.textContent)||0) + 1;
       }
     });
   });
@@ -1050,6 +1089,8 @@ function openModal(etapa) {
   document.getElementById('f-email').value = '';
   document.getElementById('f-tech').value = '';
   document.getElementById('f-notas').value = '';
+  document.getElementById('f-proxima-accion').value = '';
+  document.getElementById('f-proxima-accion-fecha').value = '';
   document.getElementById('f-score').value = '4';
   if (etapa) document.getElementById('f-etapa').value = etapa;
   document.getElementById('modal').classList.add('open');
@@ -1073,6 +1114,8 @@ function editCard(id) {
   document.getElementById('f-tech').value = c.tech || '';
   document.getElementById('f-score').value = c.score || '4';
   document.getElementById('f-notas').value = c.notas || '';
+  document.getElementById('f-proxima-accion').value = c.proxima_accion || '';
+  document.getElementById('f-proxima-accion-fecha').value = c.proxima_accion_fecha || '';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -1089,6 +1132,8 @@ async function saveCard() {
     tech: document.getElementById('f-tech').value.trim(),
     score: parseInt(document.getElementById('f-score').value),
     notas: document.getElementById('f-notas').value.trim(),
+    proxima_accion: document.getElementById('f-proxima-accion').value.trim() || null,
+    proxima_accion_fecha: document.getElementById('f-proxima-accion-fecha').value || null,
     fecha: new Date().toISOString().split('T')[0],
   };
   if (editingId) {
