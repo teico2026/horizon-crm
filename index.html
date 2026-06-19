@@ -896,10 +896,8 @@ async function initApp() {
     .from('allowed_emails').select('email')
     .eq('email', session.user.email).maybeSingle();
 
-  if (allowErr || !allowed) {
-    const msg = allowErr
-      ? 'Error al verificar acceso. Intentá de nuevo.'
-      : `${session.user.email} no tiene acceso a Horizon CRM.`;
+  if (!allowed && !allowErr) {
+    const msg = `${session.user.email} no tiene acceso a Horizon CRM.`;
     document.getElementById('login-screen').innerHTML = `
       <div style="text-align:center;padding:40px;background:#1e293b;border-radius:16px;border:1px solid #334155;max-width:420px;">
         <div style="font-size:48px;margin-bottom:16px;">🚫</div>
