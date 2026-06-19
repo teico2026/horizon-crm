@@ -3901,11 +3901,13 @@ function closeAM() {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function amFindPipeline(empresa) {
-  const key = empresa.toLowerCase().substring(0, 8);
-  for (const [name, data] of Object.entries(PIPELINE_2026.porCliente)) {
-    if (name.toLowerCase().includes(key) || key.includes(name.toLowerCase().substring(0, 6))) return { name, ...data };
-  }
-  return null;
+  // Lee de Supabase (cards array) — fuente de verdad única
+  const card = cards.find(c => c.empresa === empresa);
+  if (!card) return null;
+  const real = Number(card.vendido2026) || 0;
+  const proyectado = Number(card.objetivo2026) || 0;
+  if (!real && !proyectado) return null;
+  return { name: empresa, real, proyectado };
 }
 
 function amFindH2(empresa) {
