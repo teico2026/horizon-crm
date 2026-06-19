@@ -891,17 +891,20 @@ async function initApp() {
   const { data: { session } } = await _supabase.auth.getSession();
   if (!session) { showLoginScreen(); return; }
 
-  // Check allowlist
+  // Check allowlist — fail-closed: cualquier duda bloquea
   const { data: allowed, error: allowErr } = await _supabase
     .from('allowed_emails').select('email')
     .eq('email', session.user.email).maybeSingle();
 
-  if (!allowed && !allowErr) {
+  if (allowErr || !allowed) {
+    const msg = allowErr
+      ? 'Error al verificar acceso. Intentá de nuevo.'
+      : `${session.user.email} no tiene acceso a Horizon CRM.`;
     document.getElementById('login-screen').innerHTML = `
       <div style="text-align:center;padding:40px;background:#1e293b;border-radius:16px;border:1px solid #334155;max-width:420px;">
         <div style="font-size:48px;margin-bottom:16px;">🚫</div>
         <h2 style="color:#f1f5f9;margin-bottom:8px;">Acceso no autorizado</h2>
-        <p style="color:#94a3b8;font-size:14px;margin-bottom:24px;">${session.user.email} no tiene acceso a Horizon CRM.</p>
+        <p style="color:#94a3b8;font-size:14px;margin-bottom:24px;">${msg}</p>
         <button onclick="signOut()" style="padding:10px 24px;background:#ef4444;border:none;border-radius:8px;color:white;font-size:14px;cursor:pointer;">Cerrar sesión</button>
       </div>`;
     document.getElementById('login-screen').style.display = 'flex';
