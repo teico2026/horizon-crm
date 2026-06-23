@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AM Report — Pogliotti & SITSA</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; }
+
+    .header {
+      background: #1B4F91;
+      padding: 32px 48px;
+      border-bottom: 4px solid #2D7DD2;
+    }
+    .header-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+    .header h1 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -.5px; }
+    .header h2 { font-size: 14px; color: rgba(255,255,255,.65); font-weight: 400; margin-top: 4px; }
+    .badge { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: .3px; }
+    .badge-conv { background: #f59e0b; color: #1c1400; }
+    .meta { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+    .meta-item { font-size: 13px; color: rgba(255,255,255,.75); }
+    .meta-item strong { color: #fff; display: block; font-size: 15px; font-weight: 700; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; display: flex; flex-direction: column; gap: 24px; }
+
+    .section { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .section-header { padding: 18px 24px 14px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px; }
+    .section-icon { font-size: 20px; }
+    .section-title { font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: .5px; }
+    .section-body { padding: 20px 24px; }
+
+    /* KPI row */
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .kpi { text-align: center; padding: 16px 12px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; }
+    .kpi-val { font-size: 22px; font-weight: 800; color: #1B4F91; line-height: 1; margin-bottom: 6px; }
+    .kpi-val.green { color: #16a34a; }
+    .kpi-val.amber { color: #d97706; }
+    .kpi-val.red { color: #dc2626; }
+    .kpi-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+
+    /* Stakeholders */
+    .stakeholders { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stakeholder { padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; }
+    .stakeholder-name { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .stakeholder-role { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+    .stakeholder-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+    .tag-decision { background: #fee2e2; color: #991b1b; }
+    .tag-ops { background: #dbeafe; color: #1e40af; }
+    .stakeholder-insight { font-size: 12px; color: #475569; line-height: 1.5; margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+
+    /* Risk/Opp items */
+    .item-list { display: flex; flex-direction: column; gap: 10px; }
+    .item { display: flex; gap: 12px; padding: 14px 16px; border-radius: 10px; align-items: flex-start; }
+    .item-high { background: #fff7ed; border: 1px solid #fed7aa; }
+    .item-med { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .item-low { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .item-warn { background: #fef2f2; border: 1px solid #fecaca; }
+    .item-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .item-content { flex: 1; }
+    .item-title { font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 3px; }
+    .item-desc { font-size: 12px; color: #64748b; line-height: 1.5; }
+
+    /* Next actions */
+    .actions-list { display: flex; flex-direction: column; gap: 8px; }
+    .action { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .action-num { width: 24px; height: 24px; border-radius: 50%; background: #1B4F91; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .action-text { flex: 1; font-size: 13px; color: #334155; font-weight: 500; }
+    .action-owner { font-size: 11px; color: #94a3b8; font-weight: 600; white-space: nowrap; }
+
+    /* Projection */
+    .proj-bar-wrap { margin-top: 10px; }
+    .proj-label { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 600; }
+    .proj-bar-bg { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .proj-bar-fill { height: 100%; border-radius: 99px; transition: width .6s; }
+
+    .footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 24px; }
+    .footer strong { color: #1B4F91; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Pogliotti & Pogliotti Construcciones S.A.</h1>
+      <h2>SITSA · ISP / Carrier · Córdoba, Argentina</h2>
+    </div>
+    <span class="badge badge-conv">💬 En Conversación</span>
+  </div>
+  <div class="meta">
+    <div class="meta-item"><strong>Franco Lazos</strong>Contacto operativo</div>
+    <div class="meta-item"><strong>FTTH / Carrier</strong>Tecnología activa</div>
+    <div class="meta-item"><strong>USD 663,273</strong>Historial total</div>
+    <div class="meta-item"><strong>⭐⭐⭐⭐⭐</strong>Score Horizon</div>
+    <div class="meta-item"><strong>Mayo 2026</strong>Última actividad</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPIs -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">📊</span>
+      <span class="section-title">Indicadores clave</span>
+    </div>
+    <div class="section-body">
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-val">$663K</div>
+          <div class="kpi-label">Historial USD</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-val amber">$0</div>
+          <div class="kpi-label">Vendido 2026</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-val amber">Sin dato</div>
+          <div class="kpi-label">Objetivo 2026</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-val green">5/5</div>
+          <div class="kpi-label">Score estratégico</div>
+        </div>
+      </div>
+      <div class="proj-bar-wrap" style="margin-top:20px;">
+        <div class="proj-label">Pipeline 2026 — ejecución estimada vs historial</div>
+        <div class="proj-bar-bg">
+          <div class="proj-bar-fill" style="width:0%;background:#f59e0b;"></div>
+        </div>
+        <p style="font-size:11px;color:#dc2626;margin-top:6px;">⚠️ Sin ventas registradas en 2026 a pesar de historial de USD 663K — cuenta en riesgo de enfriarse.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stakeholders -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">👥</span>
+      <span class="section-title">Mapa de stakeholders</span>
+    </div>
+    <div class="section-body">
+      <div class="stakeholders">
+        <div class="stakeholder">
+          <div class="stakeholder-name">Verónica</div>
+          <div class="stakeholder-role">Decisora real · Alta dirección</div>
+          <span class="stakeholder-tag tag-decision">🔑 Decisora</span>
+          <div class="stakeholder-insight">
+            Perfil altamente exigente y específico. No acepta márgenes de error. Las condiciones tienen que adaptarse completamente a su criterio. Llegó al radar de Horizon vía el grupo de compras Huawei. Relación trabajada pero con fricciones previas en intentos de venta anteriores. <strong>Sin ella, no hay cierre.</strong>
+          </div>
+        </div>
+        <div class="stakeholder">
+          <div class="stakeholder-name">Franco Lazos</div>
+          <div class="stakeholder-role">Contacto operativo · Técnico/Compras</div>
+          <span class="stakeholder-tag tag-ops">⚙️ Operativo</span>
+          <div class="stakeholder-insight">
+            Interlocutor directo del día a día. Canal para pruebas técnicas y feedback de campo. Manejado principalmente por Fede. Participó en las pruebas con BATCOM — feedback pendiente de cierre.
+            <br/><br/>📱 3512482514 · franco.lazos@sitsa.com.ar
+          </div>
+        </div>
+        <div class="stakeholder">
+          <div class="stakeholder-name">Jorge</div>
+          <div class="stakeholder-role">Stakeholder interno Horizon — pendiente de presentación</div>
+          <span class="stakeholder-tag" style="background:#ede9fe;color:#5b21b6;">🤝 A presentar</span>
+          <div class="stakeholder-insight">
+            Acción abierta: presentar Jorge a la cuenta. Puede fortalecer la relación institucional con Verónica y darle más peso a la propuesta de Horizon.
+          </div>
+        </div>
+        <div class="stakeholder">
+          <div class="stakeholder-name">Fede (Horizon)</div>
+          <div class="stakeholder-role">Account owner interno</div>
+          <span class="stakeholder-tag" style="background:#dcfce7;color:#15803d;">🎯 Owner</span>
+          <div class="stakeholder-insight">
+            Owner principal de la cuenta. Maneja la relación con Franco y tiene el contexto de las pruebas BATCOM. Es quien mejor puede definir las necesidades técnicas actuales y el próximo paso de cierre.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Oportunidades -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">⚡</span>
+      <span class="section-title">Oportunidades detectadas</span>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item item-high">
+          <div class="item-icon">🔥</div>
+          <div class="item-content">
+            <div class="item-title">Pruebas BATCOM — feedback abierto</div>
+            <div class="item-desc">Las pruebas con BATCOM están en curso o completadas y el feedback no se cerró formalmente. Este es el punto de palanca más inmediato: cerrar ese feedback y convertirlo en una propuesta concreta. Si el resultado fue positivo, es el argumento más fuerte para Verónica.</div>
+          </div>
+        </div>
+        <div class="item item-high">
+          <div class="item-icon">📡</div>
+          <div class="item-content">
+            <div class="item-title">Expansión FTTH — cuenta con historial probado</div>
+            <div class="item-desc">Con USD 663K de historial en FTTH/Carrier, Pogliotti-SITSA es una cuenta compradora activa. El cero de 2026 sugiere que hay un ciclo abierto sin cerrar, no que hayan dejado de comprar. Alta probabilidad de recompra en H2 2026 si se reactiva la relación correctamente.</div>
+          </div>
+        </div>
+        <div class="item item-med">
+          <div class="item-icon">🤝</div>
+          <div class="item-content">
+            <div class="item-title">Presentación de Jorge — fortalece la relación institucional</div>
+            <div class="item-desc">Verónica valora el trato personalizado y exige seriedad. Presentar a Jorge como referente de Horizon puede elevar el nivel de la relación y generar confianza. Acción de bajo costo, alto impacto relacional.</div>
+          </div>
+        </div>
+        <div class="item item-low">
+          <div class="item-icon">🌐</div>
+          <div class="item-content">
+            <div class="item-title">Canal Huawei — leverage del grupo de compras</div>
+            <div class="item-desc">La cuenta llegó al radar de Horizon vía el grupo de compras de Huawei. Este canal puede ser reactivado para posicionar nuevas soluciones (XGS-PON, equipos de próxima generación) antes que la competencia llegue con propuestas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Riesgos -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">⚠️</span>
+      <span class="section-title">Riesgos y fricciones</span>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item item-warn">
+          <div class="item-icon">🚨</div>
+          <div class="item-content">
+            <div class="item-title">Sin ventas en 2026 — cuenta en riesgo de enfriarse</div>
+            <div class="item-desc">Último movimiento: mayo 2026. Si no hay una acción concreta antes de fin de junio, la conversación puede caerse del pipeline. Una cuenta con USD 663K de historial sin actividad en el año es una señal de alerta.</div>
+          </div>
+        </div>
+        <div class="item item-warn">
+          <div class="item-icon">🧊</div>
+          <div class="item-content">
+            <div class="item-title">Perfil de Verónica — cero margen de error</div>
+            <div class="item-desc">Cualquier propuesta que llegue con datos inconsistentes, tiempos incumplidos o promesas no cerradas va a cerrar la puerta. La propuesta a Verónica tiene que ser impecable: precio firme, specs confirmadas, plazos reales.</div>
+          </div>
+        </div>
+        <div class="item item-warn">
+          <div class="item-icon">📋</div>
+          <div class="item-content">
+            <div class="item-title">Sin objetivo 2026 cargado</div>
+            <div class="item-desc">No hay target definido para esta cuenta en el CRM. Sin número objetivo, no hay forma de medir el avance ni de priorizar correctamente. Fede debería cerrar este dato esta semana.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximos pasos -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🎯</span>
+      <span class="section-title">Próximas acciones recomendadas</span>
+    </div>
+    <div class="section-body">
+      <div class="actions-list">
+        <div class="action">
+          <div class="action-num">1</div>
+          <div class="action-text">Cerrar feedback de pruebas BATCOM con Franco — esta semana</div>
+          <div class="action-owner">Fede</div>
+        </div>
+        <div class="action">
+          <div class="action-num">2</div>
+          <div class="action-text">Definir y cargar objetivo 2026 en el CRM para la cuenta</div>
+          <div class="action-owner">Fede + Matias</div>
+        </div>
+        <div class="action">
+          <div class="action-num">3</div>
+          <div class="action-text">Coordinar presentación de Jorge a Verónica — acción relacional</div>
+          <div class="action-owner">Matias</div>
+        </div>
+        <div class="action">
+          <div class="action-num">4</div>
+          <div class="action-text">Preparar propuesta formal para Verónica — specs confirmadas, precio firme, sin márgenes de error</div>
+          <div class="action-owner">Fede</div>
+        </div>
+        <div class="action">
+          <div class="action-num">5</div>
+          <div class="action-text">Cargar próxima acción en CRM con fecha límite para no perder el tracking</div>
+          <div class="action-owner">Fede</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Generado por <strong>Horizon CRM</strong> · Análisis AM basado en datos reales de Supabase · <strong>Confidencial</strong>
+</div>
+
+</body>
+</html>
