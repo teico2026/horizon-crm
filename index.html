@@ -768,12 +768,32 @@
       </div>
       <div class="form-group">
         <label class="form-label">Etapa</label>
-        <select class="form-select" id="f-etapa">
+        <select class="form-select" id="f-etapa" onchange="autoProb(this.value)">
           <option value="frio">🧊 Prospecto Frío</option>
           <option value="contactado">📞 Contactado</option>
           <option value="conversacion">💬 En Conversación</option>
           <option value="propuesta">📋 Propuesta Enviada</option>
           <option value="ganado">✅ Ganado</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">👤 Responsable (AM)</label>
+        <select class="form-select" id="f-responsable">
+          <option value="">— Sin asignar —</option>
+          <option value="Matías Taddei">Matías Taddei</option>
+          <option value="Federico Núñez">Federico Núñez</option>
+          <option value="Agustín Migues">Agustín Migues</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Score (1-5)</label>
+        <select class="form-select" id="f-score">
+          <option value="5">⭐⭐⭐⭐⭐ Muy alta</option>
+          <option value="4" selected>⭐⭐⭐⭐ Alta</option>
+          <option value="3">⭐⭐⭐ Media</option>
+          <option value="2">⭐⭐ Baja</option>
         </select>
       </div>
     </div>
@@ -791,24 +811,23 @@
         <input class="form-input" id="f-email" placeholder="mail@empresa.com" />
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Tecnología</label>
-        <input class="form-input" id="f-tech" placeholder="FTTH, HFC, GPON..." />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Score (1-5)</label>
-        <select class="form-select" id="f-score">
-          <option value="5">⭐⭐⭐⭐⭐ Muy alta</option>
-          <option value="4" selected>⭐⭐⭐⭐ Alta</option>
-          <option value="3">⭐⭐⭐ Media</option>
-          <option value="2">⭐⭐ Baja</option>
-        </select>
-      </div>
+    <div class="form-group">
+      <label class="form-label">Tecnología</label>
+      <input class="form-input" id="f-tech" placeholder="FTTH, HFC, GPON..." />
     </div>
     <div class="form-group">
       <label class="form-label">Notas</label>
       <input class="form-input" id="f-notas" placeholder="Contexto, oportunidad, próximo paso..." />
+    </div>
+    <div class="form-row" style="margin-top:4px;">
+      <div class="form-group">
+        <label class="form-label">💰 Valor oportunidad (USD)</label>
+        <input class="form-input" type="number" id="f-valor" placeholder="0" min="0" step="1000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">🎯 % Prob. cierre</label>
+        <input class="form-input" type="number" id="f-prob" placeholder="auto por etapa" min="0" max="100" step="5" oninput="this.dataset.auto='0'" />
+      </div>
     </div>
     <div style="margin-top:4px;padding:12px;background:#0f1f0f;border-radius:8px;border:1px solid #166534;">
       <div style="color:#4ade80;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">⚡ Próxima acción</div>
@@ -963,6 +982,7 @@ function buildCard(c) {
     <div class="card-footer">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
         <span class="card-date">🕐 ${c.fecha}</span>
+        ${c.responsable ? `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#0f2d5c;color:#7dd3fc;font-weight:600;border:1px solid #1e3a5f;">👤 ${c.responsable.split(' ')[0]}</span>` : ''}
         ${(()=>{const h=getScanHistory();const t=h[c.id];if(!t)return '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#422006;color:#fb923c;font-weight:600;">⚡ Sin IA</span>';const d=Math.floor((Date.now()-t)/86400000);if(d===0)return '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#052e16;color:#4ade80;font-weight:600;">🤖 Hoy</span>';if(d<=7)return `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#0c1a2e;color:#7dd3fc;font-weight:600;">🤖 ${d}d</span>`;return `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#1e1b4b;color:#a78bfa;font-weight:600;">🤖 ${d}d</span>`;})()}
       </div>
       <div class="card-actions">
@@ -1012,11 +1032,11 @@ function render(filter='all', search='') {
     }
     const cnt = document.getElementById('count-' + col);
     if (cnt) cnt.textContent = counts[col] || 0;
-    // USD total per stage
+    // Weighted pipeline value: Σ(valor_oportunidad × prob_cierre/100)
     vals[col] = cards.filter(c => c.etapa === col && (filter === 'all' || c.tipo === filter))
-                     .reduce((s,c) => s + (Number(c.objetivo2026)||0), 0);
+                     .reduce((s,c) => s + (Number(c.valor_oportunidad)||0) * (Number(c.prob_cierre)||0) / 100, 0);
     const valEl = document.getElementById('val-' + col);
-    if (valEl) valEl.textContent = vals[col] > 0 ? 'USD ' + vals[col].toLocaleString('en-US') : '—';
+    if (valEl) valEl.textContent = vals[col] > 0 ? 'USD ' + Math.round(vals[col]).toLocaleString('en-US') : '—';
   });
 
   // Stats
@@ -1088,6 +1108,16 @@ function searchCards(val) {
   render(currentFilter, currentSearch);
 }
 
+// ─── PROB AUTO POR ETAPA ─────────────────────────────────
+const ETAPA_PROB = { frio:10, contactado:25, conversacion:45, propuesta:65, ganado:100, perdido:0 };
+function autoProb(etapa) {
+  const el = document.getElementById('f-prob');
+  if (!el.value || el.dataset.auto === '1') {
+    el.value = ETAPA_PROB[etapa] || '';
+    el.dataset.auto = '1';
+  }
+}
+
 // ─── MODAL ───────────────────────────────────────────────
 let editingId = null;
 
@@ -1101,8 +1131,14 @@ function openModal(etapa) {
   document.getElementById('f-notas').value = '';
   document.getElementById('f-proxima-accion').value = '';
   document.getElementById('f-proxima-accion-fecha').value = '';
+  document.getElementById('f-valor').value = '';
+  document.getElementById('f-prob').value = '';
+  document.getElementById('f-prob').dataset.auto = '1';
+  document.getElementById('f-responsable').value = '';
   document.getElementById('f-score').value = '4';
-  if (etapa) document.getElementById('f-etapa').value = etapa;
+  const etapaEl = document.getElementById('f-etapa');
+  if (etapa) etapaEl.value = etapa;
+  autoProb(etapaEl.value);
   document.getElementById('modal').classList.add('open');
   document.getElementById('f-empresa').focus();
 }
@@ -1126,6 +1162,11 @@ function editCard(id) {
   document.getElementById('f-notas').value = c.notas || '';
   document.getElementById('f-proxima-accion').value = c.proxima_accion || '';
   document.getElementById('f-proxima-accion-fecha').value = c.proxima_accion_fecha || '';
+  document.getElementById('f-valor').value = c.valor_oportunidad || '';
+  const probEl = document.getElementById('f-prob');
+  probEl.value = c.prob_cierre != null ? c.prob_cierre : '';
+  probEl.dataset.auto = '0';
+  document.getElementById('f-responsable').value = c.responsable || '';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -1144,6 +1185,9 @@ async function saveCard() {
     notas: document.getElementById('f-notas').value.trim(),
     proxima_accion: document.getElementById('f-proxima-accion').value.trim() || null,
     proxima_accion_fecha: document.getElementById('f-proxima-accion-fecha').value || null,
+    valor_oportunidad: parseFloat(document.getElementById('f-valor').value) || null,
+    prob_cierre: document.getElementById('f-prob').value !== '' ? parseInt(document.getElementById('f-prob').value) : null,
+    responsable: document.getElementById('f-responsable').value || null,
     fecha: new Date().toISOString().split('T')[0],
   };
   if (editingId) {
