@@ -829,6 +829,19 @@
         <input class="form-input" type="number" id="f-prob" placeholder="auto por etapa" min="0" max="100" step="5" oninput="this.dataset.auto='0'" />
       </div>
     </div>
+    <div class="form-group" style="margin-top:4px;">
+      <label class="form-label">📍 Origen</label>
+      <select class="form-select" id="f-origen">
+        <option value="">— Sin especificar —</option>
+        <option value="reunion">Reunión</option>
+        <option value="referido">Referido</option>
+        <option value="prospecting">Prospecting IA</option>
+        <option value="inbound">Inbound</option>
+        <option value="evento">Evento</option>
+        <option value="linkedin">LinkedIn</option>
+        <option value="llamada">Llamada en frío</option>
+      </select>
+    </div>
     <div style="margin-top:4px;padding:12px;background:#0f1f0f;border-radius:8px;border:1px solid #166534;">
       <div style="color:#4ade80;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">⚡ Próxima acción</div>
       <div class="form-group" style="margin-bottom:8px;">
@@ -1135,6 +1148,7 @@ function openModal(etapa) {
   document.getElementById('f-prob').value = '';
   document.getElementById('f-prob').dataset.auto = '1';
   document.getElementById('f-responsable').value = '';
+  document.getElementById('f-origen').value = '';
   document.getElementById('f-score').value = '4';
   const etapaEl = document.getElementById('f-etapa');
   if (etapa) etapaEl.value = etapa;
@@ -1167,6 +1181,7 @@ function editCard(id) {
   probEl.value = c.prob_cierre != null ? c.prob_cierre : '';
   probEl.dataset.auto = '0';
   document.getElementById('f-responsable').value = c.responsable || '';
+  document.getElementById('f-origen').value = c.origen || '';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -1188,6 +1203,7 @@ async function saveCard() {
     valor_oportunidad: parseFloat(document.getElementById('f-valor').value) || null,
     prob_cierre: document.getElementById('f-prob').value !== '' ? parseInt(document.getElementById('f-prob').value) : null,
     responsable: document.getElementById('f-responsable').value || null,
+    origen: document.getElementById('f-origen').value || null,
     fecha: new Date().toISOString().split('T')[0],
   };
   if (editingId) {
