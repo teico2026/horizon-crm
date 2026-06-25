@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de acción — Situación SITSA / Pogliotti</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --line:#e6eaf0; --brand:#f97316; --brand-dark:#ea580c; --brand-soft:#fff7ed;
+    --ok:#16a34a; --ok-soft:#f0fdf4; --warn:#d97706; --warn-soft:#fffbeb;
+    --danger:#dc2626; --danger-soft:#fef2f2; --info:#2563eb; --info-soft:#eff6ff;
+    --chip:#f1f5f9;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:0; background:var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:28px 28px 60px}
+
+  /* ---- Topbar ---- */
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:6px 0 22px}
+  .brand{display:flex; align-items:center; gap:14px}
+  .brand .word{font-size:22px; font-weight:800; letter-spacing:.5px}
+  .brand .sep{color:var(--line); font-size:22px; font-weight:300}
+  .brand .crm{display:flex; align-items:center; gap:8px; font-size:15px; font-weight:700; color:#334155; letter-spacing:.5px}
+  .hex{width:26px; height:26px}
+  .topbar .ctx{font-size:12.5px; color:var(--muted); text-align:right}
+  .topbar .ctx b{color:#334155}
+
+  /* ---- Hero ---- */
+  .hero{
+    background:var(--panel); border:1px solid var(--line); border-radius:18px;
+    padding:24px 26px; box-shadow:0 1px 2px rgba(15,23,42,.04); margin-bottom:18px;
+  }
+  .hero .lab{font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); font-weight:700}
+  .hero h1{font-size:27px; margin:6px 0 4px; font-weight:800; letter-spacing:-.3px}
+  .hero .sub{font-size:13.5px; color:var(--muted)}
+  .kpis{display:flex; gap:14px; margin-top:18px; flex-wrap:wrap}
+  .kpi{flex:1; min-width:150px; background:#fafbfc; border:1px solid var(--line); border-radius:13px; padding:13px 15px}
+  .kpi .k{font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); font-weight:700}
+  .kpi .v{font-size:21px; font-weight:800; margin-top:4px; letter-spacing:-.3px}
+  .kpi .v small{font-size:12px; color:var(--muted); font-weight:600}
+  .kpi.alert{background:var(--danger-soft); border-color:#fecaca}
+  .kpi.alert .v{color:var(--danger)}
+  .kpi.warn{background:var(--warn-soft); border-color:#fde68a}
+  .kpi.warn .v{color:var(--warn)}
+
+  /* ---- Section header ---- */
+  .sec{margin:26px 0 12px; display:flex; align-items:center; gap:12px}
+  .sec .n{
+    width:26px; height:26px; border-radius:8px; background:var(--brand); color:#fff;
+    font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .sec h2{font-size:16px; font-weight:800; margin:0; letter-spacing:-.2px}
+  .sec .tag{margin-left:auto; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    padding:4px 10px; border-radius:999px; background:var(--brand-soft); color:var(--brand-dark); border:1px solid #fed7aa}
+  .sec .tag.internal{background:var(--info-soft); color:var(--info); border-color:#bfdbfe}
+
+  /* ---- Task list ---- */
+  .tasks{display:flex; flex-direction:column; gap:10px}
+  .task{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px;
+    display:flex; gap:14px; align-items:flex-start; box-shadow:0 1px 2px rgba(15,23,42,.03);
+    border-left:4px solid var(--brand);
+  }
+  .task.t-now{border-left-color:var(--danger)}
+  .task.t-week{border-left-color:var(--warn)}
+  .task.t-plan{border-left-color:var(--info)}
+  .task .step{
+    width:30px; height:30px; border-radius:9px; background:#f1f5f9; color:#334155;
+    font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex:none; margin-top:1px;
+  }
+  .task .main{flex:1; min-width:0}
+  .task .title{font-size:14.5px; font-weight:700; line-height:1.4}
+  .task .desc{font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.5}
+  .task .meta{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center}
+  .pill{font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:5px}
+  .pill.who{background:var(--chip); color:#334155; border:1px solid var(--line)}
+  .pill.dl-now{background:var(--danger-soft); color:var(--danger); border:1px solid #fecaca}
+  .pill.dl-week{background:var(--warn-soft); color:var(--warn); border:1px solid #fde68a}
+  .pill.dl-plan{background:var(--info-soft); color:var(--info); border:1px solid #bfdbfe}
+  .avatar{width:18px; height:18px; border-radius:50%; color:#fff; font-size:9px; font-weight:800;
+    display:inline-flex; align-items:center; justify-content:center}
+
+  /* ---- Notes / risk ---- */
+  .note{
+    background:var(--warn-soft); border:1px solid #fde68a; border-radius:13px; padding:14px 16px;
+    font-size:13px; line-height:1.6; color:#7c5310; margin-top:16px;
+  }
+  .note b{color:#78350f}
+  .note .ttl{font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:.6px; display:block; margin-bottom:6px}
+
+  .opp{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+    box-shadow:0 1px 2px rgba(15,23,42,.03);
+  }
+  .opp .row{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .opp .name{font-size:15px; font-weight:800}
+  .opp .interest{margin-left:auto; font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
+    padding:5px 12px; border-radius:999px; background:var(--warn-soft); color:var(--warn); border:1px solid #fde68a}
+  .opp .body{font-size:13px; color:#475569; line-height:1.6; margin-top:10px}
+
+  .foot{margin-top:30px; padding-top:16px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+  .foot .note-s{font-size:11.5px; color:var(--muted)}
+  .foot .id{font-size:11px; color:#94a3b8; font-family:ui-monospace,Menlo,monospace}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="brand">
+        <span class="word">HORIZON</span>
+        <span class="sep">|</span>
+        <span class="crm">
+          <svg class="hex" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 4 L91 27 L91 73 L50 96 L9 73 L9 27 Z" stroke="#f97316" stroke-width="8" fill="#fff7ed"/>
+            <path d="M50 30 L68 40 L68 60 L50 70 L32 60 L32 40 Z" fill="#f97316"/>
+          </svg>
+          CRM
+        </span>
+      </div>
+      <div class="ctx">
+        Plan de acción · origen: <b>reunión</b><br>
+        Cuenta: <b>Pogliotti &amp; Pogliotti Construcciones S.A.</b> (SITSA) · fecha [a confirmar]
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="lab">Situación de cuenta · Riesgo de cobranza</div>
+      <h1>SITSA / Pogliotti — Plan de acción y pasos a seguir</h1>
+      <div class="sub">Regularizar exposición vigente, ordenar la metodología de pago y decidir el embarque pendiente antes de despachar.</div>
+      <div class="kpis">
+        <div class="kpi alert">
+          <div class="k">Exposición actual</div>
+          <div class="v">USD 66k <small>*a confirmar</small></div>
+        </div>
+        <div class="kpi warn">
+          <div class="k">Embarque pendiente</div>
+          <div class="v">USD 140k <small>*a confirmar</small></div>
+        </div>
+        <div class="kpi">
+          <div class="k">Crédito en evaluación</div>
+          <div class="v">USD 200k <small>*tope</small></div>
+        </div>
+        <div class="kpi">
+          <div class="k">Deuda histórica</div>
+          <div class="v">Fibra marzo <small>14.000 m impagos</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARTE 1 -->
+    <div class="sec">
+      <div class="n">1</div>
+      <h2>Cuenta SITSA / Pogliotti — pasos a seguir</h2>
+      <span class="tag">Cliente · venta condicionada</span>
+    </div>
+
+    <div class="tasks">
+      <div class="task t-now">
+        <div class="step">1</div>
+        <div class="main">
+          <div class="title">Resolver la disputa de la nota de débito (diferencia de cambio)</div>
+          <div class="desc">El cliente objeta la nota de débito emitida por diferencia de cambio. Es el principal punto de conflicto: hay que acordar criterio antes de seguir facturando.</div>
+          <div class="meta">
+            <span class="pill who"><span class="avatar" style="background:#0ea5e9">MT</span> Matías Taddei</span>
+            <span class="pill who"><span class="avatar" style="background:#8b5cf6">CS</span> Carlos Schenone</span>
+            <span class="pill dl-now">🔴 Vence: esta semana</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task t-week">
+        <div class="step">2</div>
+        <div class="main">
+          <div class="title">Definir e implementar la nueva metodología de cuenta</div>
+          <div class="desc">Estado de cuenta <b>semanal por mail en dólares</b> · enviar <b>remitos por mail</b> (formalidad) · <b>facturar contra pago</b> cerrando el TC del día de pago · agregar <b>colchón de precio</b> por contingencia cambiaria.</div>
+          <div class="meta">
+            <span class="pill who"><span class="avatar" style="background:#8b5cf6">CS</span> Carlos Schenone</span>
+            <span class="pill dl-week">🟠 Vence: esta semana</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task t-week">
+        <div class="step">3</div>
+        <div class="main">
+          <div class="title">Gestionar el cobro de la factura de fibra de marzo (14.000 m)</div>
+          <div class="desc">Factura de marzo aún impaga; parte de la exposición histórica que arrastra la cuenta. Incluir en el estado de cuenta y reclamar.</div>
+          <div class="meta">
+            <span class="pill who"><span class="avatar" style="background:#64748b">??</span> Cobranzas [a confirmar]</span>
+            <span class="pill dl-week">🟠 Vence: esta semana</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task t-now">
+        <div class="step">4</div>
+        <div class="main">
+          <div class="title">Decidir el despacho del embarque (~USD 140k) y el tope de crédito (~USD 200k)</div>
+          <div class="desc">No liberar el embarque sin un plan de regularización de la deuda actual (nota de débito + factura de marzo). Condicionar el crédito ampliado a hitos de cobranza.</div>
+          <div class="meta">
+            <span class="pill who"><span class="avatar" style="background:#0ea5e9">MT</span> Matías Taddei</span>
+            <span class="pill dl-now">🔴 Antes del despacho</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="ttl">⚠️ A confirmar / supuestos</span>
+      <b>Nombre del cliente:</b> el título dice "SITSA" pero en la reunión figura "Pogliotti", "Verónica" y "Franco". En el CRM existe <b>Pogliotti &amp; Pogliotti Construcciones S.A.</b> → unificar denominación.
+      <br><b>Cifras</b> (66k / 140k / 200k / 30k / 45M pesos / 14.000 m): tomadas de la transcripción, validar contra contabilidad.
+      <br><b>Fecha</b> de la reunión: no consta en la transcripción.
+    </div>
+
+    <!-- Oportunidad -->
+    <div class="sec">
+      <div class="n">○</div>
+      <h2>Oportunidad comercial detectada</h2>
+    </div>
+    <div class="opp">
+      <div class="row">
+        <span class="name">Continuidad de venta — embarque ~USD 140k</span>
+        <span class="interest">Interés alto · riesgo cobranza</span>
+      </div>
+      <div class="body">
+        Hay mercadería pedida (~USD 140k) y consignación en juego, pero la cuenta tiene exposición abierta (~USD 66k), disputa por nota de débito y una factura de marzo impaga.
+        <b>La oportunidad está condicionada a ordenar la cobranza y la metodología de pago</b> (pasos 1 a 4).
+      </div>
+    </div>
+
+    <!-- PARTE 2 -->
+    <div class="sec">
+      <div class="n">2</div>
+      <h2>Módulo de planificación (sistema interno)</h2>
+      <span class="tag internal">Interno · no es venta</span>
+    </div>
+
+    <div class="tasks">
+      <div class="task t-plan">
+        <div class="step">5</div>
+        <div class="main">
+          <div class="title">Definir el modelo de los 3 tipos de demanda</div>
+          <div class="desc">Demanda <b>real</b> · demanda <b>estimada / esperada</b> · demanda <b>promedio (estadística)</b>. Integrado a la planificación de stock y compras del sistema.</div>
+          <div class="meta">
+            <span class="pill who"><span class="avatar" style="background:#16a34a">FN</span> Federico Núñez</span>
+            <span class="pill who"><span class="avatar" style="background:#f59e0b">JR</span> Juan P. Ruíz</span>
+            <span class="pill dl-plan">🔵 Planificación interna</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task t-plan">
+        <div class="step">6</div>
+        <div class="main">
+          <div class="title">Definir la lógica de costeo integrada a la línea de producto</div>
+          <div class="desc">Cadena: <b>FOB + flete + tributos → costo nacionalizado estimado → markup → DDP / utilidad.</b> Contemplar el colchón por riesgo cambiario como parámetro ajustable.</div>
+          <div class="meta">
+            <span class="pill who"><span class="avatar" style="background:#f59e0b">JR</span> Juan P. Ruíz</span>
+            <span class="pill dl-plan">🔵 Planificación interna</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="note-s">Horizon · CRM Oportunidades — generado desde la minuta "Reunión situación SITSA"</span>
+      <span class="id">origen: reunión · etapa sugerida: en conversación</span>
+    </div>
+
+  </div>
+</body>
+</html>
