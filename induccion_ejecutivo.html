@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Inducción — Ejecutivo de Ventas · Horizon</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; color: #1e293b; }
+  @media print {
+    body { background: #fff; }
+    .no-print { display: none; }
+    .page { box-shadow: none; margin: 0; max-width: 100%; }
+  }
+  .page {
+    max-width: 820px; margin: 32px auto; background: #fff;
+    border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,.09);
+    overflow: hidden;
+  }
+  .header {
+    background: #0f172a; padding: 24px 32px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hex {
+    width: 48px; height: 48px; background: #f97316; flex-shrink: 0;
+    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 900; font-size: 16px;
+  }
+  .header-text h1 { color: #fff; font-size: 18px; font-weight: 800; }
+  .header-text p { color: #94a3b8; font-size: 12px; margin-top: 3px; }
+  .body { padding: 28px 32px; }
+  .intro {
+    background: #f0f9ff; border-left: 4px solid #0ea5e9;
+    border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 24px;
+    font-size: 13px; color: #0c4a6e; line-height: 1.6;
+  }
+  .intro strong { font-weight: 700; }
+  .section { margin-bottom: 22px; }
+  .section-title {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .8px; color: #f97316; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: #f1f5f9;
+  }
+  /* Pitch box */
+  .pitch-box {
+    background: #0f172a; border-radius: 10px; padding: 18px 20px;
+    color: #e2e8f0; font-size: 13px; line-height: 1.7; font-style: italic;
+  }
+  .pitch-box strong { color: #f97316; font-style: normal; }
+  /* Clients table */
+  .clients { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .clients th {
+    background: #f8fafc; padding: 8px 10px; text-align: left;
+    font-weight: 700; color: #64748b; font-size: 10px;
+    text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid #e2e8f0;
+  }
+  .clients td { padding: 9px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  .clients tr:last-child td { border-bottom: none; }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 10px;
+  }
+  .tag-fiber { background: #dcfce7; color: #15803d; }
+  .tag-retomar { background: #fef9c3; color: #854d0e; }
+  .tag-nuevo { background: #e0f2fe; color: #0369a1; }
+  /* Rules */
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rule {
+    background: #f8fafc; border-radius: 8px; padding: 12px 14px;
+    font-size: 12px; color: #374151; line-height: 1.5; border: 1px solid #e2e8f0;
+  }
+  .rule .icon { font-size: 18px; margin-bottom: 4px; }
+  .rule strong { display: block; font-size: 11px; color: #1e293b; margin-bottom: 2px; }
+  /* Products */
+  .products { display: flex; gap: 10px; flex-wrap: wrap; }
+  .prod-tag {
+    background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 8px 14px; font-size: 12px; color: #1e293b;
+  }
+  .prod-tag span { display: block; font-size: 10px; color: #94a3b8; margin-top:1px; }
+  /* Footer */
+  .footer {
+    background: #f8fafc; border-top: 1px solid #e2e8f0;
+    padding: 14px 32px; display: flex; justify-content: space-between;
+    align-items: center; font-size: 11px; color: #94a3b8;
+  }
+  .print-btn {
+    background: #f97316; color: #fff; border: none; border-radius: 8px;
+    padding: 8px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
+    margin: 16px auto 0; display: block;
+  }
+  .num { font-weight: 800; color: #f97316; }
+</style>
+</head>
+<body>
+
+<div class="no-print" style="text-align:center;padding:16px">
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+</div>
+
+<div class="page">
+  <div class="header">
+    <div class="hex">H</div>
+    <div class="header-text">
+      <h1>Bienvenido a Horizon — Tu primera semana</h1>
+      <p>Guía de inducción comercial · Ejecutivo de Ventas · Jun-2026</p>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- Contexto -->
+    <div class="intro">
+      <strong>Horizon</strong> es distribuidora mayorista de equipamiento para ISPs (proveedores de internet). Vendemos fibra óptica, cajas NAP, splitters, ONTs y equipos GPON de Fiberhome, Huawei y otras marcas. Nuestros clientes son ISPs regionales que están <strong>migrando o expandiendo sus redes a FTTH</strong>. Tu trabajo esta semana es simple: presentarte, escuchar y ofrecer fibra.
+    </div>
+
+    <!-- Qué vas a ofrecer -->
+    <div class="section">
+      <div class="section-title">📦 Lo que vas a ofrecer</div>
+      <div class="products">
+        <div class="prod-tag">Cable Fibra Óptica<span>Fiberhome · 24F / 48F / 96F · CFOA-SM</span></div>
+        <div class="prod-tag">Cajas NAP<span>Terminal FitDP-420A · exterior/interior</span></div>
+        <div class="prod-tag">Splitters PLC<span>1:8 / 1:16 / 1:32 · SC/APC</span></div>
+        <div class="prod-tag">ONTs Fiberhome<span>HG6145F3 · HG6144F · GPON</span></div>
+        <div class="prod-tag">Patchcords SC-APC<span>SC-APC / SC-APC · 1m/2m</span></div>
+      </div>
+    </div>
+
+    <!-- Pitch -->
+    <div class="section">
+      <div class="section-title">🎙️ Cómo presentarte (guión de 30 segundos)</div>
+      <div class="pitch-box">
+        "Hola [nombre], te llamo de <strong>Horizon</strong> — soy [tu nombre], soy el nuevo ejecutivo de ventas.
+        Estamos distribuyendo <strong>fibra óptica Fiberhome, cajas NAP y splitters</strong>, y quería presentarme
+        y ver si tienen proyectos de expansión FTTH donde podamos ayudarlos.
+        ¿Tienen algo en cartera para este segundo semestre o les paso precios para que los tengan de referencia?"
+      </div>
+    </div>
+
+    <!-- Clientes a llamar -->
+    <div class="section">
+      <div class="section-title">📞 Los 10 primeros clientes — llamar esta semana</div>
+      <table class="clients">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Empresa</th>
+            <th>Contexto rápido</th>
+            <th>Ángulo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td><strong>ITC Córdoba</strong></td>
+            <td>Proyecto FTTH ENACOM activo. Stock reservado.</td>
+            <td><span class="tag tag-fiber">OC pendiente</span></td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td><strong>Gigared</strong></td>
+            <td>Historial con Horizon. Compraron transceivers 2026.</td>
+            <td><span class="tag tag-fiber">Ofrecerle fibra</span></td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td><strong>FESACOM</strong></td>
+            <td>En pipeline activo. Seguimiento urgente.</td>
+            <td><span class="tag tag-fiber">Follow-up activo</span></td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td><strong>WILTEL</strong></td>
+            <td>En pipeline activo. Acción urgente esta semana.</td>
+            <td><span class="tag tag-fiber">Follow-up activo</span></td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td><strong>Comworks</strong></td>
+            <td>Historial de compras de fibra FH.</td>
+            <td><span class="tag tag-retomar">Retomar relación</span></td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td><strong>Swissnet</strong></td>
+            <td>Historial de compras de fibra FH.</td>
+            <td><span class="tag tag-retomar">Retomar relación</span></td>
+          </tr>
+          <tr>
+            <td class="num">7</td>
+            <td><strong>Obercom</strong></td>
+            <td>Historial de compras de fibra FH.</td>
+            <td><span class="tag tag-retomar">Retomar relación</span></td>
+          </tr>
+          <tr>
+            <td class="num">8</td>
+            <td><strong>Fibernext</strong></td>
+            <td>Historial de compras de fibra FH.</td>
+            <td><span class="tag tag-retomar">Retomar relación</span></td>
+          </tr>
+          <tr>
+            <td class="num">9</td>
+            <td><strong>TELVISO</strong></td>
+            <td>En pipeline. Proyecto en conversación.</td>
+            <td><span class="tag tag-nuevo">Avanzar propuesta</span></td>
+          </tr>
+          <tr>
+            <td class="num">10</td>
+            <td><strong>SITSA</strong></td>
+            <td>En pipeline. Proyecto en etapa inicial.</td>
+            <td><span class="tag tag-nuevo">Primera propuesta</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Reglas -->
+    <div class="section">
+      <div class="section-title">⚡ Cuatro reglas para esta semana</div>
+      <div class="rules">
+        <div class="rule">
+          <div class="icon">📋</div>
+          <strong>Registrá todo en el CRM</strong>
+          Cada llamada que hagas tiene que quedar anotada. Si no está en el CRM, no existe.
+        </div>
+        <div class="rule">
+          <div class="icon">💰</div>
+          <strong>No des precio sin consultar</strong>
+          Los precios de lista se mueven con el tipo de cambio. Pedí autorización antes de cerrar un número.
+        </div>
+        <div class="rule">
+          <div class="icon">🤝</div>
+          <strong>El objetivo esta semana es escuchar</strong>
+          No necesitás cerrar nada. Presentate, preguntá qué proyectos tienen y volvé con información.
+        </div>
+        <div class="rule">
+          <div class="icon">📦</div>
+          <strong>Tenemos stock disponible</strong>
+          Fibra 24F y 48F, NAPs, splitters y ONTs están en stock. Podés ofrecer entrega inmediata.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>Horizon Trading · Inducción Ejecutivo de Ventas · Jun-2026</span>
+    <span>Consultas: Matías Taddei</span>
+  </div>
+</div>
+
+</body>
+</html>
