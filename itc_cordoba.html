@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ITC Córdoba — Plan de Cuenta · Horizon</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;min-height:100vh;}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,#1B4F91 0%,#0f2d5c 100%);padding:28px 40px 24px;}
+  .header-inner{max-width:960px;margin:0 auto;}
+  .breadcrumb{font-size:11px;color:rgba(255,255,255,.45);font-weight:500;margin-bottom:10px;letter-spacing:.3px;}
+  .header-top{display:flex;align-items:flex-start;justify-content:space-between;}
+  .client-id{display:flex;align-items:center;gap:16px;}
+  .client-avatar{width:52px;height:52px;background:rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.2);}
+  .client-name{font-size:26px;font-weight:900;color:#fff;}
+  .client-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;font-weight:400;}
+  .header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+  .meta-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15);}
+  .meta-pill.green{background:rgba(52,211,153,.15);color:#6ee7b7;border-color:rgba(52,211,153,.25);}
+  .meta-pill.yellow{background:rgba(251,191,36,.15);color:#fde68a;border-color:rgba(251,191,36,.25);}
+  .meta-pill.blue{background:rgba(96,165,250,.15);color:#93c5fd;border-color:rgba(96,165,250,.25);}
+
+  /* MAIN */
+  .main{max-width:960px;margin:0 auto;padding:32px 40px 60px;}
+
+  /* KPI ROW */
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px;}
+  .kpi{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .kpi-value{font-size:28px;font-weight:900;color:#1e293b;line-height:1;}
+  .kpi-label{font-size:11px;color:#64748b;margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+  .kpi-sub{font-size:11px;color:#94a3b8;margin-top:3px;}
+  .kpi.accent .kpi-value{color:#1B4F91;}
+  .kpi.green .kpi-value{color:#16a34a;}
+  .kpi.amber .kpi-value{color:#d97706;}
+
+  /* SECTION HEADER */
+  .section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .section-title::after{content:'';flex:1;height:1px;background:#e2e8f0;}
+  .section{margin-bottom:32px;}
+
+  /* OPP CARD */
+  .opp-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;}
+  .opp-header{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f1f5f9;}
+  .opp-title{font-size:17px;font-weight:800;color:#1e293b;}
+  .opp-sub{font-size:12px;color:#64748b;margin-top:2px;}
+  .opp-tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+  .tag-blue{background:#dbeafe;color:#1d4ed8;}
+  .tag-green{background:#dcfce7;color:#15803d;}
+  .tag-amber{background:#fef3c7;color:#b45309;}
+  .tag-purple{background:#ede9fe;color:#6d28d9;}
+  .tag-gray{background:#f1f5f9;color:#475569;}
+  .tag-red{background:#fee2e2;color:#b91c1c;}
+  .opp-body{padding:20px 22px;}
+
+  /* DESCRIPCION */
+  .desc-block{background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:16px;border-left:3px solid #2D7DD2;}
+  .desc-block p{font-size:13px;color:#334155;line-height:1.7;}
+  .desc-block strong{color:#1e293b;}
+
+  /* RISK BLOCK */
+  .risk-block{background:#fff7ed;border-radius:10px;padding:14px 16px;margin-bottom:16px;border-left:3px solid #f59e0b;}
+  .risk-block p{font-size:13px;color:#92400e;line-height:1.7;}
+  .risk-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#f59e0b;margin-bottom:5px;}
+
+  /* STEPS */
+  .steps{display:flex;flex-direction:column;gap:0;}
+  .step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f1f5f9;position:relative;}
+  .step:last-child{border-bottom:none;}
+  .step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:1px;}
+  .step-num.urgent{background:#fee2e2;color:#b91c1c;}
+  .step-num.soon{background:#fef3c7;color:#b45309;}
+  .step-num.later{background:#dbeafe;color:#1d4ed8;}
+  .step-num.future{background:#f1f5f9;color:#64748b;}
+  .step-content{flex:1;}
+  .step-action{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px;}
+  .step-detail{font-size:12px;color:#64748b;line-height:1.6;}
+  .step-footer{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .resp-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+  .deadline-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+  .dl-red{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;}
+  .dl-amber{background:#fef3c7;color:#b45309;border:1px solid #fcd34d;}
+  .dl-blue{background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;}
+  .dl-gray{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;}
+
+  /* OPORTUNIDADES FUTURAS */
+  .future-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;}
+  .future-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .future-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px;}
+  .future-desc{font-size:12px;color:#64748b;line-height:1.6;}
+  .future-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  /* PIPELINE GAUGE */
+  .gauge-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .gauge-label{font-size:12px;color:#475569;font-weight:600;width:120px;flex-shrink:0;}
+  .gauge-bar{flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden;}
+  .gauge-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#1B4F91,#2D7DD2);}
+  .gauge-val{font-size:12px;font-weight:700;color:#1B4F91;width:40px;text-align:right;}
+
+  .footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px;border-top:1px solid #e2e8f0;margin-top:20px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="breadcrumb">Horizon Trading · Plan de Cuenta · 24 Jun 2026</div>
+    <div class="header-top">
+      <div class="client-id">
+        <div class="client-avatar">ITC</div>
+        <div>
+          <div class="client-name">ITC Córdoba</div>
+          <div class="client-sub">ISP · Córdoba · Proyecto ENACOM FTTH en marcha</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill green">⭐⭐⭐⭐ Score 4</span>
+      <span class="meta-pill blue">📋 Etapa: Propuesta</span>
+      <span class="meta-pill yellow">💰 Pipeline: USD 100,000 · 50% prob</span>
+      <span class="meta-pill">👤 Federico Núñez</span>
+      <span class="meta-pill">📍 Origen: Reunión</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi accent">
+      <div class="kpi-value">USD 100K</div>
+      <div class="kpi-label">Valor estimado</div>
+      <div class="kpi-sub">Pasivos FTTH (fibra, NAPs, splitters)</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-value">USD 50K</div>
+      <div class="kpi-label">Valor ponderado</div>
+      <div class="kpi-sub">100K × 50% prob. cierre</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">08-Jul</div>
+      <div class="kpi-label">Próxima acción</div>
+      <div class="kpi-sub">Revisar stock completo</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-value">+30%</div>
+      <div class="kpi-label">Estrategia precio</div>
+      <div class="kpi-sub">Sobredimensionar para ENACOM</div>
+    </div>
+  </div>
+
+  <!-- OPP PRINCIPAL -->
+  <div class="section">
+    <div class="section-title">🎯 Oportunidad principal</div>
+
+    <div class="opp-card">
+      <div class="opp-header">
+        <div>
+          <div class="opp-title">Red FTTH para ENACOM — Pasivos de fibra</div>
+          <div class="opp-sub">Proyecto ANR · Tasa subsidiada · Stock reservado en Horizon</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag tag-blue">FTTH</span>
+          <span class="tag tag-green">Stock reservado</span>
+          <span class="tag tag-purple">ENACOM ANR</span>
+          <span class="tag tag-amber">⏳ Aprobación pendiente</span>
+        </div>
+      </div>
+      <div class="opp-body">
+
+        <div class="desc-block">
+          <p>ITC Córdoba está preparando un proyecto FTTH para presentar a <strong>ENACOM</strong> bajo el programa ANR (Aportes No Reembolsables) con tasa subsidiada. <strong>Horizon cotiza únicamente los pasivos</strong>: fibra óptica, cajas NAP y splitters. El stock ya está <strong>reservado</strong> para este cliente.</p>
+          <p style="margin-top:8px;">Estrategia clave: <strong>sobredimensionar el presupuesto ~30%</strong> en la presentación a ENACOM para crear margen de maniobra. El precio se congela <strong>colocando la orden de compra al proveedor</strong> — sin OC no hay precio garantizado.</p>
+        </div>
+
+        <div class="risk-block">
+          <div class="risk-label">⚠️ Riesgo a monitorear</div>
+          <p>ENACOM puede rechazar <strong>activos de marca china</strong> ("mercadería no confiable"). Este proyecto es 100% pasivos, por lo que el riesgo no aplica directamente — pero vale aclararlo si nos preguntan por activos complementarios.</p>
+        </div>
+
+        <!-- PIPELINE READINESS -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">📊 Estado del proyecto</div>
+          <div class="gauge-row">
+            <div class="gauge-label">Carpeta ENACOM</div>
+            <div class="gauge-bar"><div class="gauge-fill" style="width:80%"></div></div>
+            <div class="gauge-val">80%</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-label">Stock reservado</div>
+            <div class="gauge-bar"><div class="gauge-fill" style="width:100%"></div></div>
+            <div class="gauge-val">100%</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-label">OC al proveedor</div>
+            <div class="gauge-bar"><div class="gauge-fill" style="width:0%"></div></div>
+            <div class="gauge-val" style="color:#dc2626;">0%</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-label">Financiamiento</div>
+            <div class="gauge-bar"><div class="gauge-fill" style="width:40%"></div></div>
+            <div class="gauge-val">40%</div>
+          </div>
+        </div>
+
+        <!-- PASOS -->
+        <div style="font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">📋 Pasos a seguir — en orden</div>
+        <div class="steps">
+
+          <div class="step">
+            <div class="step-num urgent">1</div>
+            <div class="step-content">
+              <div class="step-action">Revisar stock completo disponible</div>
+              <div class="step-detail">Levantar inventario de fibra óptica, NAPs y splitters disponibles vs. lo requerido por ITC. Identificar qué hay en stock físico, qué hay que fabricar/pedir, y cuánto tiempo lleva. Este es el insumo crítico para la orden de compra.</div>
+              <div class="step-footer">
+                <span class="resp-badge">👤 Federico Núñez</span>
+                <span class="deadline-badge dl-red">🔴 Deadline: 08-Jul-2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num urgent">2</div>
+            <div class="step-content">
+              <div class="step-action">Confirmar aprobación préstamo ENACOM / CREDICOP</div>
+              <div class="step-detail">Consultar a ITC el estado de aprobación del crédito Banco Nación / préstamo ENACOM-CREDICOP. Sin financiamiento confirmado no se puede avanzar a OC. Esta semana.</div>
+              <div class="step-footer">
+                <span class="resp-badge">👤 Federico Núñez</span>
+                <span class="deadline-badge dl-red">🔴 Deadline: 27-Jun-2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num soon">3</div>
+            <div class="step-content">
+              <div class="step-action">Armar cotización oficial sobredimensionada (+30%)</div>
+              <div class="step-detail">Con el stock validado, generar la cotización para presentar a ENACOM. Aplicar el sobredimensionamiento acordado (~30% sobre el real) para crear margen. Indicar precios en USD con tipo de cambio vigente.</div>
+              <div class="step-footer">
+                <span class="resp-badge">👤 Federico Núñez</span>
+                <span class="deadline-badge dl-amber">🟡 Deadline: 11-Jul-2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num soon">4</div>
+            <div class="step-content">
+              <div class="step-action">Colocar Orden de Compra al proveedor para congelar precio</div>
+              <div class="step-detail">Una vez que ITC confirme que sube el proyecto a ENACOM, emitir la OC al proveedor inmediatamente. Sin OC no hay precio garantizado. El precio de lista puede moverse con el tipo de cambio.</div>
+              <div class="step-footer">
+                <span class="resp-badge">👤 Matías Taddei</span>
+                <span class="resp-badge" style="background:#f0fdf4;color:#15803d;border-color:#bbf7d0;">👤 Federico Núñez</span>
+                <span class="deadline-badge dl-amber">🟡 Apenas ITC suba el proyecto</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num later">5</div>
+            <div class="step-content">
+              <div class="step-action">Seguimiento aprobación ENACOM y coordinación de entrega</div>
+              <div class="step-detail">Una vez presentado, monitorear el estado de aprobación del ANR. Coordinar timing de entrega del material con los plazos de desembolso del crédito. Acordar logística con ITC.</div>
+              <div class="step-footer">
+                <span class="resp-badge">👤 Federico Núñez</span>
+                <span class="deadline-badge dl-blue">🔵 Post-presentación ENACOM</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPORTUNIDADES FUTURAS -->
+  <div class="section">
+    <div class="section-title">🔭 Oportunidades futuras identificadas</div>
+    <div class="future-grid">
+
+      <div class="future-card">
+        <div class="future-icon">🏦</div>
+        <div>
+          <div class="future-title">Crédito Fiberhome — 100% CAPEX</div>
+          <div class="future-desc">Walter (ITC) lo recibió para analizar. Tasas ~3–5% para proyectos grandes. Ya tienen Banco Nación como referencia. Potencial para financiar CAPEX total sin fondos propios. <strong>Acción: retomar cuando cierre el proyecto ENACOM.</strong></div>
+          <div style="margin-top:8px;display:flex;gap:6px;">
+            <span class="tag tag-purple">Fiberhome Credit</span>
+            <span class="tag tag-gray">📌 A retomar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="future-card">
+        <div class="future-icon">🏘️</div>
+        <div>
+          <div class="future-title">Proyecto Villarreal / Villa General</div>
+          <div class="future-desc">ITC mencionó proyectos adicionales en estas localidades (a confirmar). Posible segunda ola de expansión FTTH financiada con crédito Fiberhome. <strong>Acción: confirmar alcance y localidades al cierre de este proyecto.</strong></div>
+          <div style="margin-top:8px;display:flex;gap:6px;">
+            <span class="tag tag-blue">FTTH</span>
+            <span class="tag tag-amber">⚠️ A confirmar</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RESUMEN EJECUTIVO -->
+  <div class="section">
+    <div class="section-title">📌 Resumen ejecutivo para el equipo</div>
+    <div style="background:#1B4F91;border-radius:16px;padding:24px 28px;color:#fff;">
+      <div style="font-size:15px;font-weight:800;margin-bottom:14px;color:#fff;">ITC Córdoba — Estado al 24-Jun-2026</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">✅ Confirmado</div>
+          <ul style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.9;list-style:none;">
+            <li>• Stock reservado para ITC</li>
+            <li>• Proyecto FTTH en marcha (carpeta ~80%)</li>
+            <li>• Horizon cotiza solo pasivos (sin riesgo ENACOM/china)</li>
+            <li>• Estrategia de precio acordada (+30% sobredimensionado)</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">⏳ Pendiente</div>
+          <ul style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.9;list-style:none;">
+            <li>• Aprobación préstamo CREDICOP ← <strong>urgente</strong></li>
+            <li>• Revisión stock completo (Federico, antes 08-Jul)</li>
+            <li>• Cotización formal para ENACOM</li>
+            <li>• OC al proveedor para congelar precio</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);font-size:12px;color:rgba(255,255,255,.55);">
+        💰 Oportunidad principal: USD 100,000 · Prob. 50% · Ponderado: USD 50,000 · Responsable: Federico Núñez
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Horizon Trading · ITC Córdoba Plan de Cuenta · Generado 24-Jun-2026 · Agente Comercial IA
+</div>
+
+</body>
+</html>

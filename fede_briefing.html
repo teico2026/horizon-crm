@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Briefing Oportunidades — Federico Núñez</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; }
+
+    .header { background: #1B4F91; padding: 28px 40px; border-bottom: 4px solid #2D7DD2; }
+    .header h1 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .header p { font-size: 13px; color: rgba(255,255,255,.65); }
+    .header-meta { margin-top: 12px; font-size: 12px; color: rgba(255,255,255,.5); }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    .intro { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px 24px; margin-bottom: 28px; font-size: 13px; color: #475569; line-height: 1.6; }
+    .intro strong { color: #1B4F91; }
+
+    .opp-card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .opp-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f1f5f9; }
+    .opp-num { width: 28px; height: 28px; border-radius: 50%; background: #1B4F91; color: white; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .opp-title { flex: 1; }
+    .opp-name { font-size: 14px; font-weight: 700; color: #0f172a; }
+    .opp-cliente { font-size: 12px; color: #64748b; margin-top: 1px; }
+    .opp-fase { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+    .fase-oportunidad { background: #eff6ff; color: #1d4ed8; }
+    .fase-propuesta { background: #ede9fe; color: #6d28d9; }
+    .fase-dimensionando { background: #fff7ed; color: #c2410c; }
+    .fase-ganado { background: #dcfce7; color: #15803d; }
+    .fase-perdido { background: #fee2e2; color: #991b1b; }
+
+    .opp-context { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #f1f5f9; font-size: 12px; color: #64748b; line-height: 1.5; }
+    .opp-context em { color: #94a3b8; }
+
+    .opp-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+
+    .question { display: flex; flex-direction: column; gap: 6px; }
+    .question label { font-size: 12px; font-weight: 600; color: #374151; }
+    .question label .req { color: #ef4444; margin-left: 2px; }
+    .question input, .question select, .question textarea {
+      border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px;
+      font-size: 13px; color: #1e293b; background: #fff; outline: none;
+      transition: border-color .2s;
+      font-family: inherit;
+    }
+    .question input:focus, .question select:focus, .question textarea:focus { border-color: #2D7DD2; box-shadow: 0 0 0 3px rgba(45,125,210,.1); }
+    .question textarea { resize: vertical; min-height: 60px; }
+    .question-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .section-divider { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #94a3b8; padding: 4px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 4px; }
+
+    .submit-area { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px; text-align: center; margin-top: 8px; }
+    .submit-area p { font-size: 13px; color: #64748b; margin-bottom: 16px; }
+    .btn-submit { background: #1B4F91; color: white; border: none; border-radius: 10px; padding: 12px 32px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-submit:hover { background: #2D7DD2; }
+    .btn-copy { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; margin-left: 10px; }
+    .btn-copy:hover { background: #e2e8f0; }
+
+    .output-area { display: none; margin-top: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-size: 12px; font-family: monospace; color: #334155; white-space: pre-wrap; text-align: left; max-height: 400px; overflow-y: auto; }
+
+    .tag-missing { display: inline-block; background: #fef2f2; color: #dc2626; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; margin-left: 6px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📋 Briefing de Oportunidades en Curso</h1>
+  <p>Completá la información faltante para cerrar el pipeline y cargarlo al CRM</p>
+  <div class="header-meta">Horizon Trading · Junio 2026 · Para: Federico Núñez</div>
+</div>
+
+<div class="container">
+
+  <div class="intro">
+    <strong>Fede</strong> — revisé el pipeline del sheet y hay 25 oportunidades. Para cargarlas correctamente al CRM necesito que completes los campos que faltan en cada una. Las preguntas que están marcadas con <span style="color:#ef4444">*</span> son las más críticas para poder valorizar el pipeline correctamente. Las demás son para tener contexto completo.<br><br>
+    Cuando termines, hacé click en <strong>"Copiar resultado"</strong> y mandámelo por WhatsApp o mail.
+  </div>
+
+  <!-- OPP 02 -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">02</div>
+      <div class="opp-title">
+        <div class="opp-name">QSFP28 100G 120KM + QSFP+ 40G</div>
+        <div class="opp-cliente">CHACO / FESACOM</div>
+      </div>
+      <span class="opp-fase fase-propuesta">Propuesta enviada</span>
+    </div>
+    <div class="opp-context">Stand by por problema ENACOM al sumar Huawei. Estarían inflando precios de SFPs para incluir router + switches. Valor: USD 39.000 · Prob: 70% · Dueño: Federico</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Nombre del contacto<span class="req">*</span></label><input type="text" placeholder="Nombre y cargo"/></div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Se retomó la presentación ante ENACOM?<span class="req">*</span></label><textarea placeholder="¿Sigue en stand by? ¿Hay fecha? ¿Cambia algo la estrategia de inflar los SFPs?"></textarea></div>
+      <div class="question"><label>¿Seguimos siendo competitivos si meten router + switches?</label><textarea placeholder="¿Podemos competir en ese bundle o nos quedamos fuera?"></textarea></div>
+    </div>
+  </div>
+
+  <!-- OPP 03-06 GIGARED -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">03–06</div>
+      <div class="opp-title">
+        <div class="opp-name">STB · IoT · Rompemuros · Proyector Google TV</div>
+        <div class="opp-cliente">GIGARED</div>
+      </div>
+      <span class="opp-fase fase-oportunidad">Oportunidad</span>
+    </div>
+    <div class="opp-context">Contacto: JRGB (Internet Day). 4 oportunidades sin valor, sin probabilidad, sin propietario asignado.</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Nombre completo del contacto (JRGB)<span class="req">*</span></label><input type="text" placeholder="Nombre completo y cargo"/></div>
+      <div class="section-divider">Valores estimados</div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado STB + TMS<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Valor estimado IoT Domiciliario<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+      </div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado Rompemuros<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Valor estimado Proyector Google TV<span class="req">*</span></label><input type="text" placeholder="USD ___ (si aplica)"/></div>
+      </div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Llegaron muestras y precio de UNIRIM para cotizar STB?<span class="req">*</span></label><textarea placeholder="¿Podemos cotizar ya? ¿Falta algo?"></textarea></div>
+      <div class="question"><label>¿Hablaste con Jorge sobre el Proyector Google TV?</label><textarea placeholder="¿Hay interés concreto o lo descartamos?"></textarea></div>
+      <div class="question-row">
+        <div class="question"><label>Propietario de las 4 opps</label><input type="text" placeholder="Fede / Matias / otro"/></div>
+        <div class="question"><label>Probabilidad estimada (cada opp)</label><input type="text" placeholder="Ej: STB 40%, IoT 30%..."/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPP 08 ITC -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">08</div>
+      <div class="opp-title">
+        <div class="opp-name">Red Precon Villa Gral. Belgrano</div>
+        <div class="opp-cliente">ITC CÓRDOBA</div>
+      </div>
+      <span class="opp-fase fase-propuesta">Propuesta enviada</span>
+    </div>
+    <div class="opp-context">Esperando aprobación ENACOM/CREDICOP. Presupuesto enviado. Stock disponible. Valor: USD 256.000 · Prob: 90% · Dueño: Federico</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Nombre del contacto<span class="req">*</span></label><input type="text" placeholder="Nombre y cargo"/></div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Se aprobó el préstamo ENACOM/CREDICOP?<span class="req">*</span></label><textarea placeholder="¿Hay fecha de cierre estimada? ¿Algún cambio en el proceso?"></textarea></div>
+      <div class="question"><label>¿El stock sigue reservado para ellos?</label><input type="text" placeholder="Sí / No / Parcialmente"/></div>
+    </div>
+  </div>
+
+  <!-- OPP 11 SITSA -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">11</div>
+      <div class="opp-title">
+        <div class="opp-name">Conexión Entre Ríos</div>
+        <div class="opp-cliente">SITSA</div>
+      </div>
+      <span class="opp-fase fase-oportunidad">Oportunidad</span>
+    </div>
+    <div class="opp-context">Zambiazzo interesado en participar. Rol: él maneja contactos, Franco hace despliegue, Horizon pone mercadería. Sin valor ni probabilidad.</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Nombre completo de Zambiazzo<span class="req">*</span></label><input type="text" placeholder="Nombre completo y cargo"/></div>
+      <div class="section-divider">Valorización</div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado de la oportunidad<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Probabilidad estimada<span class="req">*</span></label><input type="text" placeholder="___%"/></div>
+      </div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Avanzó la conversación con Zambiazzo?<span class="req">*</span></label><textarea placeholder="¿Quedó confirmado el esquema de trabajo? ¿Hay siguiente paso?"></textarea></div>
+    </div>
+  </div>
+
+  <!-- OPP 12-15 TELVISO -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">12–15</div>
+      <div class="opp-title">
+        <div class="opp-name">Pasivos FH · Barrio Activos · ONT+AP+STB · Partnership</div>
+        <div class="opp-cliente">TELVISO</div>
+      </div>
+      <span class="opp-fase fase-dimensionando">Dimensionando</span>
+    </div>
+    <div class="opp-context">4 oportunidades en dimensionamiento. Sin valores ni propietario en la mayoría. Muestras entregadas. Esperando resultados de homologación.</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Contacto principal en Telviso<span class="req">*</span></label><input type="text" placeholder="Nombre y cargo (Horacio, Maxi Juarez, otro...)"/></div>
+      <div class="section-divider">Valores estimados</div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado Pasivos FH (Opp 12)</label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Valor estimado Barrio Activos (Opp 13)</label><input type="text" placeholder="USD ___"/></div>
+      </div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado ONT+AP+STB (Opp 14)</label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Valor estimado Partnership (Opp 15)</label><input type="text" placeholder="USD ___ o N/A"/></div>
+      </div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Cuándo esperamos resultado de homologaciones?<span class="req">*</span></label><textarea placeholder="OLT + ONT WiFi6 + AP + Rompemuros UNIRIM — ¿hay fecha?"></textarea></div>
+      <div class="question"><label>¿Llegó cotización y muestras de UNIRIM para STB?</label><input type="text" placeholder="Sí / No / En proceso"/></div>
+      <div class="question"><label>¿Horacio respondió sobre el Partnership?</label><textarea placeholder="¿Pidió el draft formal? ¿Hay reunión programada?"></textarea></div>
+    </div>
+  </div>
+
+  <!-- OPP 17 VICTORIA TE VE -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">17</div>
+      <div class="opp-title">
+        <div class="opp-name">OLT AN6000-15 Full</div>
+        <div class="opp-cliente">VICTORIA TE VE</div>
+      </div>
+      <span class="opp-fase fase-propuesta">Propuesta enviada</span>
+    </div>
+    <div class="opp-context">Esperando acceso para Diego Aragunde para migración. OLT conectada. Valor: USD 58.000 · Prob: 90% · Dueño: Federico</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Contacto principal<span class="req">*</span></label><input type="text" placeholder="Nombre y cargo"/></div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Le dieron acceso a Diego Aragunde?<span class="req">*</span></label><textarea placeholder="¿Arrancó la migración? ¿Hay fecha? ¿Qué falta?"></textarea></div>
+      <div class="question"><label>¿La homologación de la OLT está cerrada?</label><input type="text" placeholder="Sí / No / Pendiente de qué"/></div>
+    </div>
+  </div>
+
+  <!-- OPP 20-23 WILTEL -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">20–23</div>
+      <div class="opp-title">
+        <div class="opp-name">IoT · FINISAR/QSFP28 · Panduit · Rompemuros UNIRIM</div>
+        <div class="opp-cliente">WILTEL</div>
+      </div>
+      <span class="opp-fase fase-oportunidad">Oportunidad</span>
+    </div>
+    <div class="opp-context">4 oportunidades sin valor. Contactos: Juampi (IoT), Ignacio Córdoba NOC (FINISAR/Rompemuros), Fernanda Andereggen (Panduit/Rompemuros).</div>
+    <div class="opp-body">
+      <div class="section-divider">Valores estimados</div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado IoT Domiciliario<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Valor estimado QSFP28/FINISAR<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+      </div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado Panduit<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Valor estimado Rompemuros<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+      </div>
+      <div class="section-divider">Estado actual</div>
+      <div class="question"><label>¿Juampi terminó los precios DDP del IoT?<span class="req">*</span></label><textarea placeholder="¿Hay cotización lista para enviar?"></textarea></div>
+      <div class="question"><label>¿Se envió la presentación de Panduit?</label><input type="text" placeholder="Sí / No — si no, ¿cuándo?"/></div>
+      <div class="question"><label>¿Ignacio recibió la data de Rompemuros UNIRIM?</label><input type="text" placeholder="Sí / No / Pendiente"/></div>
+      <div class="question-row">
+        <div class="question"><label>Propietario de las 4 opps</label><input type="text" placeholder="Fede / Matias / Jorge"/></div>
+        <div class="question"><label>Probabilidad estimada</label><input type="text" placeholder="Ej: IoT 30%, FINISAR 50%..."/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPP 24-25 PREFORM -->
+  <div class="opp-card">
+    <div class="opp-header">
+      <div class="opp-num">24–25</div>
+      <div class="opp-title">
+        <div class="opp-name">Patchcords Fastconnect · Sinergia FH-Preform</div>
+        <div class="opp-cliente">PREFORM</div>
+      </div>
+      <span class="opp-fase fase-propuesta">Propuesta enviada / Oportunidad</span>
+    </div>
+    <div class="opp-context">Opp 24: cliente revisando cotización (elevada vs expectativa). USD 25.000 · 50%. Opp 25: reunión presencial 2/6 con Mati. Sin valor ni propietario.</div>
+    <div class="opp-body">
+      <div class="section-divider">Contacto</div>
+      <div class="question"><label>Nombre del contacto en Preform<span class="req">*</span></label><input type="text" placeholder="Nombre y cargo"/></div>
+      <div class="section-divider">Patchcords (Opp 24)</div>
+      <div class="question"><label>¿El cliente respondió sobre la cotización?<span class="req">*</span></label><textarea placeholder="¿Están muy lejos? ¿Hay margen de negociación? ¿Van a aceptar?"></textarea></div>
+      <div class="section-divider">Sinergia FH-Preform (Opp 25)</div>
+      <div class="question"><label>¿Se hizo la reunión del 2/6 con Mati?<span class="req">*</span></label><textarea placeholder="¿Qué salió? ¿Hay acuerdo? ¿Cuál es el próximo paso?"></textarea></div>
+      <div class="question-row">
+        <div class="question"><label>Valor estimado Sinergia<span class="req">*</span></label><input type="text" placeholder="USD ___"/></div>
+        <div class="question"><label>Propietario Sinergia</label><input type="text" placeholder="Fede / Matias / conjunto"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="submit-area">
+    <p>Cuando termines, copiá el resumen y mandáselo a Matias para cargarlo al CRM.</p>
+    <button class="btn-submit" onclick="generateOutput()">Generar resumen</button>
+    <button class="btn-copy" onclick="copyOutput()">📋 Copiar</button>
+    <div class="output-area" id="output"></div>
+  </div>
+
+</div>
+
+<script>
+function generateOutput() {
+  const lines = ['=== BRIEFING OPORTUNIDADES — FEDE ===', new Date().toLocaleDateString('es-AR'), ''];
+  const cards = document.querySelectorAll('.opp-card');
+  cards.forEach(card => {
+    const title = card.querySelector('.opp-name').textContent;
+    const cliente = card.querySelector('.opp-cliente').textContent;
+    lines.push(`--- ${title} (${cliente}) ---`);
+    card.querySelectorAll('.question').forEach(q => {
+      const label = q.querySelector('label').textContent.replace('*','').trim();
+      const input = q.querySelector('input, textarea, select');
+      if (input && input.value.trim()) {
+        lines.push(`${label}: ${input.value.trim()}`);
+      }
+    });
+    lines.push('');
+  });
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.textContent = lines.join('\n');
+}
+
+function copyOutput() {
+  generateOutput();
+  const text = document.getElementById('output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✅ Copiado';
+    setTimeout(() => btn.textContent = '📋 Copiar', 2000);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Analysis — Horizon</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f8fafc;color:#1e293b}
+.header{background:#fff;border-bottom:3px solid #f97316;padding:20px 32px;display:flex;align-items:center;gap:16px}
+.logo-hex{width:44px;height:44px;background:#f97316;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px}
+.header h1{font-size:20px;font-weight:700;color:#1e293b}
+.header .sub{font-size:12px;color:#64748b;margin-top:2px}
+.badge{background:#f97316;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:12px}
+.main{max-width:1400px;margin:0 auto;padding:24px 20px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.kpi{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.kpi .label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi .value{font-size:26px;font-weight:800;color:#1e293b}
+.kpi .sub{font-size:11px;color:#94a3b8;margin-top:4px}
+.kpi.danger .value{color:#dc2626}
+.kpi.warn .value{color:#f59e0b}
+.kpi.ok .value{color:#16a34a}
+.section{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:24px;overflow:hidden}
+.section-head{padding:16px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px}
+.section-head h2{font-size:15px;font-weight:700}
+.section-body{padding:20px 24px}
+/* Filters */
+.filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filters input{border:1px solid #e2e8f0;border-radius:8px;padding:7px 12px;font-size:12px;width:220px;outline:none;transition:border .2s}
+.filters input:focus{border-color:#f97316}
+.filters select{border:1px solid #e2e8f0;border-radius:8px;padding:7px 12px;font-size:12px;outline:none;cursor:pointer;background:#fff}
+.filters select:focus{border-color:#f97316}
+.count-label{font-size:12px;color:#64748b;margin-left:auto}
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:#f8fafc;position:sticky;top:0;z-index:2}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.3px;border-bottom:2px solid #e2e8f0;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{background:#f1f5f9;color:#f97316}
+th.sort-asc::after{content:" ↑";color:#f97316}
+th.sort-desc::after{content:" ↓";color:#f97316}
+th.no-sort{cursor:default}
+th.no-sort:hover{background:#f8fafc;color:#64748b}
+td{padding:9px 12px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr[data-status]{transition:opacity .15s}
+tr.hidden{display:none}
+.fam-tag{background:#e0f2fe;color:#0369a1;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap}
+/* Flags */
+.flags-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.flag-card{border:1px solid #fde68a;background:#fffbeb;border-radius:10px;padding:14px}
+.flag-prod{font-size:12px;font-weight:700;color:#92400e;margin-bottom:8px}
+.flag-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.flag-val{font-size:16px;font-weight:800;color:#b45309}
+.flag-cov{font-size:11px;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:8px}
+.flag-tag{font-size:10px;background:#fde68a;color:#92400e;padding:2px 7px;border-radius:8px}
+.flag-action{font-size:11px;color:#6b7280;margin-top:8px;padding-top:8px;border-top:1px solid #fde68a}
+/* Strategy */
+.strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.strat-block{border-radius:10px;padding:18px;font-size:13px}
+.strat-title{font-weight:700;font-size:14px;margin-bottom:10px}
+.strat-block ul{padding-left:18px;margin-top:6px}
+.strat-block li{margin-bottom:4px;color:#374151;font-size:12px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#64748b}
+.leg-dot{width:12px;height:12px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo-hex">H</div>
+  <div>
+    <h1>Análisis de Rotación de Stock <span class="badge">26-Jun-2026</span></h1>
+    <div class="sub">Horizon — Reporte interno · Movimientos 2020–2026 · 61 productos únicos</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="kpi-row">
+    <div class="kpi ok"><div class="label">Valor Total Inventario</div><div class="value">$409,880</div><div class="sub">47 productos en stock · precios ISP volumen</div></div>
+    <div class="kpi danger"><div class="label">Stock Inmovilizado</div><div class="value">$186,527</div><div class="sub">34 productos sin rotación o +24m cobertura</div></div>
+    <div class="kpi warn"><div class="label">Productos Críticos</div><div class="value">4</div><div class="sub">Cobertura &lt;3 meses — reponer urgente</div></div>
+    <div class="kpi"><div class="label">Productos con Stock</div><div class="value">47</div><div class="sub">De 61 SKUs únicos en el sistema</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>📦 Inventario Completo — Rotación y Valorización</h2></div>
+    <div class="section-body">
+      <div class="filters">
+        <input id="search" type="text" placeholder="🔍  Buscar producto...">
+        <select id="filter-status">
+          <option value="">Todos los estados</option>
+          <option value="critico">⚠️ Crítico (&lt;3m)</option>
+          <option value="bajo">🟡 Bajo (3–6m)</option>
+          <option value="optimo">✅ Óptimo (6–12m)</option>
+          <option value="baja">🔵 Baja rotación (12–24m)</option>
+          <option value="estancado">⛔ Estancado (+24m)</option>
+        </select>
+        <span class="count-label" id="count-label">47 productos</span>
+      </div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#dc2626"></div>Crítico (&lt;3m) — reponer</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>Bajo (3–6m) — monitorear</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#16a34a"></div>Óptimo (6–12m)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>Baja rotación (12–24m)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#94a3b8"></div>Estancado (+24m / sin ventas)</div>
+      </div>
+      <div class="table-wrap">
+      <table id="stock-table">
+        <thead>
+          <tr>
+            <th class="no-sort">Producto</th>
+            <th class="no-sort">Familia</th>
+            <th data-col="stock" data-type="num" style="text-align:right">Stock</th>
+            <th class="no-sort">Unidad</th>
+            <th data-col="precio" data-type="num" style="text-align:right">Precio ISP (USD)</th>
+            <th data-col="valor" data-type="num" style="text-align:right">Valor Total</th>
+            <th data-col="ventas" data-type="num" style="text-align:right">Ventas 12m</th>
+            <th data-col="cob" data-type="num" style="text-align:right">Cobertura</th>
+            <th class="no-sort">Barra</th>
+            <th class="no-sort">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="stock-body">
+          <tr data-prod="router wireless sr1041f" data-stock="692" data-precio="40" data-valor="27680" data-ventas="318" data-cob="26.50" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Router wireless SR1041F</td>
+      <td><span class="fam-tag">Activos/Equipos</span></td>
+      <td style="text-align:right;font-weight:700">692</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$40</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$27,680</td>
+      <td style="text-align:right;color:#475569">318</td>
+      <td style="text-align:right;color:#475569">26.50</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">26.1 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="placa gpoa c++" data-stock="1" data-precio="1100" data-valor="1100" data-ventas="3" data-cob="0.25" data-status="bajo" style="background:#fef3c7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Placa GPOA C++</td>
+      <td><span class="fam-tag">Activos/Equipos</span></td>
+      <td style="text-align:right;font-weight:700">1</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$1,100</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,100</td>
+      <td style="text-align:right;color:#475569">3</td>
+      <td style="text-align:right;color:#475569">0.25</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:17%;height:100%;background:#d97706;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#d97706;white-space:nowrap">4.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fef3c7;color:#d97706;border:1px solid #d9770633;">🟡 BAJO</span></td>
+    </tr>
+    
+<tr data-prod="placa gpoa c+" data-stock="1" data-precio="750" data-valor="750" data-ventas="5" data-cob="0.42" data-status="critico" style="background:#fee2e2">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Placa GPOA C+</td>
+      <td><span class="fam-tag">Activos/Equipos</span></td>
+      <td style="text-align:right;font-weight:700">1</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$750</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$750</td>
+      <td style="text-align:right;color:#475569">5</td>
+      <td style="text-align:right;color:#475569">0.42</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:10%;height:100%;background:#dc2626;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#dc2626;white-space:nowrap">2.4 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fee2e2;color:#dc2626;border:1px solid #dc262633;">🔴 CRÍTICO</span></td>
+    </tr>
+    
+<tr data-prod="pigtail drop fastconnect plano 1f - 100m" data-stock="1000" data-precio="—" data-valor="—" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Pigtail Drop FastConnect Plano 1F - 100m</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">1,000</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">—</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="pigtail drop fastconnect plano 1f - 150m" data-stock="500" data-precio="—" data-valor="—" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Pigtail Drop FastConnect Plano 1F - 150m</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">500</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">—</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="pigtail drop fastconnect plano 1f - 200m" data-stock="500" data-precio="—" data-valor="—" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Pigtail Drop FastConnect Plano 1F - 200m</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">500</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">—</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="pigtail drop fastconnect plano 1f - 70m" data-stock="100" data-precio="—" data-valor="—" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Pigtail Drop FastConnect Plano 1F - 70m</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">100</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">—</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 24f pk" data-stock="120000" data-precio="0" data-valor="33600" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 24F PK</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">120,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$33,600</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 48f pk" data-stock="32000" data-precio="0" data-valor="13440" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 48F PK</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">32,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$13,440</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 96f pk" data-stock="16000" data-precio="1" data-valor="9920" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 96F PK</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">16,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$1</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$9,920</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico drop fh easyconns 1f fig 8 50mts" data-stock="199" data-precio="18" data-valor="3582" data-ventas="1" data-cob="0.08" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico Drop FH Easyconns 1F FIG 8 50mts</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">199</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$18</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$3,582</td>
+      <td style="text-align:right;color:#475569">1</td>
+      <td style="text-align:right;color:#475569">0.08</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">2388.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 144f pk" data-stock="12000" data-precio="1" data-valor="10200" data-ventas="4000" data-cob="333.33" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 144F PK</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">12,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$1</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$10,200</td>
+      <td style="text-align:right;color:#475569">4,000</td>
+      <td style="text-align:right;color:#475569">333.33</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">36.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 144f pkp" data-stock="12000" data-precio="1" data-valor="10560" data-ventas="4000" data-cob="333.33" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 144F PKP</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">12,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$1</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$10,560</td>
+      <td style="text-align:right;color:#475569">4,000</td>
+      <td style="text-align:right;color:#475569">333.33</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">36.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico drop fh easyconns 1f fig 8 100mts" data-stock="84" data-precio="28" data-valor="2352" data-ventas="90" data-cob="7.50" data-status="optimo" style="background:#dcfce7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico Drop FH Easyconns 1F FIG 8 100mts</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">84</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$28</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$2,352</td>
+      <td style="text-align:right;color:#475569">90</td>
+      <td style="text-align:right;color:#475569">7.50</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:47%;height:100%;background:#16a34a;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#16a34a;white-space:nowrap">11.2 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#dcfce7;color:#16a34a;border:1px solid #16a34a33;">🟢 ÓPTIMO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 12f pk" data-stock="11990" data-precio="0" data-valor="2158" data-ventas="20010" data-cob="1667.50" data-status="optimo" style="background:#dcfce7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 12F PK</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">11,990</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$2,158</td>
+      <td style="text-align:right;color:#475569">20,010</td>
+      <td style="text-align:right;color:#475569">1,667.50</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:30%;height:100%;background:#16a34a;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#16a34a;white-space:nowrap">7.2 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#dcfce7;color:#16a34a;border:1px solid #16a34a33;">🟢 ÓPTIMO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico drop compacto fh acero 1f" data-stock="769000" data-precio="0" data-valor="42295" data-ventas="1731100" data-cob="144258.33" data-status="bajo" style="background:#fef3c7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico Drop Compacto FH Acero 1F</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">769,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$42,295</td>
+      <td style="text-align:right;color:#475569">1,731,100</td>
+      <td style="text-align:right;color:#475569">144,258.33</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:22%;height:100%;background:#d97706;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#d97706;white-space:nowrap">5.3 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fef3c7;color:#d97706;border:1px solid #d9770633;">🟡 BAJO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as120-ra 24f" data-stock="148000" data-precio="0" data-valor="51800" data-ventas="414000" data-cob="34500.00" data-status="bajo" style="background:#fef3c7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS120-RA 24F</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">148,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$51,800</td>
+      <td style="text-align:right;color:#475569">414,000</td>
+      <td style="text-align:right;color:#475569">34,500.00</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:18%;height:100%;background:#d97706;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#d97706;white-space:nowrap">4.3 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fef3c7;color:#d97706;border:1px solid #d9770633;">🟡 BAJO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 12f pkp" data-stock="8000" data-precio="0" data-valor="1600" data-ventas="32000" data-cob="2666.67" data-status="bajo" style="background:#fef3c7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 12F PKP</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">8,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,600</td>
+      <td style="text-align:right;color:#475569">32,000</td>
+      <td style="text-align:right;color:#475569">2,666.67</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:12%;height:100%;background:#d97706;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#d97706;white-space:nowrap">3.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fef3c7;color:#d97706;border:1px solid #d9770633;">🟡 BAJO</span></td>
+    </tr>
+    
+<tr data-prod="cable óptico fh cfoa-sm-as80-s 48f pkp" data-stock="4000" data-precio="0" data-valor="1800" data-ventas="64000" data-cob="5333.33" data-status="critico" style="background:#fee2e2">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Cable Óptico FH CFOA-SM-AS80-S 48F PKP</td>
+      <td><span class="fam-tag">Cable</span></td>
+      <td style="text-align:right;font-weight:700">4,000</td>
+      <td style="color:#64748b;font-size:11px">Metros</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$0</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,800</td>
+      <td style="text-align:right;color:#475569">64,000</td>
+      <td style="text-align:right;color:#475569">5,333.33</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:3%;height:100%;background:#dc2626;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#dc2626;white-space:nowrap">0.8 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fee2e2;color:#dc2626;border:1px solid #dc262633;">🔴 CRÍTICO</span></td>
+    </tr>
+    
+<tr data-prod="caja de empalme optico fh 480 fibras cm" data-stock="10" data-precio="165" data-valor="1650" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja de empalme optico FH 480 fibras CM</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">10</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$165</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,650</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja hub fh fitdp-461c" data-stock="100" data-precio="32" data-valor="3200" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja HUB FH FitDP-461C</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">100</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$32</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$3,200</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja hub fh fitdp-461d" data-stock="30" data-precio="42" data-valor="1260" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja HUB FH FitDP-461D</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">30</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$42</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,260</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja nap fh fitdp-463a-10f - expansion 50/50" data-stock="200" data-precio="18" data-valor="3600" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja NAP FH FitDP-463A-10F - Expansion 50/50</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">200</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$18</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$3,600</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja nap fh fitdp-463a-10f - expansion 70/30" data-stock="200" data-precio="18" data-valor="3600" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja NAP FH FitDP-463A-10F - Expansion 70/30</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">200</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$18</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$3,600</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja nap fh fitdp-463a-10f - terminal" data-stock="500" data-precio="18" data-valor="9000" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja NAP FH FitDP-463A-10F - Terminal</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">500</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$18</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$9,000</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="distribuidor de fibra optica lgx" data-stock="10" data-precio="75" data-valor="750" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Distribuidor de fibra optica LGX</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">10</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$75</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$750</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="distribuidor de fibra optica 48 puertos" data-stock="43" data-precio="175" data-valor="7525" data-ventas="5" data-cob="0.42" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Distribuidor de fibra optica 48 puertos</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">43</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$175</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$7,525</td>
+      <td style="text-align:right;color:#475569">5</td>
+      <td style="text-align:right;color:#475569">0.42</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">103.2 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja terminal fitdp-420a" data-stock="1097" data-precio="7" data-valor="7679" data-ventas="153" data-cob="12.75" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja terminal FitDP-420A</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">1,097</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$7</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$7,679</td>
+      <td style="text-align:right;color:#475569">153</td>
+      <td style="text-align:right;color:#475569">12.75</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">86.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="distribuidor de fibra optica 144 puertos" data-stock="17" data-precio="340" data-valor="5780" data-ventas="3" data-cob="0.25" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Distribuidor de fibra optica 144 puertos</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">17</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$340</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$5,780</td>
+      <td style="text-align:right;color:#475569">3</td>
+      <td style="text-align:right;color:#475569">0.25</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">68.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja de empalme optico fh 144 fibras cm" data-stock="84" data-precio="78" data-valor="6552" data-ventas="18" data-cob="1.50" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja de empalme optico FH 144 fibras CM</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">84</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$78</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$6,552</td>
+      <td style="text-align:right;color:#475569">18</td>
+      <td style="text-align:right;color:#475569">1.50</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">56.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja de empalme optico fh 48 fibras cm" data-stock="33" data-precio="42" data-valor="1386" data-ventas="72" data-cob="6.00" data-status="bajo" style="background:#fef3c7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja de empalme optico FH 48 fibras CM</td>
+      <td><span class="fam-tag">Cajas/Infraestructura</span></td>
+      <td style="text-align:right;font-weight:700">33</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$42</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,386</td>
+      <td style="text-align:right;color:#475569">72</td>
+      <td style="text-align:right;color:#475569">6.00</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:23%;height:100%;background:#d97706;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#d97706;white-space:nowrap">5.5 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fef3c7;color:#d97706;border:1px solid #d9770633;">🟡 BAJO</span></td>
+    </tr>
+    
+<tr data-prod="ont gpon hg6145f3" data-stock="9" data-precio="36" data-valor="324" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Ont Gpon HG6145F3</td>
+      <td><span class="fam-tag">ONT</span></td>
+      <td style="text-align:right;font-weight:700">9</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$36</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$324</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="ont gpon hg6543d" data-stock="1162" data-precio="52" data-valor="60424" data-ventas="2557" data-cob="213.08" data-status="bajo" style="background:#fef3c7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Ont Gpon HG6543D</td>
+      <td><span class="fam-tag">ONT</span></td>
+      <td style="text-align:right;font-weight:700">1,162</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$52</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$60,424</td>
+      <td style="text-align:right;color:#475569">2,557</td>
+      <td style="text-align:right;color:#475569">213.08</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:23%;height:100%;background:#d97706;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#d97706;white-space:nowrap">5.5 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fef3c7;color:#d97706;border:1px solid #d9770633;">🟡 BAJO</span></td>
+    </tr>
+    
+<tr data-prod="ont gpon hg6145f3" data-stock="480" data-precio="36" data-valor="17280" data-ventas="11964" data-cob="997.00" data-status="critico" style="background:#fee2e2">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Ont Gpon HG6145F3</td>
+      <td><span class="fam-tag">ONT</span></td>
+      <td style="text-align:right;font-weight:700">480</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$36</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$17,280</td>
+      <td style="text-align:right;color:#475569">11,964</td>
+      <td style="text-align:right;color:#475569">997.00</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:2%;height:100%;background:#dc2626;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#dc2626;white-space:nowrap">0.5 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fee2e2;color:#dc2626;border:1px solid #dc262633;">🔴 CRÍTICO</span></td>
+    </tr>
+    
+<tr data-prod="ont gpon hg6144f" data-stock="13" data-precio="30" data-valor="390" data-ventas="4764" data-cob="397.00" data-status="critico" style="background:#fee2e2">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Ont Gpon HG6144F</td>
+      <td><span class="fam-tag">ONT</span></td>
+      <td style="text-align:right;font-weight:700">13</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$30</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$390</td>
+      <td style="text-align:right;color:#475569">4,764</td>
+      <td style="text-align:right;color:#475569">397.00</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:0%;height:100%;background:#dc2626;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#dc2626;white-space:nowrap">0.0 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#fee2e2;color:#dc2626;border:1px solid #dc262633;">🔴 CRÍTICO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fastconnect 1f 100m" data-stock="100" data-precio="14" data-valor="1400" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FastConnect 1F 100m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">100</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$14</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,400</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fastconnect 1f 150m" data-stock="100" data-precio="18" data-valor="1800" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FastConnect 1F 150m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">100</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$18</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,800</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fastconnect 1f 200m" data-stock="100" data-precio="22" data-valor="2200" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FastConnect 1F 200m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">100</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$22</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$2,200</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fastconnect 1f 250m" data-stock="100" data-precio="26" data-valor="2600" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FastConnect 1F 250m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">100</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$26</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$2,600</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fh fc-pc lc-pc g.652d 20m" data-stock="39" data-precio="7" data-valor="273" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FH FC-PC LC-PC G.652D 20m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">39</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$7</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$273</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fh lc-pc sc-pc g.652d 15m" data-stock="380" data-precio="7" data-valor="2660" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FH LC-PC SC-PC G.652D 15m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">380</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$7</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$2,660</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fh sc-pc sc-pc g.652d 20m" data-stock="136" data-precio="5" data-valor="680" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FH SC-PC SC-PC G.652D 20m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">136</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$5</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$680</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="splitter optico fh 1x2 nc - sc/apc" data-stock="640" data-precio="4" data-valor="2240" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Splitter optico FH 1x2 NC - SC/APC</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">640</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$4</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$2,240</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="splitter optico fh 1x4 nc - sc/apc" data-stock="320" data-precio="5" data-valor="1600" data-ventas="—" data-cob="—" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Splitter optico FH 1x4 NC - SC/APC</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">320</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$5</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$1,600</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td style="text-align:right;color:#475569">—</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#cbd5e1;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">∞ / Sin ventas</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="patchcord fh sc-apc sc-apc g.657a1 2.0m" data-stock="2953" data-precio="4" data-valor="10336" data-ventas="5" data-cob="0.42" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Patchcord FH SC-APC SC-APC G.657A1 2.0m</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">2,953</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$4</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$10,336</td>
+      <td style="text-align:right;color:#475569">5</td>
+      <td style="text-align:right;color:#475569">0.42</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">7087.2 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="caja nap fh preconectorizada 1x8" data-stock="38" data-precio="22" data-valor="836" data-ventas="11" data-cob="0.92" data-status="estancado" style="background:#f1f5f9">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Caja NAP FH Preconectorizada 1x8</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">38</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$22</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$836</td>
+      <td style="text-align:right;color:#475569">11</td>
+      <td style="text-align:right;color:#475569">0.92</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:100%;height:100%;background:#64748b;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#64748b;white-space:nowrap">41.5 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #64748b33;">⛔ ESTANCADO</span></td>
+    </tr>
+    
+<tr data-prod="conector optico de campo fh sc/apc" data-stock="18190" data-precio="2" data-valor="40018" data-ventas="20210" data-cob="1684.17" data-status="optimo" style="background:#dcfce7">
+      <td style="font-weight:600;color:#1e293b;font-size:12px;">Conector optico de campo FH SC/APC</td>
+      <td><span class="fam-tag">Pasivos/Conectividad</span></td>
+      <td style="text-align:right;font-weight:700">18,190</td>
+      <td style="color:#64748b;font-size:11px">Unidades</td>
+      <td style="text-align:right;color:#1d4ed8;font-weight:600">$2</td>
+      <td style="text-align:right;font-weight:700;color:#1B4F91">$40,018</td>
+      <td style="text-align:right;color:#475569">20,210</td>
+      <td style="text-align:right;color:#475569">1,684.17</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;min-width:50px">
+            <div style="width:45%;height:100%;background:#16a34a;border-radius:3px;"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#16a34a;white-space:nowrap">10.8 m</span>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:#dcfce7;color:#16a34a;border:1px solid #16a34a33;">🟢 ÓPTIMO</span></td>
+    </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>⛔ Stock Estancado — Mayor Valor Inmovilizado</h2></div>
+    <div class="section-body">
+      <p style="font-size:12px;color:#64748b;margin-bottom:16px">Productos sin ventas en los últimos 12 meses o con cobertura superior a 24 meses. Prioridad de acción comercial.</p>
+      <div class="flags-grid">
+    <div class="flag-card">
+      <div class="flag-prod">Cable Óptico FH CFOA-SM-AS80-S 24F PK</div>
+      <div class="flag-meta">
+        <span class="flag-val">$33,600</span>
+        <span class="flag-fam">Cable</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 120,000 Metros</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Router wireless SR1041F</div>
+      <div class="flag-meta">
+        <span class="flag-val">$27,680</span>
+        <span class="flag-fam">Activos/Equipos</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 692 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Cable Óptico FH CFOA-SM-AS80-S 48F PK</div>
+      <div class="flag-meta">
+        <span class="flag-val">$13,440</span>
+        <span class="flag-fam">Cable</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 32,000 Metros</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Cable Óptico FH CFOA-SM-AS80-S 144F PKP</div>
+      <div class="flag-meta">
+        <span class="flag-val">$10,560</span>
+        <span class="flag-fam">Cable</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 12,000 Metros</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Patchcord FH SC-APC SC-APC G.657A1 2.0m</div>
+      <div class="flag-meta">
+        <span class="flag-val">$10,336</span>
+        <span class="flag-fam">Pasivos/Conectividad</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 2,953 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Cable Óptico FH CFOA-SM-AS80-S 144F PK</div>
+      <div class="flag-meta">
+        <span class="flag-val">$10,200</span>
+        <span class="flag-fam">Cable</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 12,000 Metros</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Cable Óptico FH CFOA-SM-AS80-S 96F PK</div>
+      <div class="flag-meta">
+        <span class="flag-val">$9,920</span>
+        <span class="flag-fam">Cable</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 16,000 Metros</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Caja NAP FH FitDP-463A-10F - Terminal</div>
+      <div class="flag-meta">
+        <span class="flag-val">$9,000</span>
+        <span class="flag-fam">Cajas/Infraestructura</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 500 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Caja terminal FitDP-420A</div>
+      <div class="flag-meta">
+        <span class="flag-val">$7,679</span>
+        <span class="flag-fam">Cajas/Infraestructura</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 1,097 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Distribuidor de fibra optica 48 puertos</div>
+      <div class="flag-meta">
+        <span class="flag-val">$7,525</span>
+        <span class="flag-fam">Cajas/Infraestructura</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 43 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Caja de empalme optico FH 144 fibras CM</div>
+      <div class="flag-meta">
+        <span class="flag-val">$6,552</span>
+        <span class="flag-fam">Cajas/Infraestructura</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 84 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-prod">Distribuidor de fibra optica 144 puertos</div>
+      <div class="flag-meta">
+        <span class="flag-val">$5,780</span>
+        <span class="flag-fam">Cajas/Infraestructura</span>
+        <span style="color:#94a3b8;font-size:11px">Stock: 17 Unidades</span>
+      </div>
+      <div class="flag-reason">Sin ventas históricas o cobertura &gt;24 meses</div>
+    </div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>🚀 Estrategia de Ventas — Plan de Acción por Nivel</h2></div>
+    <div class="section-body">
+      <div class="strat-grid">
+    <div class="strat-block" style="border-left:4px solid #16a34a;background:#f0fdf4">
+      <div class="strat-title" style="color:#16a34a">🎯 1er Prioridad — Clientes Activos del CRM</div>
+      <div class="strat-items">
+        <div class="strat-item">
+          <div class="strat-client">ITC Córdoba <span class="etapa-tag">📋 Propuesta</span></div>
+          <div class="strat-sub">FTTH proyecto ENACOM en marcha</div>
+          <div class="strat-prod">📦 Cables Drop 1F, Cajas NAP, Splitters, Conectores SC/APC, Patchcords FastConnect</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">TELVISO <span class="etapa-tag">💬 En conversación</span></div>
+          <div class="strat-sub">Expansión FTTH + homologación en curso</div>
+          <div class="strat-prod">📦 Cables multicabo (12F, 24F, 48F), Cajas empalme, ONTs HG6145F3/HG6543D, Distribuidores</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">GIGARED <span class="etapa-tag">💬 En conversación</span></div>
+          <div class="strat-sub">STB + IoT + Rompemuros activos</div>
+          <div class="strat-prod">📦 Router SR1041F (692 u en stock), ONTs HG6543D, Splitters, Patchcords</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">VICTORIA TE VE <span class="etapa-tag">📋 Propuesta</span></div>
+          <div class="strat-sub">Migración OLT AN6000-15</div>
+          <div class="strat-prod">📦 ONTs HG6145F3, Patchcords SC-APC, Splitters 1x2 y 1x4, Conectores</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">PREFORM <span class="etapa-tag">📋 Propuesta</span></div>
+          <div class="strat-sub">Sinergia FH + Fiberhome Day</div>
+          <div class="strat-prod">📦 Cajas NAP (500 u en stock), Cajas empalme, Distribuidores FO, Patchcords FH</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">WILTEL <span class="etapa-tag">💬 En conversación</span></div>
+          <div class="strat-sub">Varios proyectos en curso</div>
+          <div class="strat-prod">📦 Cables drop, Conectores, Splitters, Distribuidores LGX</div>
+        </div></div></div>
+    <div class="strat-block" style="border-left:4px solid #d97706;background:#fff7ed">
+      <div class="strat-title" style="color:#d97706">📋 2da Prioridad — Base de datos de clientes</div>
+      <div class="strat-items">
+        <div class="strat-item">
+          <div class="strat-client">ISPs con proyectos FTTH ENACOM <span class="etapa-tag">🧊 Prospecto</span></div>
+          <div class="strat-sub">Perfil: ISP mediano con ANR en curso</div>
+          <div class="strat-prod">📦 Caja NAP Terminal (500 u), Caja HUB 461C/D (130 u), Cable 24F PK (120.000m), Cable 48F (32.000m), Cable 96F (16.000m) — stock de lenta rotación ideal para proyectos nuevos</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">ISPs con red HFC migrando a FTTH <span class="etapa-tag">🧊 Prospecto</span></div>
+          <div class="strat-sub">Perfil: Cooperativas y SAPEM en transición</div>
+          <div class="strat-prod">📦 Cajas empalme FH (84 + 33 u), Distribuidores 48p (43 u) y 144p (17 u), Conectores SC/APC (18.190 u)</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">ISPs compradores de ONTs en volumen <span class="etapa-tag">🧊 Prospecto</span></div>
+          <div class="strat-sub">Perfil: ISP >500 abonados activos</div>
+          <div class="strat-prod">📦 ONTs HG6145F3 (480 u) y HG6543D (1.162 u) — aceleración de salida urgente</div>
+        </div></div></div>
+    <div class="strat-block" style="border-left:4px solid #7c3aed;background:#f5f3ff">
+      <div class="strat-title" style="color:#7c3aed">🚀 3ra Prioridad — Mercado Abierto / Acción Especial</div>
+      <div class="strat-items">
+        <div class="strat-item">
+          <div class="strat-client">Campaña "liquidación técnica" <span class="etapa-tag">📋 Propuesta</span></div>
+          <div class="strat-sub">Patchcords y pigtails FastConnect, splitters, distribuidores</div>
+          <div class="strat-prod">📦 Bundle: Kit FTTH Básico (10 pigtails + 5 splitters 1x2 + 5 conectores) — precio especial por volumen. Acción: Fiberhome Day con Red Intercable</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">Reventa a integradores / instaladores <span class="etapa-tag">🧊 Prospecto</span></div>
+          <div class="strat-sub">Cajas NAP Expansion (200+200 u)</div>
+          <div class="strat-prod">📦 Precio especial -10% para pedidos +50 u. Canal: distribuidores regionales del interior</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-client">Router SR1041F — canal retail/e-commerce <span class="etapa-tag">🧊 Prospecto</span></div>
+          <div class="strat-sub">692 u en stock, 26 meses cobertura</div>
+          <div class="strat-prod">📦 Evaluar canal Mercado Libre / distribución a resellers. Margen extra disponible en precio lista vs. volumen</div>
+        </div></div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const tbody = document.getElementById('stock-body');
+const searchEl = document.getElementById('search');
+const statusEl = document.getElementById('filter-status');
+const countEl = document.getElementById('count-label');
+let sortCol = null, sortDir = 1;
+
+function getRows() { return Array.from(tbody.querySelectorAll('tr[data-status]')); }
+
+function applyFilters() {
+  const q = searchEl.value.toLowerCase();
+  const st = statusEl.value;
+  let visible = 0;
+  getRows().forEach(r => {
+    const matchQ = !q || r.dataset.prod.includes(q);
+    const matchSt = !st || r.dataset.status === st;
+    r.classList.toggle('hidden', !(matchQ && matchSt));
+    if (matchQ && matchSt) visible++;
+  });
+  countEl.textContent = visible + ' producto' + (visible !== 1 ? 's' : '');
+}
+
+function sortBy(col, type) {
+  if (sortCol === col) { sortDir *= -1; } else { sortCol = col; sortDir = 1; }
+  const rows = getRows();
+  rows.sort((a, b) => {
+    let av = a.dataset[col], bv = b.dataset[col];
+    if (type === 'num') { av = parseFloat(av)||0; bv = parseFloat(bv)||0; }
+    return (av > bv ? 1 : av < bv ? -1 : 0) * sortDir;
+  });
+  rows.forEach(r => tbody.appendChild(r));
+  // update header indicators
+  document.querySelectorAll('th[data-col]').forEach(th => {
+    th.classList.remove('sort-asc','sort-desc');
+    if (th.dataset.col === col) th.classList.add(sortDir===1?'sort-asc':'sort-desc');
+  });
+}
+
+searchEl.addEventListener('input', applyFilters);
+statusEl.addEventListener('change', applyFilters);
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => sortBy(th.dataset.col, th.dataset.type));
+});
+</script>
+</body>
+</html>

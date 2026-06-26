@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pipeline Review — Preguntas para Fede</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; }
+
+    .header {
+      background: #1B4F91;
+      padding: 28px 40px;
+      border-bottom: 4px solid #2D7DD2;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-left h1 { font-size: 22px; font-weight: 800; color: #fff; }
+    .header-left p { font-size: 13px; color: rgba(255,255,255,.6); margin-top: 4px; }
+    .header-stats { display: flex; gap: 20px; }
+    .hstat { text-align: center; background: rgba(255,255,255,.1); border-radius: 10px; padding: 10px 18px; }
+    .hstat-num { font-size: 22px; font-weight: 800; color: #fff; }
+    .hstat-label { font-size: 10px; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .5px; }
+
+    .filters {
+      background: #fff;
+      padding: 14px 40px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .filter-label { font-size: 12px; color: #94a3b8; font-weight: 600; margin-right: 4px; }
+    .fbtn {
+      padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 1px solid #e2e8f0; background: transparent; color: #64748b;
+      cursor: pointer; transition: all .15s;
+    }
+    .fbtn:hover, .fbtn.active { background: #1B4F91; border-color: #1B4F91; color: #fff; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+    .summary-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 28px; }
+    .scard { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 16px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .scard-val { font-size: 22px; font-weight: 800; color: #1B4F91; }
+    .scard-val.green { color: #16a34a; }
+    .scard-val.amber { color: #d97706; }
+    .scard-val.red { color: #dc2626; }
+    .scard-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .4px; margin-top: 4px; font-weight: 600; }
+
+    .opp-grid { display: flex; flex-direction: column; gap: 12px; }
+
+    .opp-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      transition: box-shadow .2s;
+    }
+    .opp-card:hover { box-shadow: 0 4px 16px rgba(27,79,145,.1); }
+
+    .opp-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; cursor: pointer;
+      user-select: none;
+    }
+    .opp-num {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: #1B4F91; color: #fff;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .opp-main { flex: 1; min-width: 0; }
+    .opp-title { font-size: 14px; font-weight: 700; color: #0f172a; }
+    .opp-cliente { font-size: 12px; color: #64748b; margin-top: 1px; }
+    .opp-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .fase-ganado      { background: #dcfce7; color: #15803d; }
+    .fase-perdido     { background: #fee2e2; color: #991b1b; }
+    .fase-propuesta   { background: #dbeafe; color: #1e40af; }
+    .fase-dimensionando { background: #fef3c7; color: #92400e; }
+    .fase-oportunidad { background: #ede9fe; color: #5b21b6; }
+
+    .valor-badge { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .valor-missing { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .prob-badge { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+    .opp-owner { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+    .chevron { font-size: 14px; color: #94a3b8; transition: transform .2s; flex-shrink: 0; }
+    .opp-card.open .chevron { transform: rotate(180deg); }
+
+    .opp-body { display: none; border-top: 1px solid #f1f5f9; }
+    .opp-card.open .opp-body { display: block; }
+
+    .opp-body-inner { padding: 18px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .body-section h4 {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: #94a3b8; margin-bottom: 10px;
+    }
+
+    .notas-box {
+      background: #f8fafc; border-radius: 8px; padding: 12px;
+      font-size: 12px; color: #475569; line-height: 1.6;
+      border-left: 3px solid #2D7DD2;
+    }
+
+    .preguntas-list { display: flex; flex-direction: column; gap: 8px; }
+    .pregunta {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 8px; padding: 10px 12px;
+    }
+    .pregunta-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .pregunta-text { font-size: 12px; color: #1c1400; line-height: 1.5; font-weight: 500; }
+
+    .missing-fields { grid-column: 1/-1; }
+    .missing-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .missing-tag {
+      padding: 3px 10px; border-radius: 6px;
+      background: #fef2f2; color: #991b1b;
+      border: 1px solid #fecaca; font-size: 11px; font-weight: 600;
+    }
+    .complete-tag {
+      padding: 3px 10px; border-radius: 6px;
+      background: #f0fdf4; color: #15803d;
+      border: 1px solid #bbf7d0; font-size: 11px; font-weight: 600;
+    }
+
+    .footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 24px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>📋 Pipeline Review — Fede</h1>
+    <p>Preguntas para completar y cargar oportunidades al CRM · Jun 2026</p>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="hstat-num">25</div><div class="hstat-label">Oportunidades</div></div>
+    <div class="hstat"><div class="hstat-num">USD 676K</div><div class="hstat-label">Valorizado</div></div>
+    <div class="hstat"><div class="hstat-num">13</div><div class="hstat-label">Sin valor</div></div>
+    <div class="hstat"><div class="hstat-num">4</div><div class="hstat-label">Ganadas</div></div>
+  </div>
+</div>
+
+<div class="filters">
+  <span class="filter-label">Filtrar:</span>
+  <button class="fbtn active" onclick="filter('all',this)">Todas</button>
+  <button class="fbtn" onclick="filter('OPORTUNIDAD',this)">Oportunidad</button>
+  <button class="fbtn" onclick="filter('Propuesta enviada',this)">Propuesta enviada</button>
+  <button class="fbtn" onclick="filter('DIMENSIONANDO',this)">Dimensionando</button>
+  <button class="fbtn" onclick="filter('GANADO',this)">Ganado</button>
+  <button class="fbtn" onclick="filter('PERDIDO',this)">Perdido</button>
+  <button class="fbtn" onclick="filter('sin-valor',this)">⚠️ Sin valor</button>
+</div>
+
+<div class="container">
+
+  <div class="summary-row">
+    <div class="scard"><div class="scard-val green">USD 378K</div><div class="scard-label">Pipeline con valor cargado</div></div>
+    <div class="scard"><div class="scard-val amber">13</div><div class="scard-label">Oportunidades sin valorizar</div></div>
+    <div class="scard"><div class="scard-val">USD 256K</div><div class="scard-label">Mayor oportunidad (ITC Córdoba)</div></div>
+    <div class="scard"><div class="scard-val red">8</div><div class="scard-label">Sin probabilidad estimada</div></div>
+  </div>
+
+  <div class="opp-grid" id="opp-grid">
+
+    <!-- 01 -->
+    <div class="opp-card" data-fase="GANADO">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">01</div>
+        <div class="opp-main">
+          <div class="opp-title">ONTs FH — Recuperar cuenta</div>
+          <div class="opp-cliente">ASTESANO</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-ganado">✅ Ganado</span>
+          <span class="badge valor-missing">Sin valor</span>
+          <span class="opp-owner">Matias Taddei</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Antonio pidió recuperar cuenta. Trabajando en conjunto con Mati.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">💰</div><div class="pregunta-text">¿Cuál es el valor estimado de esta recuperación? ¿Cuántos ONTs y a qué precio?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Quién es el nombre completo del contacto en Astesano (Antonio)?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📊</div><div class="pregunta-text">¿La cuenta ya está recuperada o sigue en proceso?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>🔴 Campos faltantes para el CRM</h4>
+            <div class="missing-list">
+              <span class="missing-tag">Valor estimado</span>
+              <span class="missing-tag">Nombre contacto</span>
+              <span class="missing-tag">Probabilidad</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="opp-card" data-fase="Propuesta enviada">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">02</div>
+        <div class="opp-main">
+          <div class="opp-title">QSFP28 100G 120KM + QSFP+ 40G</div>
+          <div class="opp-cliente">CHACO / FESACOM</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-propuesta">📄 Propuesta enviada</span>
+          <span class="badge valor-badge">USD 39,000</span>
+          <span class="badge prob-badge">70%</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Stand by por problema con ENACOM al sumar HUAWEI. Están viendo si vuelven a hacer la presentación inflando precios de SFPs para incluir router + switches.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">🏛️</div><div class="pregunta-text">¿Se retomó la presentación ante ENACOM? ¿Sigue en stand by o hay fecha estimada de reactivación?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">💲</div><div class="pregunta-text">Si inflan los precios de SFPs para sumar router/switches, ¿seguimos siendo competitivos? ¿Cambia el valor total de la oportunidad?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Quién es el nombre completo del contacto en FESACOM/CHACO?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>✅ Campos completos / 🔴 Faltantes</h4>
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor</span>
+              <span class="complete-tag">✅ Prob 70%</span>
+              <span class="complete-tag">✅ Propietario</span>
+              <span class="missing-tag">Nombre contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03-06 GIGARED -->
+    <div class="opp-card" data-fase="OPORTUNIDAD">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">03–06</div>
+        <div class="opp-main">
+          <div class="opp-title">STB UNIRIM · IoT · Rompemuros · Proyector Google TV</div>
+          <div class="opp-cliente">GIGARED — 4 oportunidades</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-oportunidad">🔮 Oportunidad</span>
+          <span class="badge valor-missing">4× Sin valor</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">
+              <strong>03 STB + TMS:</strong> Hablé con JRGB en Internet Day. Interesado. Esperando precio y muestras de UNIRIM.<br><br>
+              <strong>04 IoT domiciliario:</strong> Ídem anterior.<br><br>
+              <strong>05 Rompemuros:</strong> Ídem anterior.<br><br>
+              <strong>06 Proyector Google TV:</strong> Consultar con Jorge.
+            </div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">📦</div><div class="pregunta-text">¿Llegaron las muestras y precios de UNIRIM para STB + TMS? ¿Hay fecha de cotización?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">💰</div><div class="pregunta-text">¿Tenés una estimación de volumen/valor para cada oportunidad de Gigared?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿JRGB = quién exactamente? ¿Nombre completo y cargo?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">🎯</div><div class="pregunta-text">El proyector Google TV — ¿hablaste con Jorge? ¿Hay interés concreto o es solo exploración?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📊</div><div class="pregunta-text">¿Quién queda como propietario de las 4 oportunidades de Gigared?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>🔴 Campos faltantes para el CRM</h4>
+            <div class="missing-list">
+              <span class="missing-tag">Valor estimado ×4</span>
+              <span class="missing-tag">Probabilidad ×4</span>
+              <span class="missing-tag">Propietario ×4</span>
+              <span class="missing-tag">Nombre contacto ×4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="opp-card" data-fase="PERDIDO">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">07</div>
+        <div class="opp-main">
+          <div class="opp-title">Cajas Precon FH + Fibra</div>
+          <div class="opp-cliente">GRUPO JUNÍN</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-perdido">❌ Perdido</span>
+          <span class="badge valor-badge">USD 220,000</span>
+          <span class="badge prob-badge">70%</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Compraron cajas precon KOC, 25% más barato que FiberHome. Buena calidad según Juan Pablo Aparicio. Quiere comprar FH pero no puede si seguimos más caros.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">💲</div><div class="pregunta-text">¿Podemos mejorar el precio de las cajas precon FH para ser competitivos vs KOC? ¿Hay margen para negociar con FiberHome?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">🔄</div><div class="pregunta-text">¿Esta oportunidad está definitivamente perdida o hay chances de recuperar con un ajuste de precio?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">Contacto: Juan Pablo Aparicio — ¿cargo y datos de contacto completos?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>✅ Campos completos / 🔴 Faltantes</h4>
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor USD 220K</span>
+              <span class="complete-tag">✅ Propietario</span>
+              <span class="missing-tag">Nombre contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="opp-card" data-fase="Propuesta enviada">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">08</div>
+        <div class="opp-main">
+          <div class="opp-title">Red Precon Villa Gral. Belgrano</div>
+          <div class="opp-cliente">ITC CÓRDOBA</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-propuesta">📄 Propuesta enviada</span>
+          <span class="badge valor-badge">USD 256,000</span>
+          <span class="badge prob-badge">90%</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Negociación interna. Pidiendo préstamo a ENACOM/CREDICOP. Presupuesto enviado a ENACOM. 27-5: Esperando aprobación. Tenemos casi todo el stock necesario.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">🏛️</div><div class="pregunta-text">¿Se aprobó el préstamo ENACOM/CREDICOP? ¿Hay fecha estimada de resolución?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📦</div><div class="pregunta-text">¿El stock sigue reservado para ITC? ¿Hay riesgo de que se venda a otro cliente mientras esperamos?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Quién es el contacto principal en ITC Córdoba?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>✅ Campos completos / 🔴 Faltantes</h4>
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor USD 256K</span>
+              <span class="complete-tag">✅ Prob 90%</span>
+              <span class="complete-tag">✅ Propietario</span>
+              <span class="missing-tag">Nombre contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="opp-card" data-fase="PERDIDO">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">09</div>
+        <div class="opp-main">
+          <div class="opp-title">ONTs FH 30/50 mensual</div>
+          <div class="opp-cliente">JOSE SCHAAB</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-perdido">❌ Perdido</span>
+          <span class="badge valor-badge">USD 2,000</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Negociado a USD 38 + IVA. 15-5: Esperando respuesta del cliente.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">🔄</div><div class="pregunta-text">¿Respondió José Schaab? ¿Definitivamente perdido o sigue en negociación?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📊</div><div class="pregunta-text">Si es recurrente (30/50 por mes), ¿el valor anual sería USD 24K? ¿Vale retomar?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>✅ / 🔴</h4>
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor</span>
+              <span class="complete-tag">✅ Propietario</span>
+              <span class="missing-tag">Probabilidad</span>
+              <span class="missing-tag">Nombre contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10-11 SITSA -->
+    <div class="opp-card" data-fase="OPORTUNIDAD">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">10–11</div>
+        <div class="opp-main">
+          <div class="opp-title">QSFP28 100G · Conexión Entre Ríos</div>
+          <div class="opp-cliente">SITSA — 2 oportunidades</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-ganado">✅ Ganado</span>
+          <span class="badge fase-oportunidad">🔮 Oportunidad</span>
+          <span class="badge valor-badge">USD 16,400 (opp 10)</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">
+              <strong>10 QSFP28:</strong> Querían 80km, les ofrecimos 120km en stock. GANADO USD 16,400 · 60% prob.<br><br>
+              <strong>11 Entre Ríos:</strong> Zambiazzo interesado si Horizon pone la mercadería, él maneja contactos, Franco hace el despliegue.
+            </div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">✅</div><div class="pregunta-text">Opp 10: ¿El QSFP28 ya está facturado/entregado? ¿Hay OC emitida?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">🗺️</div><div class="pregunta-text">Opp 11: ¿Avanzó la conversación con Zambiazzo? ¿Hay un proyecto concreto en Entre Ríos?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">💰</div><div class="pregunta-text">Opp 11: ¿Podés estimar el volumen de la red? ¿Cuántos hogares/km de despliegue?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Zambiazzo = nombre completo y cargo? ¿Franco es Franco Lazos de SITSA?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>🔴 Campos faltantes</h4>
+            <div class="missing-list">
+              <span class="missing-tag">Valor opp 11</span>
+              <span class="missing-tag">Prob opp 11</span>
+              <span class="missing-tag">Propietario opp 11</span>
+              <span class="missing-tag">Nombres contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12-15 TELVISO -->
+    <div class="opp-card" data-fase="DIMENSIONANDO">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">12–15</div>
+        <div class="opp-main">
+          <div class="opp-title">Pasivos · Barrio Activos · ONT+AP+STB · Partnership</div>
+          <div class="opp-cliente">TELVISO — 4 oportunidades</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-dimensionando">📐 Dimensionando</span>
+          <span class="badge valor-missing">4× Sin valor</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">
+              <strong>12 Pasivos:</strong> Caja NAP, 10m cable 12 y 96 PK entregados.<br><br>
+              <strong>13 Barrio activos:</strong> OLT + ONT WiFi6 + AP dejados para homologación.<br><br>
+              <strong>14 ONT+AP+STB:</strong> ONT WiFi6, AP Mesh, Rompemuros UNIRIM para homologar. STB en propuesta. 75% prob.<br><br>
+              <strong>15 Partnership:</strong> Mail con lineamientos enviado a principios de mayo. Horacio lo vio el 14-5. Esperando si piden draft formal.
+            </div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">🔬</div><div class="pregunta-text">¿Cuándo esperamos resultado de homologaciones (OLT, ONT WiFi6, AP Mesh)? ¿Hay fecha comprometida?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📦</div><div class="pregunta-text">¿Llegó cotización y muestras de UNIRIM para el STB de la opp 14?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">🤝</div><div class="pregunta-text">¿Horacio respondió sobre el partnership? ¿Pidió el draft formal o quedó en la nada?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">💰</div><div class="pregunta-text">¿Podés estimar el valor de cada oportunidad Telviso una vez que cierren las homologaciones?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Nombre completo del contacto en Telviso (Horacio = ¿apellido?)? ¿Y Maxi Juárez para opp 16?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>🔴 Campos faltantes</h4>
+            <div class="missing-list">
+              <span class="missing-tag">Valor ×4</span>
+              <span class="missing-tag">Prob opps 12,13,15</span>
+              <span class="missing-tag">Propietario opps 14,15</span>
+              <span class="missing-tag">Nombres contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16 -->
+    <div class="opp-card" data-fase="GANADO">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">16</div>
+        <div class="opp-main">
+          <div class="opp-title">Cajas de Empalme 144F y 48F</div>
+          <div class="opp-cliente">TELVISO</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-ganado">✅ Ganado</span>
+          <span class="badge valor-badge">USD 1,700</span>
+          <span class="badge prob-badge">80%</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Cotizado a Maxi Juárez. Esperando respuesta.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">✅</div><div class="pregunta-text">¿Respondió Maxi Juárez? ¿Se cerró la venta o sigue esperando?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Quién es el propietario de esta oportunidad — Fede o Matias?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor</span>
+              <span class="complete-tag">✅ Prob 80%</span>
+              <span class="missing-tag">Propietario</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 17 -->
+    <div class="opp-card" data-fase="Propuesta enviada">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">17</div>
+        <div class="opp-main">
+          <div class="opp-title">OLT AN6000-15 Full</div>
+          <div class="opp-cliente">VICTORIA TE VE</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-propuesta">📄 Propuesta enviada</span>
+          <span class="badge valor-badge">USD 58,000</span>
+          <span class="badge prob-badge">90%</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">Rectificador y OLT conectados. Esperando acceso a Diego Aragunde para iniciar migración de cada puerto PON. Mix grande de ONTs en la red existente.</div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">🔐</div><div class="pregunta-text">¿Le dieron acceso a Diego Aragunde para arrancar la migración? ¿Hay fecha de inicio?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">✅</div><div class="pregunta-text">¿La homologación de la OLT está cerrada formalmente?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📦</div><div class="pregunta-text">¿El mix de ONTs existentes requiere comprar ONTs adicionales a Horizon? ¿Hay una segunda oportunidad ahí?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Quién es el contacto principal en Victoria Te Ve (además de Diego Aragunde)?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor USD 58K</span>
+              <span class="complete-tag">✅ Prob 90%</span>
+              <span class="complete-tag">✅ Propietario</span>
+              <span class="missing-tag">Nombre contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 18-23 WILTEL -->
+    <div class="opp-card" data-fase="OPORTUNIDAD">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">18–23</div>
+        <div class="opp-main">
+          <div class="opp-title">Pasivos · Conectores · IoT · FINISAR · Panduit · Rompemuros</div>
+          <div class="opp-cliente">WILTEL — 6 oportunidades</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-dimensionando">📐 Dimensionando</span>
+          <span class="badge fase-ganado">✅ Ganado ×2</span>
+          <span class="badge fase-oportunidad">🔮 Oportunidad ×4</span>
+          <span class="opp-owner">Federico Núñez</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">
+              <strong>18 Pasivos:</strong> Dimensionando. Sin valor.<br><br>
+              <strong>19 Conectores:</strong> GANADO USD 3,000. Nueva OC por 2000 conectores. 90% prob.<br><br>
+              <strong>20 IoT:</strong> Juampi armando precios DDP. Esperando lista de precios UNIRIM.<br><br>
+              <strong>21 FINISAR:</strong> Internet Day — Ignacio Córdoba (Jefe NOC) interesado. Presentación enviada a Fer Andereggen.<br><br>
+              <strong>22 Panduit:</strong> Enviar presentación de marca (pendiente).<br><br>
+              <strong>23 Rompemuros:</strong> Precio y data sheet pasado a Fernanda. Enviar data a Ignacio.
+            </div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">📦</div><div class="pregunta-text">Opp 20: ¿Terminó Juampi de armar los precios DDP del IoT? ¿Podemos cotizar?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📧</div><div class="pregunta-text">Opp 22: ¿Se envió la presentación de Panduit a Wiltel? (dice "enviar" — ¿se hizo?)</div></div>
+              <div class="pregunta"><div class="pregunta-icon">📧</div><div class="pregunta-text">Opp 23: ¿Le enviaste la data de Rompemuros UNIRIM a Ignacio Córdoba?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">💰</div><div class="pregunta-text">¿Tenés estimación de valor para opps 18, 20, 21, 22, 23?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Datos completos de: Ignacio Córdoba, Fer Andereggen, Fernanda (apellido)?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <h4>🔴 Campos faltantes</h4>
+            <div class="missing-list">
+              <span class="missing-tag">Valor ×5</span>
+              <span class="missing-tag">Prob ×4</span>
+              <span class="missing-tag">Propietario ×4</span>
+              <span class="missing-tag">Nombres contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 24-25 PREFORM -->
+    <div class="opp-card" data-fase="Propuesta enviada">
+      <div class="opp-header" onclick="toggle(this)">
+        <div class="opp-num">24–25</div>
+        <div class="opp-main">
+          <div class="opp-title">Patchcords Fastconnect · Sinergia FH-Preform</div>
+          <div class="opp-cliente">PREFORM — 2 oportunidades</div>
+        </div>
+        <div class="opp-meta">
+          <span class="badge fase-propuesta">📄 Propuesta enviada</span>
+          <span class="badge fase-oportunidad">🔮 Oportunidad</span>
+          <span class="badge valor-badge">USD 25,000 (opp 24)</span>
+          <span class="badge prob-badge">50% / 70%</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="opp-body">
+        <div class="opp-body-inner">
+          <div class="body-section">
+            <h4>📝 Notas actuales</h4>
+            <div class="notas-box">
+              <strong>24 Patchcords:</strong> Cliente debe devolver cables a Claro. Cotización más alta de lo que tiene en mente. Revisando la coti. 27-5.<br><br>
+              <strong>25 Sinergia FH:</strong> Reunión presencial con Mati programada para miércoles 2/6. 70% prob.
+            </div>
+          </div>
+          <div class="body-section">
+            <h4>❓ Preguntas para Fede</h4>
+            <div class="preguntas-list">
+              <div class="pregunta"><div class="pregunta-icon">💲</div><div class="pregunta-text">Opp 24: ¿El cliente respondió sobre la cotización? ¿Están muy lejos del precio o hay margen para ajustar?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">🤝</div><div class="pregunta-text">Opp 25: ¿Se hizo la reunión del 2/6 con Mati? ¿Cuál fue el resultado? ¿Hay una oportunidad concreta en números?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">👤</div><div class="pregunta-text">¿Quién es el contacto en Preform (nombre, cargo)?</div></div>
+              <div class="pregunta"><div class="pregunta-icon">💰</div><div class="pregunta-text">Opp 25: ¿Podés estimar un valor para la sinergia de despliegue?</div></div>
+            </div>
+          </div>
+          <div class="missing-fields">
+            <div class="missing-list">
+              <span class="complete-tag">✅ Valor opp 24</span>
+              <span class="complete-tag">✅ Prob ambas</span>
+              <span class="missing-tag">Valor opp 25</span>
+              <span class="missing-tag">Propietario ambas</span>
+              <span class="missing-tag">Nombres contacto</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  Horizon CRM · Pipeline Review Jun 2026 · <strong>Confidencial</strong>
+</div>
+
+<script>
+  function toggle(header) {
+    header.parentElement.classList.toggle('open');
+  }
+
+  function filter(fase, btn) {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.opp-card').forEach(card => {
+      if (fase === 'all') { card.style.display = ''; return; }
+      if (fase === 'sin-valor') {
+        const hasMissing = card.querySelector('.valor-missing');
+        card.style.display = hasMissing ? '' : 'none';
+      } else {
+        card.style.display = card.dataset.fase === fase ? '' : 'none';
+      }
+    });
+  }
+
+  // Expand all on load for quick preview
+  // document.querySelectorAll('.opp-card').forEach(c => c.classList.add('open'));
+</script>
+</body>
+</html>

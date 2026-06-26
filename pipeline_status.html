@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pipeline Status — 23 Jun 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh;}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,#1B4F91 0%,#0f2d5c 100%);padding:28px 40px;border-bottom:1px solid #2D7DD2;}
+  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:14px;}
+  .logo-box{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;letter-spacing:-1px;}
+  .logo-text h1{font-size:20px;font-weight:800;color:#fff;}
+  .logo-text p{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;}
+  .header-date{font-size:13px;color:rgba(255,255,255,.5);font-weight:500;}
+
+  /* MAIN */
+  .main{max-width:1100px;margin:0 auto;padding:32px 40px 60px;}
+
+  /* KPI ROW */
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px;}
+  .kpi{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:18px 20px;}
+  .kpi-value{font-size:32px;font-weight:900;line-height:1;}
+  .kpi-label{font-size:12px;color:#8b949e;margin-top:6px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+  .kpi.urgent .kpi-value{color:#f85149;}
+  .kpi.soon .kpi-value{color:#e3b341;}
+  .kpi.ok .kpi-value{color:#3fb950;}
+  .kpi.total .kpi-value{color:#58a6ff;}
+
+  /* SECTION */
+  .section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8b949e;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .section-label::after{content:'';flex:1;height:1px;background:#21262d;}
+  .section{margin-bottom:32px;}
+
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+
+  .card{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:20px;transition:border-color .2s,transform .15s;position:relative;overflow:hidden;}
+  .card:hover{border-color:#388bfd;transform:translateY(-2px);}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .card.red::before{background:linear-gradient(90deg,#f85149,#ff7b72);}
+  .card.yellow::before{background:linear-gradient(90deg,#e3b341,#f0c44f);}
+  .card.blue::before{background:linear-gradient(90deg,#388bfd,#58a6ff);}
+  .card.gray::before{background:linear-gradient(90deg,#484f58,#6e7681);}
+
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+  .card-company{font-size:16px;font-weight:800;color:#e6edf3;}
+  .deadline-chip{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-left:10px;}
+  .chip-red{background:rgba(248,81,73,.15);color:#f85149;border:1px solid rgba(248,81,73,.3);}
+  .chip-yellow{background:rgba(227,179,65,.15);color:#e3b341;border:1px solid rgba(227,179,65,.3);}
+  .chip-blue{background:rgba(56,139,253,.12);color:#58a6ff;border:1px solid rgba(56,139,253,.25);}
+  .chip-gray{background:rgba(110,118,129,.15);color:#8b949e;border:1px solid rgba(110,118,129,.25);}
+
+  .opp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:#21262d;color:#8b949e;border:1px solid #30363d;}
+  .tag.hot{background:rgba(248,81,73,.1);color:#f85149;border-color:rgba(248,81,73,.2);}
+  .tag.warm{background:rgba(227,179,65,.1);color:#e3b341;border-color:rgba(227,179,65,.2);}
+  .tag.new{background:rgba(56,139,253,.1);color:#58a6ff;border-color:rgba(56,139,253,.2);}
+
+  .card-context{font-size:12px;color:#8b949e;line-height:1.6;margin-bottom:14px;border-left:2px solid #21262d;padding-left:10px;}
+
+  .next-action-box{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px;}
+  .next-action-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#484f58;margin-bottom:6px;}
+  .next-action-text{font-size:13px;color:#e6edf3;font-weight:500;line-height:1.5;}
+
+  /* TIMELINE */
+  .timeline{display:flex;gap:0;margin-bottom:36px;background:#161b22;border:1px solid #21262d;border-radius:14px;overflow:hidden;}
+  .tl-col{flex:1;padding:16px 18px;border-right:1px solid #21262d;}
+  .tl-col:last-child{border-right:none;}
+  .tl-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;}
+  .tl-header.red{color:#f85149;}
+  .tl-header.yellow{color:#e3b341;}
+  .tl-header.blue{color:#58a6ff;}
+  .tl-header.gray{color:#8b949e;}
+  .tl-item{font-size:12px;color:#c9d1d9;padding:6px 0;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:6px;}
+  .tl-item:last-child{border-bottom:none;}
+  .tl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .dot-red{background:#f85149;}
+  .dot-yellow{background:#e3b341;}
+  .dot-blue{background:#58a6ff;}
+  .tl-date{font-size:10px;color:#484f58;margin-left:auto;white-space:nowrap;}
+
+  /* FOOTER */
+  .footer{text-align:center;color:#484f58;font-size:12px;padding:20px;border-top:1px solid #21262d;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-box">H</div>
+      <div class="logo-text">
+        <h1>Pipeline Status</h1>
+        <p>Horizon Trading · Actualizado por Federico</p>
+      </div>
+    </div>
+    <div class="header-date">📅 23 de junio de 2026</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi urgent">
+      <div class="kpi-value">2</div>
+      <div class="kpi-label">🔴 Esta semana (25-jun)</div>
+    </div>
+    <div class="kpi soon">
+      <div class="kpi-value">2</div>
+      <div class="kpi-label">🟡 Próximos días (27-jun)</div>
+    </div>
+    <div class="kpi ok">
+      <div class="kpi-value">4</div>
+      <div class="kpi-label">🔵 Dentro de 30 días</div>
+    </div>
+    <div class="kpi total">
+      <div class="kpi-value">8</div>
+      <div class="kpi-label">📋 Cuentas con próxima acción</div>
+    </div>
+  </div>
+
+  <!-- TIMELINE SWIMLANE -->
+  <div class="section">
+    <div class="section-label">🗓 Calendario de próximas acciones</div>
+    <div class="timeline">
+      <div class="tl-col">
+        <div class="tl-header red">🔴 25-jun — URGENTE</div>
+        <div class="tl-item"><div class="tl-dot dot-red"></div>Consultar Guido (ENACOM) <span class="tl-date">FESACOM</span></div>
+        <div class="tl-item"><div class="tl-dot dot-red"></div>Enviar cotiz. IoT + Panduit <span class="tl-date">WILTEL</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-header yellow">🟡 27-jun — ESTA SEMANA</div>
+        <div class="tl-item"><div class="tl-dot dot-yellow"></div>Muestras UNIRIM + Meet Jorge <span class="tl-date">GIGARED</span></div>
+        <div class="tl-item"><div class="tl-dot dot-yellow"></div>Consultar préstamo ENACOM <span class="tl-date">ITC Córdoba</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-header blue">🔵 30-jun — PRÓXIMA SEMANA</div>
+        <div class="tl-item"><div class="tl-dot dot-blue"></div>Estado homologación OLT/ONT <span class="tl-date">TELVISO</span></div>
+        <div class="tl-item"><div class="tl-dot dot-blue"></div>Agenda Fede+MT / partnership <span class="tl-date">TELVISO</span></div>
+        <div class="tl-item"><div class="tl-dot dot-blue"></div>Seguimiento homologación OLT <span class="tl-date">VICTORIA TE VE</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-header gray">⬜ 07-jul — MÁS ADELANTE</div>
+        <div class="tl-item"><div class="tl-dot" style="background:#484f58"></div>Propuesta fibra econ. + FH Day <span class="tl-date">PREFORM</span></div>
+        <div class="tl-item"><div class="tl-dot" style="background:#484f58"></div>Retomar Zambiazzo <span class="tl-date">SITSA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- URGENTE -->
+  <div class="section">
+    <div class="section-label">🔴 Urgente — deadline 25-jun</div>
+    <div class="cards">
+
+      <div class="card red">
+        <div class="card-top">
+          <div class="card-company">FESACOM</div>
+          <div class="deadline-chip chip-red">🔴 25-jun · 2 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag hot">QSFP28 100G</span>
+          <span class="tag">Arista</span>
+          <span class="tag">ENACOM</span>
+        </div>
+        <div class="card-context">
+          Proyecto re-presentado con Arista. Nueva ronda de aprobación ENACOM en curso. Fede: "consultar Guido en 2 días".
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Consultar a Guido el estado de aprobación ENACOM</div>
+        </div>
+      </div>
+
+      <div class="card red">
+        <div class="card-top">
+          <div class="card-company">WILTEL</div>
+          <div class="deadline-chip chip-red">🔴 25-jun · 2 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag hot">IoT</span>
+          <span class="tag">Panduit</span>
+          <span class="tag">Rompemuros</span>
+          <span class="tag">FINISAR</span>
+        </div>
+        <div class="card-context">
+          Contacto: Fernanda (Jefa Compras) + Jefe de NOC. IoT: precios DDP estimados listos con Juampi. Rompemuros: data enviada a Ignacio. Panduit: presentación pendiente de envío.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Enviar cotización IoT a Fernanda + enviar presentación Panduit</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ESTA SEMANA -->
+  <div class="section">
+    <div class="section-label">🟡 Esta semana — deadline 27-jun</div>
+    <div class="cards">
+
+      <div class="card yellow">
+        <div class="card-top">
+          <div class="card-company">GIGARED</div>
+          <div class="deadline-chip chip-yellow">🟡 27-jun · 4 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag warm">STB + TMS</span>
+          <span class="tag warm">Proyector Google TV</span>
+          <span class="tag">IoT</span>
+          <span class="tag">Rompemuros</span>
+        </div>
+        <div class="card-context">
+          STB: faltan muestras UNIRIM, enviar esta semana. Proyector Google TV: Jorge no contactado aún, consultando SDMC. Rompemuros: data enviada a Ignacio Córdoba.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Enviar muestras UNIRIM + cotizar STB · Organizar Meet con Jorge (proyector)</div>
+        </div>
+      </div>
+
+      <div class="card yellow">
+        <div class="card-top">
+          <div class="card-company">ITC Córdoba</div>
+          <div class="deadline-chip chip-yellow">🟡 27-jun · 4 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag warm">Red Precon</span>
+          <span class="tag">ENACOM</span>
+          <span class="tag">CREDICOP</span>
+        </div>
+        <div class="card-context">
+          Esperando aprobación préstamo ENACOM/CREDICOP. Stock reservado para este cliente mientras se resuelve el financiamiento.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Consultar estado aprobación crédito ENACOM/CREDICOP</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRÓXIMA SEMANA -->
+  <div class="section">
+    <div class="section-label">🔵 Próxima semana — deadline 30-jun</div>
+    <div class="cards">
+
+      <div class="card blue">
+        <div class="card-top">
+          <div class="card-company">TELVISO</div>
+          <div class="deadline-chip chip-blue">🔵 30-jun · 7 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag new">OLT + ONT WiFi6 + AP</span>
+          <span class="tag new">STB UNIRIM</span>
+          <span class="tag new">Partnership</span>
+        </div>
+        <div class="card-context">
+          Homologación OLT+ONT WiFi6+AP por empezar. STB: muestra ok, homologando ONTs — proponer meet para STB post-OLT. Partnership con Horacio: pendiente propuesta formal, organizar agenda Fede + MT.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Consultar estado homologación OLT/ONT · Coordinar agenda Fede + Matías para propuesta partnership</div>
+        </div>
+      </div>
+
+      <div class="card blue">
+        <div class="card-top">
+          <div class="card-company">Victoria Te Ve</div>
+          <div class="deadline-chip chip-blue">🔵 30-jun · 7 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag new">OLT AN6000-15</span>
+          <span class="tag">Migración</span>
+          <span class="tag">FiberHome</span>
+        </div>
+        <div class="card-context">
+          Diego Aragunde con acceso. Migración en curso. Homologación OLT AN6000-15 en proceso.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Seguimiento homologación OLT AN6000-15</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MÁS ADELANTE -->
+  <div class="section">
+    <div class="section-label">⬜ Más adelante — deadline 07-jul</div>
+    <div class="cards">
+
+      <div class="card gray">
+        <div class="card-top">
+          <div class="card-company">Preform</div>
+          <div class="deadline-chip chip-gray">⬜ 07-jul · 14 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag">Patchcords</span>
+          <span class="tag">Sinergia FH</span>
+          <span class="tag">Red Intercable</span>
+        </div>
+        <div class="card-context">
+          Patchcords: precio fuera de rango, replantear propuesta fibra más económica. Sinergia FH: reunión 2/6 con Mati realizada — surgieron oportunidades. Potencial Fiberhome Day con Red Intercable.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Armar propuesta fibra económica · Coordinar Fiberhome Day con Red Intercable</div>
+        </div>
+      </div>
+
+      <div class="card gray">
+        <div class="card-top">
+          <div class="card-company">SITSA</div>
+          <div class="deadline-chip chip-gray">⬜ 07-jul · 14 días</div>
+        </div>
+        <div class="opp-tags">
+          <span class="tag">Conexión Entre Ríos</span>
+          <span class="tag">❄️ Frío</span>
+        </div>
+        <div class="card-context">
+          Opp Conexión Entre Ríos fría. Sin avance con Zambiazzo. Rol pendiente de definir: Horizon mercadería, Franco despliegue. Sin valor estimado.
+        </div>
+        <div class="next-action-box">
+          <div class="next-action-label">⚡ Próxima acción</div>
+          <div class="next-action-text">Retomar contacto con Zambiazzo para reactivar la oportunidad</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Horizon Trading · Pipeline update 23-jun-2026 · Generado por Agente Comercial IA
+</div>
+
+</body>
+</html>
