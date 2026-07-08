@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HORIZON · Funnel de Oportunidades (Validación pre-CRM)</title>
+<style>
+  :root{
+    --brand:#f97316; --brand-d:#ea580c;
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --blue:#3b82f6; --amber:#f59e0b; --green:#22c55e; --teal:#14b8a6; --red:#ef4444;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  .wrap{max-width:1500px;margin:0 auto;padding:22px 22px 60px}
+  /* Header */
+  header{display:flex;align-items:center;gap:14px;padding:18px 22px;background:linear-gradient(120deg,#0f172a,#1e293b);border-radius:16px;color:#fff;box-shadow:var(--shadow)}
+  .logo{width:42px;height:46px;flex:0 0 auto}
+  header h1{font-size:19px;font-weight:700;letter-spacing:.2px}
+  header p{font-size:12.5px;color:#cbd5e1;margin-top:2px}
+  .badge-hive{margin-left:auto;font-size:11px;font-weight:600;background:rgba(249,115,22,.18);color:#fdba74;padding:5px 11px;border-radius:999px;border:1px solid rgba(249,115,22,.35)}
+  /* KPI hero */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}
+  .kpi{background:var(--card);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--line)}
+  .kpi .n{font-size:23px;font-weight:800}
+  .kpi .l{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+  .kpi.total{border-left-color:var(--brand)} .kpi.valor{border-left-color:var(--teal)}
+  .kpi.val{border-left-color:var(--amber)} .kpi.lista{border-left-color:var(--green)} .kpi.crm{border-left-color:var(--blue)}
+  /* Funnel bar */
+  .funnel{display:flex;gap:6px;margin:6px 0 18px;align-items:stretch}
+  .fstep{flex:1;background:var(--card);border-radius:12px;padding:11px 14px;box-shadow:var(--shadow);position:relative;text-align:center;border-top:3px solid var(--line)}
+  .fstep .fn{font-size:20px;font-weight:800}
+  .fstep .fl{font-size:11px;color:var(--muted);margin-top:1px}
+  .fstep.s1{border-top-color:var(--blue)} .fstep.s2{border-top-color:var(--amber)}
+  .fstep.s3{border-top-color:var(--green)} .fstep.s4{border-top-color:var(--brand)}
+  .arrow{align-self:center;color:var(--muted);font-size:18px;font-weight:700}
+  .note{font-size:12px;color:var(--muted);background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:9px 13px;border-radius:10px;margin-bottom:16px}
+  /* Board */
+  .board{display:grid;grid-template-columns:repeat(5,minmax(240px,1fr));gap:12px;align-items:start;overflow-x:auto}
+  .col{background:#eef1f5;border-radius:14px;padding:10px;min-height:120px}
+  .col h2{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:4px 6px 10px;display:flex;align-items:center;gap:7px;color:#374151}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .col.c1 .dot{background:var(--blue)} .col.c2 .dot{background:var(--amber)}
+  .col.c3 .dot{background:var(--green)} .col.c4 .dot{background:var(--brand)} .col.c5 .dot{background:var(--red)}
+  .cnt{margin-left:auto;background:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 8px;color:#4b5563}
+  /* Card */
+  .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);margin-bottom:10px;border-left:4px solid var(--line)}
+  .card.i-alto{border-left-color:var(--green)} .card.i-medioalto{border-left-color:var(--amber)}
+  .card.i-medio{border-left-color:var(--blue)} .card.i-bajo{border-left-color:var(--muted)}
+  .card .top{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+  .emp{font-size:14px;font-weight:700;line-height:1.2}
+  .org{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px}
+  .org.reunion{background:#e0e7ff;color:#3730a3} .org.wa{background:#dcfce7;color:#166534} .org.mail{background:#fef9c3;color:#854d0e}
+  .prod{font-size:12.5px;color:#374151;margin:2px 0 8px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .pill{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:#f3f4f6;color:#374151;display:inline-flex;align-items:center;gap:4px}
+  .pill.val{background:#ccfbf1;color:#0f766e} .pill.dl{background:#fee2e2;color:#991b1b} .pill.ind{background:#f3f4f6}
+  .resp{display:flex;gap:-6px;margin-bottom:8px}
+  .av{width:24px;height:24px;border-radius:50%;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:-6px;border:2px solid #fff}
+  .step{font-size:12px;color:#4b5563;background:#f9fafb;border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin-bottom:8px}
+  .step b{color:#111827}
+  .src{font-size:10.5px;color:var(--muted);margin-bottom:8px}
+  .src a{color:var(--brand);text-decoration:none}
+  textarea.nota{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 8px;font:inherit;font-size:11.5px;resize:vertical;min-height:34px;background:#fffdf9}
+  .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin:6px 0 3px}
+  .actions{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+  .btn{flex:1;min-width:0;font-size:11px;font-weight:700;padding:7px 6px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#374151;cursor:pointer;transition:.12s}
+  .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+  .btn.adv{background:var(--green);color:#fff;border-color:var(--green)}
+  .btn.back{background:#fff;color:var(--muted)}
+  .btn.disc{background:#fff;color:var(--red);border-color:#fecaca}
+  .btn.crm{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .empty{font-size:11.5px;color:#9ca3af;text-align:center;padding:14px 6px;font-style:italic}
+  footer{margin-top:26px;font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
+  .reset{background:none;border:none;color:var(--brand);cursor:pointer;font-size:11px;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 1 37 11v22L20 43 3 33V11L20 1Z" fill="none" stroke="#f97316" stroke-width="2.4"/>
+      <path d="M20 9 30 15v14L20 35 10 29V15L20 9Z" fill="#f97316" opacity=".9"/>
+    </svg>
+    <div>
+      <h1>Funnel de Oportunidades — Validación pre-CRM</h1>
+      <p>Instancia previa: validar <b>oportunidad · responsable · pasos · deadline</b> antes de cargar al CRM. Trazabilidad de punta a punta.</p>
+    </div>
+    <span class="badge-hive">HORIZON · HIVE</span>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi total"><div class="n" id="k-total">0</div><div class="l">Oportunidades</div></div>
+    <div class="kpi valor"><div class="n" id="k-valor">—</div><div class="l">Valor pipeline (USD)</div></div>
+    <div class="kpi val"><div class="n" id="k-val">0</div><div class="l">Por validar</div></div>
+    <div class="kpi lista"><div class="n" id="k-lista">0</div><div class="l">Validadas · listas CRM</div></div>
+    <div class="kpi crm"><div class="n" id="k-crm">0</div><div class="l">En CRM</div></div>
+  </div>
+
+  <div class="funnel">
+    <div class="fstep s1"><div class="fn" id="f1">0</div><div class="fl">Detectada</div></div>
+    <div class="arrow">›</div>
+    <div class="fstep s2"><div class="fn" id="f2">0</div><div class="fl">En validación</div></div>
+    <div class="arrow">›</div>
+    <div class="fstep s3"><div class="fn" id="f3">0</div><div class="fl">Validada · lista CRM</div></div>
+    <div class="arrow">›</div>
+    <div class="fstep s4"><div class="fn" id="f4">0</div><div class="fl">En CRM</div></div>
+  </div>
+
+  <div class="note">🔒 Este tablero es la <b>instancia de validación del proyecto</b> — no escribe nada en el CRM. Movés cada oportunidad cuando vos la validás; recién la marcás "En CRM" cuando decidas cargarla. Tus cambios se guardan en este navegador.</div>
+
+  <div class="board" id="board"></div>
+
+  <footer>
+    Fuente: minutas procesadas (reuniones / mail / WhatsApp de ventas). Los valores marcados "s/estimar" no tienen cotización cerrada.<br>
+    Estado guardado localmente en tu navegador. <button class="reset" onclick="resetAll()">Reiniciar validaciones</button>
+  </footer>
+</div>
+
+<script>
+// ---- Responsables (avatar + color) ----
+const P = {
+  MT:{n:"Matías Taddei",c:"#f97316"}, CS:{n:"Charly Schenone",c:"#0ea5e9"},
+  GM:{n:"Guido Menescardi",c:"#8b5cf6"}, HA:{n:"Henry Arias",c:"#14b8a6"},
+  DA:{n:"Diego Aragunde",c:"#ef4444"}, LU:{n:"Lucas (ventas)",c:"#22c55e"}
+};
+const ini = k => k.length>2 ? k : k;
+
+// ---- Oportunidades reales pre-cargadas ----
+const OPS = [
+  { id:"mkt-drop", empresa:"Marketing Directo S.R.L.", origen:"wa",
+    producto:"Cable Drop Óptico FiberHome 1F acero GJYXCH-1B6a1 · 200 bobinas × 1.000 m (200.000 m)",
+    valor:20960, valorTxt:"USD 20.960 neto · 23.160,80 c/IVA", indicio:"alto",
+    resp:["LU","MT"], paso:"Enviar / seguir cotización (200 bobinas). Contacto: Javier +54 9 11 2724-6168.",
+    deadline:"2026-07-08", src:"WhatsApp ventas", srcFile:"",
+    estadoDefault:"en_validacion" },
+
+  { id:"sitsa-emb", empresa:"SITSA / Pogliotti", origen:"reunion",
+    producto:"Continuidad de venta — embarque pendiente por despachar (mercadería + consignación)",
+    valor:140000, valorTxt:"~USD 140.000", indicio:"alto",
+    resp:["MT","CS"], paso:"Decidir despacho vs. deuda abierta (~66k) + fijar metodología de cuenta (estado semanal USD, facturar contra pago).",
+    deadline:"antes del despacho", src:"Minuta situación SITSA", srcFile:"Minuta_fecha-a-confirmar_situacion-SITSA.md",
+    estadoDefault:"detectada" },
+
+  { id:"eria-6000", empresa:"ISP Entre Ríos (Sara/David)", origen:"reunion",
+    producto:"OLT FiberHome serie 6000 (chasis + ~3 placas GPON) + migración desde 5000 (EOL 31/12/2026)",
+    valor:26000, valorTxt:"~USD 26.000 (ref.)", indicio:"medioalto",
+    resp:["GM","HA","MT"], paso:"Armar cotización 6000 (config ~3.000 abonados, opciones, financiación 6m / FOB).",
+    deadline:"esta semana", src:"Minuta ISP Entre Ríos", srcFile:"Minuta_fecha-a-confirmar_ISP-EntreRios-migracion-Fiberhome-OLT.md",
+    estadoDefault:"detectada" },
+
+  { id:"eria-5000", empresa:"ISP Entre Ríos (Sara/David)", origen:"reunion",
+    producto:"Parche con OLT 5000 usadas/actualizadas (de cliente que migró a 6000) como puente",
+    valor:0, valorTxt:"s/estimar", indicio:"medio",
+    resp:["DA","MT"], paso:"Explorar disponibilidad de 5000 usadas en Entre Ríos para operar durante la migración.",
+    deadline:"en paralelo", src:"Minuta ISP Entre Ríos", srcFile:"Minuta_fecha-a-confirmar_ISP-EntreRios-migracion-Fiberhome-OLT.md",
+    estadoDefault:"detectada" },
+
+  { id:"eria-onu", empresa:"ISP Entre Ríos (Sara/David)", origen:"reunion",
+    producto:"Reemplazo / estandarización parque de ONUs FiberHome (hoy multivendor VSOL/ZTE/otras)",
+    valor:0, valorTxt:"s/estimar", indicio:"medio",
+    resp:["GM","MT"], paso:"Pasar precios de ONUs FiberHome junto con la cotización 6000.",
+    deadline:"con la cotización", src:"Minuta ISP Entre Ríos", srcFile:"Minuta_fecha-a-confirmar_ISP-EntreRios-migracion-Fiberhome-OLT.md",
+    estadoDefault:"detectada" },
+
+  { id:"eria-fob", empresa:"ISP Entre Ríos (Sara/David)", origen:"reunion",
+    producto:"FOB / financiación local como habilitador comercial (al cliente le gusta importar)",
+    valor:0, valorTxt:"s/estimar", indicio:"medio",
+    resp:["MT","CS"], paso:"Ofrecer esquema FOB y financiación 6 meses dentro de la propuesta.",
+    deadline:"con la cotización", src:"Minuta ISP Entre Ríos", srcFile:"Minuta_fecha-a-confirmar_ISP-EntreRios-migracion-Fiberhome-OLT.md",
+    estadoDefault:"detectada" }
+];
+
+const ESTADOS = ["detectada","en_validacion","validada","en_crm","descartada"];
+const COLS = [
+  {k:"detectada",   cls:"c1", t:"Detectada"},
+  {k:"en_validacion",cls:"c2", t:"En validación"},
+  {k:"validada",    cls:"c3", t:"Validada · lista CRM"},
+  {k:"en_crm",      cls:"c4", t:"En CRM"},
+  {k:"descartada",  cls:"c5", t:"Descartada"}
+];
+const LS = "horizon_funnel_v1";
+let store = JSON.parse(localStorage.getItem(LS) || "{}");
+function save(){ localStorage.setItem(LS, JSON.stringify(store)); }
+function estadoDe(o){ return (store[o.id] && store[o.id].estado) || o.estadoDefault; }
+function notaDe(o){ return (store[o.id] && store[o.id].nota) || ""; }
+function setEstado(id,e){ store[id]=store[id]||{}; store[id].estado=e; save(); render(); }
+function setNota(id,v){ store[id]=store[id]||{}; store[id].nota=v; save(); }
+function fmt(n){ return n>0 ? "USD "+n.toLocaleString("es-AR") : "s/estimar"; }
+
+function avatars(list){
+  return `<div class="resp">${list.map(k=>{
+    const p=P[k]||{n:k,c:"#6b7280"}; const in2=k;
+    return `<div class="av" title="${p.n}" style="background:${p.c}">${in2}</div>`;
+  }).join("")}</div>`;
+}
+function indLabel(i){ return {alto:"Interés ALTO",medioalto:"Interés MEDIO-ALTO",medio:"Interés MEDIO",bajo:"Interés BAJO"}[i]||i; }
+
+function card(o){
+  const e = estadoDe(o);
+  const idx = ESTADOS.indexOf(e);
+  const canBack = idx>0 && e!=="descartada";
+  const canAdv = idx<3 && e!=="descartada";
+  let adv="";
+  if(e==="detectada") adv=`<button class="btn adv" onclick="setEstado('${o.id}','en_validacion')">Validar →</button>`;
+  else if(e==="en_validacion") adv=`<button class="btn adv" onclick="setEstado('${o.id}','validada')">✓ Validada</button>`;
+  else if(e==="validada") adv=`<button class="btn crm" onclick="setEstado('${o.id}','en_crm')">Marcar en CRM</button>`;
+  const back = canBack ? `<button class="btn back" onclick="setEstado('${o.id}','${ESTADOS[idx-1]}')">←</button>`:"";
+  const disc = e!=="descartada"
+     ? `<button class="btn disc" onclick="setEstado('${o.id}','descartada')">Descartar</button>`
+     : `<button class="btn back" onclick="setEstado('${o.id}','detectada')">Recuperar</button>`;
+  const srcLink = o.srcFile
+     ? `<a href="./${encodeURIComponent(o.srcFile)}">${o.src}</a>` : o.src;
+  return `<div class="card i-${o.indicio}">
+    <div class="top"><span class="emp">${o.empresa}</span><span class="org ${o.origen}">${o.origen==='wa'?'WhatsApp':o.origen==='mail'?'Mail':'Reunión'}</span></div>
+    <div class="prod">${o.producto}</div>
+    <div class="meta">
+      <span class="pill val">💰 ${o.valorTxt}</span>
+      <span class="pill ind">🎯 ${indLabel(o.indicio)}</span>
+      <span class="pill dl">⏱ ${o.deadline}</span>
+    </div>
+    ${avatars(o.resp)}
+    <div class="step"><b>Próximo paso:</b> ${o.paso}</div>
+    <div class="src">📄 ${srcLink}</div>
+    <div class="lbl">Notas de validación</div>
+    <textarea class="nota" placeholder="Confirmá / ajustá responsable, valor, pasos o deadline…" onchange="setNota('${o.id}',this.value)">${notaDe(o)}</textarea>
+    <div class="actions">${back}${adv}${disc}</div>
+  </div>`;
+}
+
+function render(){
+  const board = document.getElementById("board");
+  board.innerHTML = COLS.map(c=>{
+    const items = OPS.filter(o=>estadoDe(o)===c.k);
+    const body = items.length
+      ? items.map(card).join("")
+      : `<div class="empty">— vacío —</div>`;
+    return `<div class="col ${c.cls}"><h2><span class="dot"></span>${c.t}<span class="cnt">${items.length}</span></h2>${body}</div>`;
+  }).join("");
+  // KPIs
+  const cnt = e => OPS.filter(o=>estadoDe(o)===e).length;
+  const activos = OPS.filter(o=>estadoDe(o)!=="descartada");
+  document.getElementById("k-total").textContent = activos.length;
+  const val = activos.reduce((s,o)=>s+(o.valor||0),0);
+  document.getElementById("k-valor").textContent = val>0 ? (val>=1000? "$"+(val/1000).toLocaleString("es-AR",{maximumFractionDigits:1})+"k" : "$"+val) : "—";
+  document.getElementById("k-val").textContent = cnt("detectada")+cnt("en_validacion");
+  document.getElementById("k-lista").textContent = cnt("validada");
+  document.getElementById("k-crm").textContent = cnt("en_crm");
+  document.getElementById("f1").textContent = cnt("detectada");
+  document.getElementById("f2").textContent = cnt("en_validacion");
+  document.getElementById("f3").textContent = cnt("validada");
+  document.getElementById("f4").textContent = cnt("en_crm");
+}
+function resetAll(){ if(confirm("¿Reiniciar todas las validaciones a su estado inicial?")){ store={}; save(); render(); } }
+render();
+</script>
+</body>
+</html>
