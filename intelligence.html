@@ -8,7 +8,6 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;}
 
-/* Nav */
 .nav{background:#1e293b;border-bottom:1px solid #334155;padding:0 24px;display:flex;align-items:center;gap:0;height:52px;}
 .nav-brand{display:flex;align-items:center;gap:10px;margin-right:32px;}
 .hex{width:32px;height:32px;background:#f97316;flex-shrink:0;
@@ -17,14 +16,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 .brand-name{font-size:15px;font-weight:800;color:#fff;}
 .brand-sub{font-size:10px;color:#64748b;font-weight:400;}
 .nav-tabs{display:flex;gap:0;height:100%;}
-.tab-btn{background:none;border:none;color:#94a3b8;padding:0 18px;height:100%;cursor:pointer;font-size:13px;font-weight:600;
+.tab-btn{background:none;border:none;color:#94a3b8;padding:0 16px;height:100%;cursor:pointer;font-size:13px;font-weight:600;
   border-bottom:2px solid transparent;transition:all .15s;}
 .tab-btn:hover{color:#e2e8f0;}
 .tab-btn.active{color:#f97316;border-bottom-color:#f97316;}
+.tab-btn.ai-btn{color:#a78bfa;border:1px solid #4c1d95;border-bottom:2px solid transparent;border-radius:6px 6px 0 0;margin:8px 4px 0;padding:0 12px;height:36px;font-size:12px;}
+.tab-btn.ai-btn:hover,.tab-btn.ai-btn.active{color:#fff;background:#4c1d95;border-color:#7c3aed;border-bottom-color:#7c3aed;}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
 .badge{background:#1e3a5f;color:#60a5fa;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;}
 
-/* Views */
 .view{display:none;padding:24px;}
 .view.active{display:block;}
 
@@ -37,15 +37,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 .province-fill:hover{fill:#2d4a7a;}
 .province-fill.has-clients{fill:#1e4d8c;}
 .province-fill.active{fill:#f97316!important;}
-.client-dot{fill:#f97316;opacity:.8;cursor:pointer;transition:r .15s;}
+.client-dot{fill:#f97316;opacity:.8;cursor:pointer;}
 .client-dot:hover{opacity:1;}
-
 .prov-panel{background:#1e293b;border-radius:12px;border:1px solid #334155;overflow:hidden;}
 .prov-panel-head{padding:14px 16px;border-bottom:1px solid #334155;}
 .prov-panel-head h3{font-size:13px;font-weight:700;color:#e2e8f0;}
 .prov-panel-head p{font-size:11px;color:#64748b;margin-top:2px;}
 .prov-list{max-height:460px;overflow-y:auto;}
-.prov-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #1e293b;cursor:pointer;transition:background .1s;}
+.prov-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #0f172a;cursor:pointer;transition:background .1s;}
 .prov-row:hover{background:#334155;}
 .prov-row .pname{font-size:12px;font-weight:600;color:#e2e8f0;}
 .prov-row .pmeta{font-size:10px;color:#64748b;margin-top:1px;}
@@ -61,11 +60,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 .rank-table thead tr{background:#1e293b;position:sticky;top:0;z-index:2;}
 .rank-table th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #334155;cursor:pointer;user-select:none;white-space:nowrap;}
 .rank-table th:hover{color:#e2e8f0;}
-.rank-table th .sort-icon{margin-left:4px;opacity:.4;}
-.rank-table th.sorted .sort-icon{opacity:1;color:#f97316;}
 .rank-table td{padding:9px 12px;border-bottom:1px solid #1e293b;vertical-align:middle;}
 .rank-table tr:hover td{background:#1e293b;cursor:pointer;}
-.rank-num{color:#64748b;font-size:11px;font-weight:600;width:32px;}
+.rank-num{color:#64748b;font-size:11px;font-weight:600;}
 .client-name{font-weight:700;color:#e2e8f0;font-size:13px;}
 .client-cuit{font-size:10px;color:#64748b;margin-top:1px;}
 .rfm-score{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-weight:800;font-size:13px;}
@@ -73,11 +70,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 .rfm-high{background:#1e3a5f;color:#60a5fa;}
 .rfm-mid{background:#451a03;color:#fb923c;}
 .rfm-low{background:#1f1f1f;color:#64748b;}
-.rfm-pill{display:flex;gap:3px;}
-.rfm-dot{width:10px;height:10px;border-radius:50%;}
-.rfm-r{background:#818cf8;}
-.rfm-f{background:#34d399;}
-.rfm-m{background:#f97316;}
 .amount{font-weight:700;color:#e2e8f0;}
 .year-bar{display:flex;gap:2px;align-items:flex-end;height:28px;}
 .yb{border-radius:2px 2px 0 0;min-width:8px;}
@@ -88,9 +80,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 .status-lost{background:#1f1f1f;color:#64748b;}
 .table-wrap{background:#0f172a;border-radius:12px;border:1px solid #334155;overflow:hidden;max-height:calc(100vh - 200px);overflow-y:auto;}
 
+/* ── STATS BAR ── */
+.stats-bar{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
+.stat-chip{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px 16px;flex:1;min-width:140px;}
+.stat-chip .sc-val{font-size:20px;font-weight:800;color:#e2e8f0;}
+.stat-chip .sc-lab{font-size:10px;color:#64748b;margin-top:2px;}
+.stat-chip .sc-sub{font-size:11px;color:#94a3b8;margin-top:2px;}
+
 /* ── CLIENTE ── */
 .client-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;color:#334155;gap:12px;}
-.client-placeholder svg{opacity:.3;}
 .client-placeholder p{font-size:14px;color:#475569;}
 .ficha{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .ficha-card{background:#1e293b;border-radius:12px;border:1px solid #334155;padding:18px;}
@@ -107,42 +105,149 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 .rfm-total{text-align:center;padding:10px;background:#0f172a;border-radius:8px;}
 .rfm-total .rt-val{font-size:32px;font-weight:800;color:#4ade80;}
 .rfm-total .rt-lab{font-size:11px;color:#64748b;}
-
-/* Year chart */
 .year-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:16px;}
 .yc-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;}
-.yc-bar-fill{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:opacity .2s;}
-.yc-bar-fill:hover{opacity:.8;}
+.yc-bar-fill{width:100%;border-radius:4px 4px 0 0;min-height:4px;}
 .yc-label{font-size:9px;color:#64748b;font-weight:600;}
 .yc-val{font-size:9px;color:#94a3b8;white-space:nowrap;}
-
-/* Tags */
 .tag-list{display:flex;flex-wrap:wrap;gap:6px;}
 .tag{background:#0f172a;border:1px solid #334155;border-radius:6px;padding:3px 10px;font-size:11px;color:#94a3b8;}
-
-/* Action box */
 .action-box{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:14px 16px;margin-top:12px;}
 .action-box h4{font-size:11px;color:#f97316;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
 .action-box p{font-size:12px;color:#94a3b8;line-height:1.6;}
 .btn-crm{background:#f97316;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;margin-top:14px;width:100%;transition:background .15s;}
 .btn-crm:hover{background:#ea580c;}
 .btn-crm:disabled{background:#334155;color:#64748b;cursor:not-allowed;}
-
-/* Back btn */
 .back-btn{background:#1e293b;border:1px solid #334155;color:#94a3b8;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;}
 .back-btn:hover{color:#e2e8f0;}
+.btn-ai{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;width:100%;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-ai:hover{opacity:.9;}
+
+/* ── CRM OPORTUNIDADES ── */
+.opp-placeholder{background:#0f172a;border:1px dashed #334155;border-radius:10px;padding:20px;text-align:center;}
+.opp-placeholder p{font-size:12px;color:#475569;margin-bottom:8px;}
+.opp-placeholder .conn-badge{display:inline-flex;align-items:center;gap:6px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:6px 12px;font-size:11px;color:#64748b;}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:#334155;}
+.conn-dot.live{background:#4ade80;box-shadow:0 0 6px #4ade80;}
+.opp-card{background:#0f172a;border-radius:8px;border:1px solid #334155;padding:12px 14px;margin-bottom:8px;}
+.opp-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.opp-title{font-size:12px;font-weight:700;color:#e2e8f0;}
+.opp-stage{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;}
+.stage-frio{background:#1e3a5f;color:#60a5fa;}
+.stage-contacto{background:#1a2e1a;color:#4ade80;}
+.stage-propuesta{background:#451a03;color:#fb923c;}
+.stage-negociacion{background:#3b0764;color:#c084fc;}
+.stage-ganada{background:#14532d;color:#4ade80;}
+.opp-meta{font-size:11px;color:#64748b;}
+.opp-amount{font-size:13px;font-weight:700;color:#f97316;}
+.progress-bar-wrap{margin-top:8px;}
+.progress-bar-bg{background:#1e293b;border-radius:4px;height:6px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:4px;transition:width .4s;}
+
+/* ── CLIENTE OBJETIVO ── */
+.objetivo-ring{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.objetivo-ring svg{transform:rotate(-90deg);}
+.objetivo-ring .ring-text{position:absolute;text-align:center;}
+.ring-pct{font-size:22px;font-weight:800;color:#4ade80;}
+.ring-lab{font-size:10px;color:#64748b;}
+
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.dash-card{background:#1e293b;border-radius:12px;border:1px solid #334155;padding:20px;}
+.dash-card.wide{grid-column:1/-1;}
+.dash-card.two{grid-column:span 2;}
+.dash-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#64748b;margin-bottom:16px;}
+.big-num{font-size:36px;font-weight:800;}
+.big-sub{font-size:12px;color:#64748b;margin-top:4px;}
+.gauge-wrap{position:relative;display:flex;justify-content:center;}
+.kpi-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.kpi{background:#0f172a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;}
+.kpi-val{font-size:18px;font-weight:800;color:#e2e8f0;}
+.kpi-lab{font-size:10px;color:#64748b;margin-top:2px;}
+.kpi-delta{font-size:11px;margin-top:4px;font-weight:600;}
+/* Stacked bar chart */
+.stacked-chart{display:flex;flex-direction:column;gap:10px;}
+.stacked-row{display:flex;align-items:center;gap:10px;}
+.stacked-label{font-size:11px;color:#94a3b8;width:80px;flex-shrink:0;text-align:right;}
+.stacked-bar-bg{flex:1;height:28px;background:#0f172a;border-radius:6px;overflow:hidden;position:relative;}
+.stacked-segment{height:100%;display:inline-block;vertical-align:top;}
+.stacked-val{font-size:11px;color:#94a3b8;width:60px;flex-shrink:0;}
+/* Waterfall */
+.wf-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding:16px 0 0;}
+.wf-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;}
+.wf-fill{width:100%;border-radius:4px 4px 0 0;}
+.wf-label{font-size:9px;color:#64748b;font-weight:600;text-align:center;line-height:1.2;}
+.wf-val{font-size:9px;color:#94a3b8;}
+/* Timeline progress */
+.timeline{display:flex;align-items:center;gap:0;margin:16px 0;position:relative;}
+.tl-month{flex:1;text-align:center;font-size:9px;color:#64748b;position:relative;}
+.tl-bar{height:4px;background:#1e293b;flex:1;}
+.tl-bar.done{background:#4ade80;}
+.tl-bar.partial{background:#f97316;}
+.tl-bar.proj{background:#334155;background:repeating-linear-gradient(90deg,#334155 0,#334155 4px,#0f172a 4px,#0f172a 8px);}
+.legend{display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#94a3b8;}
+.legend-dot{width:10px;height:10px;border-radius:2px;}
+
+/* ── ANÁLISIS IA ── */
+.ai-layout{display:grid;grid-template-columns:320px 1fr;gap:20px;min-height:calc(100vh - 100px);}
+.ai-sidebar{background:#1e293b;border-radius:12px;border:1px solid #334155;padding:0;overflow:hidden;}
+.ai-sidebar-head{padding:16px;border-bottom:1px solid #334155;background:#0f172a;}
+.ai-sidebar-head h2{font-size:13px;font-weight:800;color:#e2e8f0;}
+.ai-sidebar-head p{font-size:11px;color:#64748b;margin-top:2px;}
+.ai-client-search{padding:12px;border-bottom:1px solid #334155;}
+.ai-client-list{max-height:calc(100vh - 220px);overflow-y:auto;}
+.ai-client-row{padding:10px 16px;border-bottom:1px solid #0f172a;cursor:pointer;transition:background .1s;}
+.ai-client-row:hover,.ai-client-row.selected{background:#334155;}
+.ai-client-row .acr-name{font-size:12px;font-weight:700;color:#e2e8f0;}
+.ai-client-row .acr-meta{font-size:10px;color:#64748b;margin-top:2px;}
+
+.ai-main{display:flex;flex-direction:column;gap:16px;}
+.ai-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;gap:12px;color:#334155;}
+.ai-empty p{font-size:14px;color:#475569;}
+
+/* Flow steps */
+.flow{display:flex;flex-direction:column;gap:12px;}
+.flow-step{background:#1e293b;border-radius:12px;border:1px solid #334155;overflow:hidden;transition:border-color .2s;}
+.flow-step.active{border-color:#f97316;}
+.flow-step.done{border-color:#4ade80;}
+.flow-step-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
+.flow-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+.fn-idle{background:#1e293b;border:1px solid #334155;color:#64748b;}
+.fn-active{background:#f97316;color:#fff;}
+.fn-done{background:#14532d;color:#4ade80;}
+.flow-step-title{font-size:13px;font-weight:700;color:#e2e8f0;}
+.flow-step-sub{font-size:11px;color:#64748b;margin-top:1px;}
+.flow-step-body{padding:0 16px 16px;display:none;}
+.flow-step.open .flow-step-body{display:block;}
+.flow-chevron{margin-left:auto;color:#64748b;font-size:12px;}
+
+/* Agent cards */
+.agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.agent-card{background:#0f172a;border-radius:8px;border:1px solid #334155;padding:12px;}
+.agent-card.active{border-color:#7c3aed;}
+.agent-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.agent-icon{font-size:18px;}
+.agent-name{font-size:12px;font-weight:700;color:#e2e8f0;}
+.agent-status{font-size:10px;padding:1px 7px;border-radius:6px;margin-left:auto;}
+.as-idle{background:#1e293b;color:#64748b;}
+.as-ready{background:#1a2e1a;color:#4ade80;}
+.as-pending{background:#1e3a5f;color:#60a5fa;}
+.agent-desc{font-size:11px;color:#64748b;line-height:1.5;}
+
+.input-area{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 14px;font-size:12px;color:#94a3b8;width:100%;resize:none;outline:none;font-family:inherit;margin-top:8px;}
+.input-area:focus{border-color:#7c3aed;}
+.btn-run{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;}
+.btn-run:hover{opacity:.85;}
+.btn-run:disabled{opacity:.4;cursor:not-allowed;}
+
+.output-box{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:14px;font-size:12px;color:#94a3b8;line-height:1.7;margin-top:8px;min-height:60px;}
+.output-box.has-content{border-color:#4c1d95;color:#e2e8f0;}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:#0f172a;}
 ::-webkit-scrollbar-thumb{background:#334155;border-radius:3px;}
-
-/* Stats bar */
-.stats-bar{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
-.stat-chip{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px 16px;flex:1;min-width:140px;}
-.stat-chip .sc-val{font-size:20px;font-weight:800;color:#e2e8f0;}
-.stat-chip .sc-lab{font-size:10px;color:#64748b;margin-top:2px;}
-.stat-chip .sc-sub{font-size:11px;color:#94a3b8;margin-top:2px;}
 
 /* Tooltip */
 .tooltip{position:fixed;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;font-size:12px;color:#e2e8f0;pointer-events:none;z-index:1000;max-width:200px;display:none;}
@@ -161,7 +266,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
   <div class="nav-tabs">
     <button class="tab-btn active" onclick="showView('mapa',this)">🗺 Mapa</button>
     <button class="tab-btn" onclick="showView('ranking',this)">📊 Ranking</button>
+    <button class="tab-btn" onclick="showView('dashboard',this)">📈 Dashboard</button>
     <button class="tab-btn" onclick="showView('cliente',this)">🔍 Cliente</button>
+    <button class="tab-btn ai-btn" onclick="showView('analisis',this)">✦ Análisis IA</button>
   </div>
   <div class="nav-right">
     <span class="badge">234 clientes</span>
@@ -169,134 +276,43 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
   </div>
 </div>
 
+<!-- ════════════════════════════════ MAPA ═══════════════════════════════ -->
 <div id="view-mapa" class="view active">
   <div class="stats-bar">
-    <div class="stat-chip">
-      <div class="sc-val">234</div>
-      <div class="sc-lab">Clientes históricos</div>
-      <div class="sc-sub">2020 – 2026</div>
-    </div>
-    <div class="stat-chip">
-      <div class="sc-val">$22.3M</div>
-      <div class="sc-lab">Ventas totales USD</div>
-      <div class="sc-sub">Acumulado histórico</div>
-    </div>
-    <div class="stat-chip">
-      <div class="sc-val" id="rfm15-count">–</div>
-      <div class="sc-lab">Clientes VIP (RFM 15)</div>
-      <div class="sc-sub">Score máximo</div>
-    </div>
-    <div class="stat-chip">
-      <div class="sc-val" id="active-count">–</div>
-      <div class="sc-lab">Activos (últ. 6 meses)</div>
-      <div class="sc-sub">Compra reciente</div>
-    </div>
-    <div class="stat-chip">
-      <div class="sc-val" id="cold-count">–</div>
-      <div class="sc-lab">Fríos (+12 meses)</div>
-      <div class="sc-sub">A reactivar</div>
-    </div>
+    <div class="stat-chip"><div class="sc-val">234</div><div class="sc-lab">Clientes históricos</div><div class="sc-sub">2020 – 2026</div></div>
+    <div class="stat-chip"><div class="sc-val">$22.3M</div><div class="sc-lab">Ventas totales USD</div><div class="sc-sub">Acumulado histórico</div></div>
+    <div class="stat-chip"><div class="sc-val" id="rfm15-count">–</div><div class="sc-lab">Clientes VIP (RFM 15)</div><div class="sc-sub">Score máximo</div></div>
+    <div class="stat-chip"><div class="sc-val" id="active-count">–</div><div class="sc-lab">Activos (últ. 6 meses)</div><div class="sc-sub">Compra reciente</div></div>
+    <div class="stat-chip"><div class="sc-val" id="cold-count">–</div><div class="sc-lab">Fríos (+12 meses)</div><div class="sc-sub">A reactivar</div></div>
   </div>
   <div class="mapa-layout">
     <div class="map-card">
       <h2>Distribución Geográfica — Argentina</h2>
       <svg id="arg-svg" viewBox="0 0 500 750" xmlns="http://www.w3.org/2000/svg">
-        <!-- Simplified Argentina provinces SVG -->
-        <!-- Buenos Aires -->
-        <path class="province-fill has-clients" id="prov-Buenos Aires" 
-          d="M 230 340 L 310 320 L 340 360 L 350 420 L 310 460 L 260 480 L 220 460 L 200 420 L 210 370 Z"
-          onclick="filterByProv('Buenos Aires')"/>
-        <!-- Córdoba -->
-        <path class="province-fill" id="prov-Córdoba"
-          d="M 200 260 L 270 250 L 300 270 L 310 320 L 230 340 L 200 320 Z"
-          onclick="filterByProv('Córdoba')"/>
-        <!-- Santa Fe -->
-        <path class="province-fill" id="prov-Santa Fe"
-          d="M 270 200 L 310 190 L 330 210 L 330 270 L 300 270 L 270 250 Z"
-          onclick="filterByProv('Santa Fe')"/>
-        <!-- Mendoza -->
-        <path class="province-fill" id="prov-Mendoza"
-          d="M 130 300 L 190 290 L 200 320 L 200 370 L 160 390 L 120 350 L 120 310 Z"
-          onclick="filterByProv('Mendoza')"/>
-        <!-- San Juan -->
-        <path class="province-fill" id="prov-San Juan"
-          d="M 130 230 L 190 220 L 200 260 L 190 290 L 130 300 Z"
-          onclick="filterByProv('San Juan')"/>
-        <!-- San Luis -->
-        <path class="province-fill" id="prov-San Luis"
-          d="M 190 290 L 230 280 L 240 310 L 230 340 L 200 340 L 190 320 Z"
-          onclick="filterByProv('San Luis')"/>
-        <!-- La Pampa -->
-        <path class="province-fill" id="prov-La Pampa"
-          d="M 160 390 L 200 370 L 220 410 L 210 460 L 170 470 L 140 440 L 140 400 Z"
-          onclick="filterByProv('La Pampa')"/>
-        <!-- Neuquén -->
-        <path class="province-fill" id="prov-Neuquén"
-          d="M 100 420 L 140 400 L 160 430 L 150 470 L 110 480 L 90 450 Z"
-          onclick="filterByProv('Neuquén')"/>
-        <!-- Río Negro -->
-        <path class="province-fill" id="prov-Río Negro"
-          d="M 110 480 L 170 470 L 190 500 L 170 530 L 120 530 L 90 510 Z"
-          onclick="filterByProv('Río Negro')"/>
-        <!-- Chubut -->
-        <path class="province-fill" id="prov-Chubut"
-          d="M 100 540 L 170 530 L 180 570 L 160 610 L 100 610 L 90 570 Z"
-          onclick="filterByProv('Chubut')"/>
-        <!-- Santa Cruz -->
-        <path class="province-fill" id="prov-Santa Cruz"
-          d="M 100 620 L 160 610 L 170 660 L 150 700 L 100 700 L 85 660 Z"
-          onclick="filterByProv('Santa Cruz')"/>
-        <!-- Tierra del Fuego -->
-        <path class="province-fill" id="prov-Tierra del Fuego"
-          d="M 120 710 L 160 705 L 160 735 L 140 745 L 120 735 Z"
-          onclick="filterByProv('Tierra del Fuego')"/>
-        <!-- Chaco -->
-        <path class="province-fill" id="prov-Chaco"
-          d="M 290 170 L 340 160 L 360 180 L 360 210 L 330 210 L 310 190 Z"
-          onclick="filterByProv('Chaco')"/>
-        <!-- Entre Ríos -->
-        <path class="province-fill" id="prov-Entre Ríos"
-          d="M 310 270 L 340 260 L 360 280 L 360 320 L 340 340 L 310 320 Z"
-          onclick="filterByProv('Entre Ríos')"/>
-        <!-- Misiones -->
-        <path class="province-fill" id="prov-Misiones"
-          d="M 360 150 L 390 140 L 400 170 L 380 190 L 360 180 Z"
-          onclick="filterByProv('Misiones')"/>
-        <!-- Corrientes -->
-        <path class="province-fill" id="prov-Corrientes"
-          d="M 340 180 L 380 180 L 390 210 L 370 240 L 340 240 L 330 210 Z"
-          onclick="filterByProv('Corrientes')"/>
-        <!-- Formosa -->
-        <path class="province-fill" id="prov-Formosa"
-          d="M 280 130 L 330 120 L 350 140 L 340 160 L 290 170 Z"
-          onclick="filterByProv('Formosa')"/>
-        <!-- Jujuy -->
-        <path class="province-fill" id="prov-Jujuy"
-          d="M 220 90 L 260 80 L 270 110 L 250 120 L 220 110 Z"
-          onclick="filterByProv('Jujuy')"/>
-        <!-- Salta -->
-        <path class="province-fill" id="prov-Salta"
-          d="M 220 110 L 270 110 L 290 130 L 280 160 L 250 170 L 220 150 Z"
-          onclick="filterByProv('Salta')"/>
-        <!-- Tucumán -->
-        <path class="province-fill" id="prov-Tucumán"
-          d="M 240 170 L 270 160 L 275 185 L 255 195 L 240 185 Z"
-          onclick="filterByProv('Tucumán')"/>
-        <!-- Santiago del Estero -->
-        <path class="province-fill" id="prov-Santiago del Estero"
-          d="M 255 165 L 295 155 L 310 175 L 305 210 L 275 215 L 255 195 Z"
-          onclick="filterByProv('Santiago del Estero')"/>
-        <!-- Catamarca -->
-        <path class="province-fill" id="prov-Catamarca"
-          d="M 195 155 L 240 145 L 255 165 L 255 195 L 230 205 L 200 195 L 190 175 Z"
-          onclick="filterByProv('Catamarca')"/>
-        <!-- La Rioja -->
-        <path class="province-fill" id="prov-La Rioja"
-          d="M 175 195 L 215 185 L 230 205 L 230 240 L 200 250 L 175 235 Z"
-          onclick="filterByProv('La Rioja')"/>
-
-        <!-- Province labels -->
-        <text x="265" y="400" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="700" pointer-events="none">BUENOS AIRES</text>
+        <path class="province-fill has-clients" id="prov-Buenos Aires" d="M 230 340 L 310 320 L 340 360 L 350 420 L 310 460 L 260 480 L 220 460 L 200 420 L 210 370 Z" onclick="filterByProv('Buenos Aires')"/>
+        <path class="province-fill" id="prov-Córdoba" d="M 200 260 L 270 250 L 300 270 L 310 320 L 230 340 L 200 320 Z" onclick="filterByProv('Córdoba')"/>
+        <path class="province-fill" id="prov-Santa Fe" d="M 270 200 L 310 190 L 330 210 L 330 270 L 300 270 L 270 250 Z" onclick="filterByProv('Santa Fe')"/>
+        <path class="province-fill" id="prov-Mendoza" d="M 130 300 L 190 290 L 200 320 L 200 370 L 160 390 L 120 350 L 120 310 Z" onclick="filterByProv('Mendoza')"/>
+        <path class="province-fill" id="prov-San Juan" d="M 130 230 L 190 220 L 200 260 L 190 290 L 130 300 Z" onclick="filterByProv('San Juan')"/>
+        <path class="province-fill" id="prov-San Luis" d="M 190 290 L 230 280 L 240 310 L 230 340 L 200 340 L 190 320 Z" onclick="filterByProv('San Luis')"/>
+        <path class="province-fill" id="prov-La Pampa" d="M 160 390 L 200 370 L 220 410 L 210 460 L 170 470 L 140 440 L 140 400 Z" onclick="filterByProv('La Pampa')"/>
+        <path class="province-fill" id="prov-Neuquén" d="M 100 420 L 140 400 L 160 430 L 150 470 L 110 480 L 90 450 Z" onclick="filterByProv('Neuquén')"/>
+        <path class="province-fill" id="prov-Río Negro" d="M 110 480 L 170 470 L 190 500 L 170 530 L 120 530 L 90 510 Z" onclick="filterByProv('Río Negro')"/>
+        <path class="province-fill" id="prov-Chubut" d="M 100 540 L 170 530 L 180 570 L 160 610 L 100 610 L 90 570 Z" onclick="filterByProv('Chubut')"/>
+        <path class="province-fill" id="prov-Santa Cruz" d="M 100 620 L 160 610 L 170 660 L 150 700 L 100 700 L 85 660 Z" onclick="filterByProv('Santa Cruz')"/>
+        <path class="province-fill" id="prov-Tierra del Fuego" d="M 120 710 L 160 705 L 160 735 L 140 745 L 120 735 Z" onclick="filterByProv('Tierra del Fuego')"/>
+        <path class="province-fill" id="prov-Chaco" d="M 290 170 L 340 160 L 360 180 L 360 210 L 330 210 L 310 190 Z" onclick="filterByProv('Chaco')"/>
+        <path class="province-fill" id="prov-Entre Ríos" d="M 310 270 L 340 260 L 360 280 L 360 320 L 340 340 L 310 320 Z" onclick="filterByProv('Entre Ríos')"/>
+        <path class="province-fill" id="prov-Misiones" d="M 360 150 L 390 140 L 400 170 L 380 190 L 360 180 Z" onclick="filterByProv('Misiones')"/>
+        <path class="province-fill" id="prov-Corrientes" d="M 340 180 L 380 180 L 390 210 L 370 240 L 340 240 L 330 210 Z" onclick="filterByProv('Corrientes')"/>
+        <path class="province-fill" id="prov-Formosa" d="M 280 130 L 330 120 L 350 140 L 340 160 L 290 170 Z" onclick="filterByProv('Formosa')"/>
+        <path class="province-fill" id="prov-Jujuy" d="M 220 90 L 260 80 L 270 110 L 250 120 L 220 110 Z" onclick="filterByProv('Jujuy')"/>
+        <path class="province-fill" id="prov-Salta" d="M 220 110 L 270 110 L 290 130 L 280 160 L 250 170 L 220 150 Z" onclick="filterByProv('Salta')"/>
+        <path class="province-fill" id="prov-Tucumán" d="M 240 170 L 270 160 L 275 185 L 255 195 L 240 185 Z" onclick="filterByProv('Tucumán')"/>
+        <path class="province-fill" id="prov-Santiago del Estero" d="M 255 165 L 295 155 L 310 175 L 305 210 L 275 215 L 255 195 Z" onclick="filterByProv('Santiago del Estero')"/>
+        <path class="province-fill" id="prov-Catamarca" d="M 195 155 L 240 145 L 255 165 L 255 195 L 230 205 L 200 195 L 190 175 Z" onclick="filterByProv('Catamarca')"/>
+        <path class="province-fill" id="prov-La Rioja" d="M 175 195 L 215 185 L 230 205 L 230 240 L 200 250 L 175 235 Z" onclick="filterByProv('La Rioja')"/>
+        <text x="265" y="410" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="700" pointer-events="none">BUENOS AIRES</text>
         <text x="250" y="295" text-anchor="middle" fill="#94a3b8" font-size="8" pointer-events="none">Córdoba</text>
         <text x="300" y="235" text-anchor="middle" fill="#94a3b8" font-size="8" pointer-events="none">Santa Fe</text>
         <text x="158" y="340" text-anchor="middle" fill="#94a3b8" font-size="8" pointer-events="none">Mendoza</text>
@@ -308,12 +324,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
         <text x="140" y="505" text-anchor="middle" fill="#94a3b8" font-size="8" pointer-events="none">Río Negro</text>
         <text x="135" y="575" text-anchor="middle" fill="#94a3b8" font-size="8" pointer-events="none">Chubut</text>
         <text x="128" y="660" text-anchor="middle" fill="#94a3b8" font-size="8" pointer-events="none">Sta. Cruz</text>
-        
-        <!-- Client dots will be added by JS -->
         <g id="client-dots"></g>
       </svg>
     </div>
-
     <div class="prov-panel">
       <div class="prov-panel-head">
         <h3 id="prov-panel-title">Clientes por Provincia</h3>
@@ -324,6 +337,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
   </div>
 </div>
 
+<!-- ════════════════════════════════ RANKING ═══════════════════════════════ -->
 <div id="view-ranking" class="view">
   <div class="rank-controls">
     <input type="text" class="search-box" id="rank-search" placeholder="🔍  Buscar cliente..." oninput="filterRanking()">
@@ -342,7 +356,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
           <th onclick="sortBy('rfm')">RFM <span class="sort-icon">↕</span></th>
           <th onclick="sortBy('total')">Total USD <span class="sort-icon">↑</span></th>
           <th onclick="sortBy('ops')">Ops <span class="sort-icon">↕</span></th>
-          <th>2021-2026</th>
+          <th>2021–2026</th>
           <th onclick="sortBy('ultima')">Último <span class="sort-icon">↕</span></th>
           <th>Estado</th>
           <th></th>
@@ -353,16 +367,174 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
   </div>
 </div>
 
+<!-- ════════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+<div id="view-dashboard" class="view">
+  <div class="dash-grid">
+    <!-- KPI Row -->
+    <div class="dash-card">
+      <div class="dash-title">Objetivo 2026</div>
+      <div class="big-num" style="color:#60a5fa;">$4.0M</div>
+      <div class="big-sub">USD · Meta anual</div>
+      <div style="margin-top:12px;font-size:11px;color:#64748b;">Referencia: 2022 $5.3M / 2023 $6.7M</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-title">Alcanzado 2026</div>
+      <div class="big-num" style="color:#4ade80;">$1.58M</div>
+      <div class="big-sub">USD · Ene–Jul 2026</div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;background:#0f172a;border-radius:4px;height:8px;overflow:hidden;">
+          <div style="height:100%;width:39.5%;background:#4ade80;border-radius:4px;"></div>
+        </div>
+        <span style="font-size:12px;color:#4ade80;font-weight:700;">39.5%</span>
+      </div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-title">Proyección Anualizada</div>
+      <div class="big-num" style="color:#f97316;">$2.71M</div>
+      <div class="big-sub">USD · Ritmo actual × 12/7</div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;background:#0f172a;border-radius:4px;height:8px;overflow:hidden;">
+          <div style="height:100%;width:67.8%;background:#f97316;border-radius:4px;"></div>
+        </div>
+        <span style="font-size:12px;color:#f97316;font-weight:700;">67.8%</span>
+      </div>
+    </div>
+
+    <!-- Objetivo vs Alcanzado vs Ponderado por Pipeline -->
+    <div class="dash-card wide">
+      <div class="dash-title">Ventas 2026 — Objetivo · Alcanzado · Proyección por Oportunidades</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#4ade80;"></div>Alcanzado real</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Proyección pipeline ponderado *</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#60a5fa;"></div>Objetivo</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#334155;"></div>Gap</div>
+      </div>
+      <div class="stacked-chart">
+        <div class="stacked-row">
+          <div class="stacked-label">Objetivo</div>
+          <div class="stacked-bar-bg">
+            <div class="stacked-segment" style="width:100%;background:#1e3a5f;"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 10px;">
+              <span style="font-size:11px;color:#60a5fa;font-weight:700;">$4.00M — Meta anual</span>
+            </div>
+          </div>
+          <div class="stacked-val" style="color:#60a5fa;">$4.0M</div>
+        </div>
+        <div class="stacked-row">
+          <div class="stacked-label">Alcanzado</div>
+          <div class="stacked-bar-bg">
+            <div class="stacked-segment" style="width:39.5%;background:#14532d;"></div>
+            <div class="stacked-segment" style="width:60.5%;background:#1e293b;"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 10px;gap:8px;">
+              <span style="font-size:11px;color:#4ade80;font-weight:700;">$1.58M</span>
+              <span style="font-size:10px;color:#334155;">|</span>
+              <span style="font-size:10px;color:#475569;">Gap: $2.42M</span>
+            </div>
+          </div>
+          <div class="stacked-val" style="color:#4ade80;">39.5%</div>
+        </div>
+        <div class="stacked-row">
+          <div class="stacked-label">Con pipeline *</div>
+          <div class="stacked-bar-bg">
+            <div class="stacked-segment" style="width:39.5%;background:#14532d;"></div>
+            <div class="stacked-segment" style="width:16%;background:#92400e;"></div>
+            <div class="stacked-segment" style="width:44.5%;background:#1e293b;"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 10px;gap:8px;">
+              <span style="font-size:11px;color:#4ade80;font-weight:700;">$1.58M</span>
+              <span style="font-size:10px;color:#f97316;font-weight:700;">+ $0.64M pipeline</span>
+              <span style="font-size:10px;color:#334155;">=</span>
+              <span style="font-size:10px;color:#e2e8f0;">$2.22M estimado</span>
+            </div>
+          </div>
+          <div class="stacked-val" style="color:#f97316;">55.5%</div>
+        </div>
+        <div class="stacked-row">
+          <div class="stacked-label">Proyección</div>
+          <div class="stacked-bar-bg">
+            <div class="stacked-segment" style="width:67.8%;background:#7c2d12;"></div>
+            <div class="stacked-segment" style="width:32.2%;background:#1e293b;"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 10px;">
+              <span style="font-size:11px;color:#fb923c;font-weight:700;">$2.71M anualizado al ritmo actual</span>
+            </div>
+          </div>
+          <div class="stacked-val" style="color:#f97316;">67.8%</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:10px;color:#475569;">* Pipeline ponderado: USD 3.19M total pipeline × prob. promedio ~20% = ~$0.64M estimado H2</div>
+    </div>
+
+    <!-- Evolución mensual 2026 -->
+    <div class="dash-card two">
+      <div class="dash-title">Evolución Mensual 2026</div>
+      <div id="monthly-chart" style="display:flex;align-items:flex-end;gap:6px;height:140px;padding-top:20px;"></div>
+      <div style="display:flex;gap:6px;margin-top:4px;" id="monthly-labels"></div>
+    </div>
+
+    <!-- Semáforo de velocidad -->
+    <div class="dash-card">
+      <div class="dash-title">Velocidad de Cierre</div>
+      <div style="text-align:center;padding:12px 0;">
+        <div style="font-size:48px;margin-bottom:8px;">🟡</div>
+        <div style="font-size:18px;font-weight:800;color:#fb923c;">Riesgo</div>
+        <div style="font-size:12px;color:#64748b;margin-top:6px;line-height:1.5;">Al ritmo actual llegás a $2.71M<br>vs objetivo $4.0M</div>
+        <div style="margin-top:12px;background:#0f172a;border-radius:8px;padding:10px;">
+          <div style="font-size:11px;color:#64748b;">Necesitás acelerar</div>
+          <div style="font-size:18px;font-weight:800;color:#f97316;margin-top:2px;">+$224K/mes</div>
+          <div style="font-size:10px;color:#475569;">en los próximos 5 meses</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top clients 2026 -->
+    <div class="dash-card">
+      <div class="dash-title">Top Clientes 2026</div>
+      <div id="top-clients-2026"></div>
+    </div>
+
+    <!-- Comparativo histórico -->
+    <div class="dash-card two">
+      <div class="dash-title">Comparativo Histórico — Mismo Período (Ene–Jul)</div>
+      <div style="display:flex;align-items:flex-end;gap:12px;height:130px;padding-top:16px;" id="hist-comp-chart"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════ CLIENTE ═══════════════════════════════ -->
 <div id="view-cliente" class="view">
   <div id="client-placeholder" class="client-placeholder">
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-    </svg>
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
     <p>Seleccioná un cliente desde el Ranking o el Mapa</p>
   </div>
   <div id="client-ficha" style="display:none;">
-    <button class="back-btn" onclick="document.getElementById('client-ficha').style.display='none';document.getElementById('client-placeholder').style.display='flex';showView('ranking',document.querySelectorAll('.tab-btn')[1])">← Volver al Ranking</button>
+    <button class="back-btn" onclick="backToRanking()">← Volver al Ranking</button>
     <div class="ficha" id="ficha-content"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ ANÁLISIS IA ═══════════════════════════════ -->
+<div id="view-analisis" class="view">
+  <div class="ai-layout">
+    <div class="ai-sidebar">
+      <div class="ai-sidebar-head">
+        <h2>✦ Motor de Análisis IA</h2>
+        <p>Seleccioná un cliente para analizar</p>
+      </div>
+      <div class="ai-client-search" style="padding:10px 12px;">
+        <input type="text" class="search-box" style="width:100%;" placeholder="🔍 Buscar..." oninput="filterAiClients(this.value)" id="ai-search">
+      </div>
+      <div class="ai-client-list" id="ai-client-list"></div>
+    </div>
+
+    <div class="ai-main" id="ai-main">
+      <div class="ai-empty">
+        <div style="font-size:48px;">✦</div>
+        <p>Seleccioná un cliente para iniciar el análisis</p>
+        <div style="font-size:12px;color:#334155;text-align:center;max-width:300px;line-height:1.6;">
+          El motor combina historial de compras, inteligencia de mercado, y el PM especializado para proponer oportunidades concretas.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -371,265 +543,244 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;mi
 <script>
 const CLIENTS = [{"nombre": "Sion S.A.", "cuit": "30-69007604-3", "total": 7788080.0, "ops": 284, "ultima": "2026-06-24", "primera": "2020-12-03", "rfm": 15, "r": 5, "f": 5, "m": 5, "familias": ["FUENTES", "HFC", "CARRIER", "ARTICULOS INFORMATICOSS", "ODN", "FTTH"], "vendedores": ["Matias Taddei", "Lucas Taddei HT", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 114236.0, "2024": 1544482.0, "2023": 2126924.0, "2022": 1199283.0, "2021": 1303438.0, "2020": 57412.0, "2025": 1442306.0}}, {"nombre": "Pogliotti & Pogliotti Construcciones S.A.", "cuit": "30-70986231-2", "total": 857845.0, "ops": 77, "ultima": "2026-06-26", "primera": "2021-01-05", "rfm": 15, "r": 5, "f": 5, "m": 5, "familias": ["FTTH", "CARRIER", "ODN"], "vendedores": ["Hugo Ortiz", "Matias Taddei", "Lucas Taddei", "Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 178167.0, "2026": 76006.0, "2024": 103424.0, "2021": 60174.0, "2022": 181524.0, "2023": 258550.0}}, {"nombre": "Obercom S.R.L.", "cuit": "30-71661644-0", "total": 592611.0, "ops": 94, "ultima": "2026-06-30", "primera": "2020-12-09", "rfm": 15, "r": 5, "f": 5, "m": 5, "familias": ["FTTH", "CARRIER", "ARTICULOS INFORMATICOSS", "ODN"], "vendedores": ["Matias Taddei", "Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 125062.0, "2024": 51799.0, "2026": 185840.0, "2022": 63444.0, "2025": 76029.0, "2020": 48944.0, "2023": 41492.0}}, {"nombre": "Horizon Trading S.A.", "cuit": "30-71493161-6", "total": 511175.0, "ops": 23, "ultima": "2026-06-26", "primera": "2021-03-31", "rfm": 14, "r": 5, "f": 4, "m": 5, "familias": ["FTTH", "FUENTES", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 294775.0, "2022": 44000.0, "2021": 172400.0}}, {"nombre": "Buena Onda Televisora Color S.R.L.", "cuit": "30-70299285-7", "total": 502582.0, "ops": 28, "ultima": "2026-04-30", "primera": "2022-03-15", "rfm": 14, "r": 5, "f": 4, "m": 5, "familias": ["FTTH", "HFC"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 279904.0, "2026": 1462.0, "2025": 20400.0, "2023": 41034.0, "2024": 159782.0}}, {"nombre": "Telesistema SRL", "cuit": "30-70918451-9", "total": 456319.0, "ops": 10, "ultima": "2023-10-25", "primera": "2020-12-11", "rfm": 7, "r": 1, "f": 2, "m": 4, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 62856.0, "2020": 128250.0, "2022": 140000.0, "2023": 125212.0}}, {"nombre": "Nortelevisa S.A.", "cuit": "30-65682429-4", "total": 453446.0, "ops": 14, "ultima": "2024-12-12", "primera": "2021-01-19", "rfm": 9, "r": 2, "f": 3, "m": 4, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 241250.0, "2023": 99750.0, "2024": 112356.0, "2022": 89.0}}, {"nombre": "Broadbandtech S.A.", "cuit": "30-70729176-8", "total": 441952.0, "ops": 49, "ultima": "2026-04-24", "primera": "2020-12-22", "rfm": 13, "r": 5, "f": 4, "m": 4, "familias": ["FTTH", "HFC", "CARRIER"], "vendedores": ["Matias Taddei", "Lucas Taddei", "Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 58916.0, "2023": 132170.0, "2021": 83268.0, "2026": 14750.0, "2025": 19825.0, "2022": 129453.0, "2020": 3570.0}}, {"nombre": "Redes del Oeste S A", "cuit": "33-71187588-9", "total": 438720.0, "ops": 39, "ultima": "2025-07-31", "primera": "2021-01-18", "rfm": 11, "r": 3, "f": 4, "m": 4, "familias": ["WIRELESS", "FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 355018.0, "2022": 56695.0, "2024": 4926.0, "2023": 22081.0}}, {"nombre": "Backbone Hosting Solutions S.A.U.", "cuit": "30-71719106-0", "total": 435901.0, "ops": 8, "ultima": "2022-09-01", "primera": "2022-06-30", "rfm": 7, "r": 1, "f": 2, "m": 4, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 435901.0}}, {"nombre": "Infinitel S.R.L.", "cuit": "30-71564795-4", "total": 434005.0, "ops": 48, "ultima": "2026-05-11", "primera": "2020-12-10", "rfm": 13, "r": 5, "f": 4, "m": 4, "familias": ["FTTH", "CARRIER", "ODN"], "vendedores": ["Matias Taddei", "Lucas Taddei HT", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2020": 64770.0, "2024": 362.0, "2023": 256604.0, "2021": 35143.0, "2022": 60490.0, "2026": 16635.0}}, {"nombre": "Comworks SA", "cuit": "30-71554899-9", "total": 411389.0, "ops": 27, "ultima": "2026-05-15", "primera": "2025-03-28", "rfm": 13, "r": 5, "f": 4, "m": 4, "familias": ["WIRELESS", "FTTH", "CARRIER", "ODN"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 228322.0, "2025": 183067.0}}, {"nombre": "Comunicaciones Setetec Argentina S.R.L.", "cuit": "30-71169171-1", "total": 375081.0, "ops": 77, "ultima": "2025-07-02", "primera": "2022-03-31", "rfm": 11, "r": 2, "f": 5, "m": 4, "familias": ["FTTH", "HFC", "CARRIER"], "vendedores": ["Julio González Daher", "Joaquin Pildain", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 282386.0, "2022": 81892.0, "2024": 5702.0, "2025": 5101.0}}, {"nombre": "Cablepartsnet S.R.L.", "cuit": "30-71431060-3", "total": 355567.0, "ops": 29, "ultima": "2024-01-25", "primera": "2022-04-27", "rfm": 9, "r": 1, "f": 4, "m": 4, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 184403.0, "2022": 164482.0, "2024": 6681.0}}, {"nombre": "Ssservicios S.A.S.", "cuit": "30-71586345-2", "total": 355453.0, "ops": 30, "ultima": "2026-03-12", "primera": "2021-01-08", "rfm": 12, "r": 4, "f": 4, "m": 4, "familias": ["FTTH", "CARRIER", "ODN"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 584.0, "2022": 202636.0, "2021": 28711.0, "2023": 121520.0, "2026": 1900.0, "2025": 101.0}}, {"nombre": "Tecnet Argentina S.A.", "cuit": "30-71475261-4", "total": 341900.0, "ops": 17, "ultima": "2023-06-30", "primera": "2020-12-18", "rfm": 8, "r": 1, "f": 3, "m": 4, "familias": ["FTTH", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 4097.0, "2021": 16290.0, "2023": 307255.0, "2020": 14258.0}}, {"nombre": "SuperCanal S A", "cuit": "30-61118252-6", "total": 338253.0, "ops": 10, "ultima": "2026-06-30", "primera": "2025-06-23", "rfm": 11, "r": 5, "f": 2, "m": 4, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 157203.0, "2025": 181050.0}}, {"nombre": "Pampacom S.R.L.", "cuit": "30-71014918-2", "total": 312055.0, "ops": 91, "ultima": "2025-09-10", "primera": "2020-12-28", "rfm": 12, "r": 3, "f": 5, "m": 4, "familias": ["FTTH", "HFC", "ODN"], "vendedores": ["Matias Taddei", "Lucas Taddei HT", "Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 109172.0, "2022": 46116.0, "2020": 23248.0, "2025": 4400.0, "2024": 28534.0, "2023": 100585.0}}, {"nombre": "Gigared S.A.", "cuit": "30-66304517-9", "total": 300385.0, "ops": 13, "ultima": "2026-03-31", "primera": "2023-02-17", "rfm": 11, "r": 4, "f": 3, "m": 4, "familias": ["FTTH", "CARRIER"], "vendedores": ["Matias Taddei", "Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 180218.0, "2025": 27768.0, "2026": 92400.0}}, {"nombre": "Algitech S.A.S.", "cuit": "30-71621289-7", "total": 295682.0, "ops": 144, "ultima": "2024-06-03", "primera": "2020-12-29", "rfm": 10, "r": 1, "f": 5, "m": 4, "familias": ["FTTH", "FUENTES", "HFC"], "vendedores": ["Lucas Taddei HT", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 66662.0, "2022": 107876.0, "2021": 103779.0, "2020": 15325.0, "2024": 2040.0}}, {"nombre": "Research SRL", "cuit": "30-71103341-2", "total": 286408.0, "ops": 30, "ultima": "2024-07-18", "primera": "2020-12-11", "rfm": 10, "r": 2, "f": 4, "m": 4, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 54608.0, "2023": 131437.0, "2022": 59060.0, "2024": 1782.0, "2020": 39520.0}}, {"nombre": "Itel S.A.", "cuit": "30-70999676-9", "total": 266298.0, "ops": 49, "ultima": "2025-09-16", "primera": "2020-12-23", "rfm": 11, "r": 3, "f": 4, "m": 4, "familias": ["FTTH", "ODN"], "vendedores": ["Julio González Daher", "Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 69520.0, "2025": 12160.0, "2023": 86017.0, "2022": 82477.0, "2024": 13083.0, "2020": 3040.0}}, {"nombre": "Madacom S.R.L.", "cuit": "30-70902384-1", "total": 259581.0, "ops": 22, "ultima": "2025-04-10", "primera": "2021-03-16", "rfm": 10, "r": 2, "f": 4, "m": 4, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 148056.0, "2022": 106125.0, "2025": 5400.0}}, {"nombre": "Banco de Inversión y Comercio Exterior Sociedad Anónima", "cuit": "30-65112908-3", "total": 240900.0, "ops": 4, "ultima": "2022-07-28", "primera": "2022-07-28", "rfm": 7, "r": 1, "f": 2, "m": 4, "familias": ["FTTH", "HFC"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 240900.0}}, {"nombre": "Sgs Valle Visión S.R.L.", "cuit": "30-69806515-6", "total": 238855.0, "ops": 26, "ultima": "2024-07-05", "primera": "2021-01-05", "rfm": 9, "r": 1, "f": 4, "m": 4, "familias": ["FTTH", "HFC"], "vendedores": ["Matias Taddei", "Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 198568.0, "2023": 32027.0, "2022": 279.0, "2024": 7981.0}}, {"nombre": "Frappa Mauricio Guillermo", "cuit": "20-26112627-4", "total": 237879.0, "ops": 80, "ultima": "2026-07-03", "primera": "2021-03-04", "rfm": 14, "r": 5, "f": 5, "m": 4, "familias": ["FTTH", "HFC", "CARRIER"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 76018.0, "2022": 102405.0, "2023": 31741.0, "2026": 11832.0, "2024": 15495.0, "2025": 388.0}}, {"nombre": "Generacion Wi-Fi SA", "cuit": "30-71228332-3", "total": 217497.0, "ops": 14, "ultima": "2026-06-12", "primera": "2025-01-14", "rfm": 12, "r": 5, "f": 3, "m": 4, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Lucas Taddei", "Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 179997.0, "2026": 37500.0}}, {"nombre": "Pablo Augusto Calderón", "cuit": "20-31635907-9", "total": 214731.0, "ops": 97, "ultima": "2025-09-12", "primera": "2022-08-24", "rfm": 12, "r": 3, "f": 5, "m": 4, "familias": ["FTTH", "FUENTES"], "vendedores": ["Matias Taddei", "Lucas Taddei HT", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 6033.0, "2023": 149275.0, "2022": 27571.0, "2025": 31852.0}}, {"nombre": "Establecimiento Cascada Blanca S.A", "cuit": "30-71483666-4", "total": 210000.0, "ops": 3, "ultima": "2025-06-25", "primera": "2025-06-25", "rfm": 7, "r": 2, "f": 1, "m": 4, "familias": ["FTTH"], "vendedores": ["Jorge Pastur"], "provincia": "Buenos Aires", "por_año": {"2025": 210000.0}}, {"nombre": "Provincia Leasing S.A.", "cuit": "30-68831033-0", "total": 200756.0, "ops": 4, "ultima": "2021-10-29", "primera": "2021-10-28", "rfm": 7, "r": 1, "f": 2, "m": 4, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 200756.0}}, {"nombre": "Fournet S.R.L.", "cuit": "30-71743476-1", "total": 198194.0, "ops": 63, "ultima": "2026-04-16", "primera": "2022-07-05", "rfm": 13, "r": 5, "f": 5, "m": 3, "familias": ["FTTH", "HFC"], "vendedores": ["Matias Taddei", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 133914.0, "2022": 48391.0, "2025": 9980.0, "2024": 5473.0, "2026": 435.0}}, {"nombre": "Sinectis S.A.", "cuit": "30-68589598-2", "total": 184500.0, "ops": 2, "ultima": "2023-01-10", "primera": "2022-11-14", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 61500.0, "2023": 123000.0}}, {"nombre": "Cable Hogar del Valle S.R.L.", "cuit": "30-62147800-8", "total": 166400.0, "ops": 1, "ultima": "2023-09-20", "primera": "2023-09-20", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 166400.0}}, {"nombre": "Asa Digital S R L", "cuit": "30-70508475-7", "total": 157774.0, "ops": 13, "ultima": "2022-09-06", "primera": "2021-01-18", "rfm": 7, "r": 1, "f": 3, "m": 3, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 51712.0, "2022": 106062.0}}, {"nombre": "Servicargas Mendoza  S A", "cuit": "30-70883962-7", "total": 147182.0, "ops": 25, "ultima": "2023-06-27", "primera": "2021-01-18", "rfm": 8, "r": 1, "f": 4, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Mendoza", "por_año": {"2021": 100197.0, "2023": 46985.0}}, {"nombre": "Banco Supervielle S.A.", "cuit": "33-50000517-9", "total": 136500.0, "ops": 3, "ultima": "2022-04-04", "primera": "2022-04-04", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 136500.0}}, {"nombre": "Mantelectric I C I S A", "cuit": "30-52029200-0", "total": 136288.0, "ops": 6, "ultima": "2025-06-06", "primera": "2023-10-24", "rfm": 7, "r": 2, "f": 2, "m": 3, "familias": ["WIRELESS", "CARRIER"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 89925.0, "2023": 5362.0, "2025": 41000.0}}, {"nombre": "Mauro Daniel Fortini", "cuit": "20-29456274-6", "total": 135793.0, "ops": 30, "ultima": "2024-09-03", "primera": "2021-01-14", "rfm": 9, "r": 2, "f": 4, "m": 3, "familias": ["FTTH", "CARRIER"], "vendedores": ["Julio González Daher", "Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 19872.0, "2023": 101896.0, "2021": 13468.0, "2024": 557.0}}, {"nombre": "Coop. de Luz y Fuerza Eléct. Industrias y otros Serv. Púb. Vivienda y Créditos de Punta Alta Ltda.", "cuit": "30-54571426-0", "total": 105911.0, "ops": 21, "ultima": "2025-08-14", "primera": "2021-04-07", "rfm": 10, "r": 3, "f": 4, "m": 3, "familias": ["FTTH", "HFC", "CARRIER"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 45942.0, "2021": 13334.0, "2025": 11244.0, "2024": 35390.0}}, {"nombre": "Diego Sebastián Garay", "cuit": "20-31077307-8", "total": 102351.0, "ops": 41, "ultima": "2024-06-25", "primera": "2021-03-01", "rfm": 8, "r": 1, "f": 4, "m": 3, "familias": ["FTTH", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 36024.0, "2024": 5317.0, "2023": 25877.0, "2022": 35134.0}}, {"nombre": "Silica Networks Argentina SA", "cuit": "30-70719317-0", "total": 99948.0, "ops": 24, "ultima": "2024-12-11", "primera": "2023-03-17", "rfm": 9, "r": 2, "f": 4, "m": 3, "familias": ["FTTH", "CARRIER"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 36459.0, "2023": 63489.0}}, {"nombre": "Nexodigital S.A.", "cuit": "30-71006331-8", "total": 94531.0, "ops": 39, "ultima": "2025-01-10", "primera": "2021-10-28", "rfm": 9, "r": 2, "f": 4, "m": 3, "familias": ["FTTH", "HFC", "CARRIER"], "vendedores": ["Lucas Taddei HT", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 33281.0, "2022": 45189.0, "2024": 2280.0, "2021": 7303.0, "2025": 6478.0}}, {"nombre": "Lemmon Internet SRL", "cuit": "30-71685252-7", "total": 90907.0, "ops": 16, "ultima": "2024-09-13", "primera": "2020-12-09", "rfm": 8, "r": 2, "f": 3, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 25872.0, "2022": 31843.0, "2023": 15890.0, "2020": 9120.0, "2024": 8181.0}}, {"nombre": "Mariana Busajm", "cuit": "27-24856927-7", "total": 89924.0, "ops": 7, "ultima": "2023-04-13", "primera": "2021-08-03", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 55160.0, "2023": 20764.0, "2022": 14000.0}}, {"nombre": "Backbone S.A.", "cuit": "30-71712511-4", "total": 89840.0, "ops": 3, "ultima": "2023-03-31", "primera": "2023-02-28", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 89840.0}}, {"nombre": "Wire Tech FTTH S.R.L.", "cuit": "30-71738450-0", "total": 85935.0, "ops": 34, "ultima": "2023-02-24", "primera": "2022-05-24", "rfm": 8, "r": 1, "f": 4, "m": 3, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 85665.0, "2023": 270.0}}, {"nombre": "Coop. de Provisión de Servicios Públicos de Tortuguitas", "cuit": "30-57186681-8", "total": 83041.0, "ops": 6, "ultima": "2023-08-10", "primera": "2023-06-08", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 83041.0}}, {"nombre": "Swissnet SRL", "cuit": "30-71665558-6", "total": 82518.0, "ops": 11, "ultima": "2026-04-06", "primera": "2021-06-18", "rfm": 10, "r": 4, "f": 3, "m": 3, "familias": ["FTTH", "ODN"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 49492.0, "2025": 4080.0, "2021": 5096.0, "2022": 23850.0}}, {"nombre": "Video Cable Magdalena S R L", "cuit": "33-65840263-9", "total": 82330.0, "ops": 4, "ultima": "2022-07-05", "primera": "2021-06-09", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 69460.0, "2022": 12870.0}}, {"nombre": "Iplus S.A.S", "cuit": "30-71644337-6", "total": 80461.0, "ops": 13, "ultima": "2026-05-21", "primera": "2025-05-14", "rfm": 11, "r": 5, "f": 3, "m": 3, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Jorge Pastur", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 19361.0, "2026": 61100.0}}, {"nombre": "Provetel Argentina S.A", "cuit": "30-71084627-4", "total": 80315.0, "ops": 8, "ultima": "2025-10-22", "primera": "2025-08-19", "rfm": 8, "r": 3, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Matias Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 80315.0}}, {"nombre": "Marketing Directo S.R.L.", "cuit": "30-69550313-6", "total": 74530.0, "ops": 15, "ultima": "2024-10-21", "primera": "2022-05-05", "rfm": 8, "r": 2, "f": 3, "m": 3, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 27912.0, "2022": 41889.0, "2024": 4729.0}}, {"nombre": "Wicorp S.A.", "cuit": "33-71199093-9", "total": 73773.0, "ops": 19, "ultima": "2026-01-15", "primera": "2021-08-27", "rfm": 10, "r": 4, "f": 3, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 14466.0, "2023": 18964.0, "2022": 21799.0, "2021": 18544.0}}, {"nombre": "Prolux Comser S.A.", "cuit": "30-71207935-1", "total": 73769.0, "ops": 11, "ultima": "2023-04-27", "primera": "2021-10-22", "rfm": 7, "r": 1, "f": 3, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 46430.0, "2022": 21259.0, "2021": 6080.0}}, {"nombre": "Omar Anselmo Ripoll", "cuit": "20-12037057-0", "total": 70938.0, "ops": 12, "ultima": "2023-10-11", "primera": "2021-04-09", "rfm": 7, "r": 1, "f": 3, "m": 3, "familias": ["FTTH", "FUENTES", "HFC"], "vendedores": ["Lucas Taddei HT", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 61389.0, "2021": 9549.0}}, {"nombre": "Cable Televisión S.R.L.", "cuit": "30-67081354-8", "total": 67494.0, "ops": 30, "ultima": "2023-12-27", "primera": "2022-02-04", "rfm": 8, "r": 1, "f": 4, "m": 3, "familias": ["FTTH", "FUENTES", "HFC"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 42440.0, "2022": 25053.0}}, {"nombre": "Infomaster S.R.L.", "cuit": "30-70775002-9", "total": 67474.0, "ops": 5, "ultima": "2023-10-26", "primera": "2021-07-28", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 15424.0, "2022": 52050.0}}, {"nombre": "Asociación Mutual Mercantil Argentina", "cuit": "30-59304955-4", "total": 66663.0, "ops": 2, "ultima": "2023-04-25", "primera": "2021-12-23", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["FTTH"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 27930.0, "2023": 38733.0}}, {"nombre": "Coop. de Provisión de Servicios de Comunicaciones Teracoop Limitada", "cuit": "30-71611311-2", "total": 61984.0, "ops": 1, "ultima": "2022-12-30", "primera": "2022-09-05", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2022": 61984.0}}, {"nombre": "Mónica Beatriz Martínez", "cuit": "27-17400925-8", "total": 61949.0, "ops": 25, "ultima": "2026-01-15", "primera": "2022-03-28", "rfm": 11, "r": 4, "f": 4, "m": 3, "familias": ["FTTH", "FUENTES", "HFC", "ODN"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 22129.0, "2022": 26657.0, "2023": 13163.0}}, {"nombre": "Sebastián Souto", "cuit": "20-31388131-9", "total": 60800.0, "ops": 1, "ultima": "2020-12-10", "primera": "2020-12-10", "rfm": 5, "r": 1, "f": 1, "m": 3, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2020": 60800.0}}, {"nombre": "Miguel Ignacio Araya", "cuit": "20-25505268-4", "total": 59359.0, "ops": 11, "ultima": "2024-07-11", "primera": "2020-12-09", "rfm": 8, "r": 2, "f": 3, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 33869.0, "2024": 2600.0, "2023": 10414.0, "2020": 12476.0}}, {"nombre": "Video Digital S.R.L.", "cuit": "30-71469658-7", "total": 57842.0, "ops": 6, "ultima": "2023-06-23", "primera": "2022-07-07", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 27232.0, "2022": 30610.0}}, {"nombre": "Cable Video Urdinarrain S.R.L.", "cuit": "30-64582614-7", "total": 56357.0, "ops": 17, "ultima": "2023-05-29", "primera": "2021-01-08", "rfm": 7, "r": 1, "f": 3, "m": 3, "familias": ["HFC", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 14724.0, "2023": 22960.0, "2021": 18672.0}}, {"nombre": "TV Cable Hogar S A", "cuit": "30-63279843-8", "total": 55463.0, "ops": 21, "ultima": "2024-07-25", "primera": "2021-04-07", "rfm": 9, "r": 2, "f": 4, "m": 3, "familias": ["HFC", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 25471.0, "2021": 22037.0, "2024": 5320.0, "2023": 2635.0}}, {"nombre": "MDI Marketing Directo Integrado S.A.", "cuit": "30-70895368-3", "total": 53964.0, "ops": 17, "ultima": "2024-03-07", "primera": "2022-10-05", "rfm": 7, "r": 1, "f": 3, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 33002.0, "2022": 20963.0}}, {"nombre": "Delco Imagen S A", "cuit": "30-64370651-9", "total": 53244.0, "ops": 11, "ultima": "2024-07-22", "primera": "2021-01-20", "rfm": 8, "r": 2, "f": 3, "m": 3, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 28318.0, "2021": 18846.0, "2024": 6080.0}}, {"nombre": "Iptel S.A.", "cuit": "33-70782765-9", "total": 52852.0, "ops": 7, "ultima": "2022-08-05", "primera": "2021-01-28", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FUENTES", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 22890.0, "2022": 29962.0}}, {"nombre": "Cooperativa De Electricidad Obras Y Servicios Publicos de Achiras LTDA", "cuit": "30-54579253-9", "total": 52800.0, "ops": 2, "ultima": "2025-07-14", "primera": "2025-05-30", "rfm": 7, "r": 3, "f": 1, "m": 3, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 52800.0}}, {"nombre": "PXT y Asociados S.R.L.", "cuit": "30-71005922-1", "total": 52650.0, "ops": 6, "ultima": "2023-11-14", "primera": "2023-08-02", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 52650.0}}, {"nombre": "Roxana Alejandra Mansilla", "cuit": "23-23620933-4", "total": 52268.0, "ops": 7, "ultima": "2022-08-24", "primera": "2020-12-10", "rfm": 6, "r": 1, "f": 2, "m": 3, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 24300.0, "2021": 21888.0, "2020": 6080.0}}, {"nombre": "Renovación Radial S.A.", "cuit": "30-70956347-1", "total": 52014.0, "ops": 27, "ultima": "2023-03-31", "primera": "2021-05-18", "rfm": 8, "r": 1, "f": 4, "m": 3, "familias": ["FTTH", "FUENTES", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 30659.0, "2023": 10630.0, "2022": 10725.0}}, {"nombre": "Telefonia Publica y Privada SA", "cuit": "30-70124828-3", "total": 49678.0, "ops": 7, "ultima": "2026-05-26", "primera": "2025-11-18", "rfm": 9, "r": 5, "f": 2, "m": 2, "familias": ["WIRELESS", "ODN"], "vendedores": ["Matias Taddei", "Gaston Furer", "Lucas Taddei", "Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2026": 43748.0, "2025": 5930.0}}, {"nombre": "Asociación De Cooperativas Red Digital Sur Limitada", "cuit": "30-71433899-0", "total": 48400.0, "ops": 1, "ultima": "2025-05-15", "primera": "2025-05-15", "rfm": 5, "r": 2, "f": 1, "m": 2, "familias": ["ODN"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2025": 48400.0}}, {"nombre": "Coop De Electricidad Obras y Servicios Pub LTDA de Coronel Moldes", "cuit": "30-54572115-1", "total": 48400.0, "ops": 1, "ultima": "2025-05-15", "primera": "2025-05-12", "rfm": 5, "r": 2, "f": 1, "m": 2, "familias": ["ODN"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2025": 48400.0}}, {"nombre": "Cable Televisora Color  S A", "cuit": "30-61106460-4", "total": 47569.0, "ops": 11, "ultima": "2025-02-06", "primera": "2020-12-18", "rfm": 7, "r": 2, "f": 3, "m": 2, "familias": ["FUENTES", "HFC", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 30385.0, "2020": 12260.0, "2025": 4924.0}}, {"nombre": "Losac S A", "cuit": "30-68239660-8", "total": 46951.0, "ops": 22, "ultima": "2024-03-21", "primera": "2021-01-08", "rfm": 7, "r": 1, "f": 4, "m": 2, "familias": ["HFC", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 21414.0, "2021": 18542.0, "2023": 3195.0, "2024": 3800.0}}, {"nombre": "Proveedor S.A.", "cuit": "30-71308150-3", "total": 46262.0, "ops": 12, "ultima": "2024-10-01", "primera": "2020-12-18", "rfm": 7, "r": 2, "f": 3, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 36890.0, "2024": 594.0, "2022": 2698.0, "2020": 6080.0}}, {"nombre": "Coop. de Servicios y Obras Públicas Limitada de Puán", "cuit": "33-54569474-9", "total": 45160.0, "ops": 4, "ultima": "2024-10-15", "primera": "2024-05-28", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 45160.0}}, {"nombre": "Arturo Andrés Novi Gambardella", "cuit": "23-92138638-9", "total": 44080.0, "ops": 2, "ultima": "2024-01-09", "primera": "2023-11-15", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 9280.0, "2023": 34800.0}}, {"nombre": "Carolina Cable Color S A", "cuit": "30-63032905-8", "total": 40875.0, "ops": 2, "ultima": "2022-12-13", "primera": "2022-12-07", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2022": 40875.0}}, {"nombre": "Berthix S.A.", "cuit": "30-71581675-6", "total": 39868.0, "ops": 5, "ultima": "2023-09-21", "primera": "2023-02-23", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 39868.0}}, {"nombre": "FESACOM", "cuit": "30-71884826-8", "total": 39816.0, "ops": 17, "ultima": "2026-07-02", "primera": "2025-08-19", "rfm": 10, "r": 5, "f": 3, "m": 2, "familias": ["FTTH", "ODN"], "vendedores": ["Matias Taddei", "Lucas Taddei", "Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2026": 33646.0, "2025": 6170.0}}, {"nombre": "Concordia Video Cable S.A.", "cuit": "30-68065681-5", "total": 39600.0, "ops": 1, "ultima": "2023-04-18", "primera": "2023-04-18", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Federico Núñez"], "provincia": "Entre Ríos", "por_año": {"2023": 39600.0}}, {"nombre": "Daniel Alberto Delfino", "cuit": "20-17600711-8", "total": 39471.0, "ops": 13, "ultima": "2022-07-08", "primera": "2021-01-08", "rfm": 6, "r": 1, "f": 3, "m": 2, "familias": ["HFC", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 18323.0, "2022": 21148.0}}, {"nombre": "Ercom SRL", "cuit": "30-70880361-4", "total": 38337.0, "ops": 7, "ultima": "2023-12-27", "primera": "2022-06-22", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH", "HFC"], "vendedores": ["Lucas Taddei HT", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 3339.0, "2023": 34998.0}}, {"nombre": "Power VT S.A.", "cuit": "30-70730721-4", "total": 35984.0, "ops": 2, "ultima": "2021-04-06", "primera": "2021-04-06", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["HFC"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 35984.0}}, {"nombre": "Difusora Pellegrini S.A.", "cuit": "30-65024441-5", "total": 34008.0, "ops": 2, "ultima": "2021-04-12", "primera": "2021-04-12", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 34008.0}}, {"nombre": "Soluciones Wisp S.A.", "cuit": "30-71462735-6", "total": 33861.0, "ops": 4, "ultima": "2026-06-12", "primera": "2021-10-27", "rfm": 9, "r": 5, "f": 2, "m": 2, "familias": ["FTTH", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 8225.0, "2023": 25574.0, "2021": 62.0}}, {"nombre": "NE.SAR S.R.L", "cuit": "33-70949819-9", "total": 33603.0, "ops": 3, "ultima": "2026-05-21", "primera": "2026-05-21", "rfm": 8, "r": 5, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Matias Taddei"], "provincia": "Buenos Aires", "por_año": {"2026": 33603.0}}, {"nombre": "Wn Internet S.R.L.", "cuit": "30-71541553-0", "total": 33196.0, "ops": 5, "ultima": "2023-02-10", "primera": "2021-01-15", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 17899.0, "2022": 65.0, "2021": 15232.0}}, {"nombre": "Angostura Video Cable S.A.", "cuit": "30-64883281-4", "total": 32414.0, "ops": 8, "ultima": "2024-05-07", "primera": "2021-04-21", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 1845.0, "2022": 8802.0, "2024": 44.0, "2023": 21723.0}}, {"nombre": "Velcom S.R.L.", "cuit": "30-71698618-3", "total": 31038.0, "ops": 9, "ultima": "2023-06-09", "primera": "2021-09-08", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 16908.0, "2022": 730.0, "2021": 13400.0}}, {"nombre": "Super Canal S A (No usar)", "cuit": "30-65132467-6", "total": 30690.0, "ops": 4, "ultima": "2023-02-24", "primera": "2022-12-07", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 28390.0, "2023": 2300.0}}, {"nombre": "Iván Emanuel Melnichuk", "cuit": "20-32985371-4", "total": 30350.0, "ops": 2, "ultima": "2021-11-25", "primera": "2021-08-20", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["ARTICULOS INFORMATICOSS", "FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 30350.0}}, {"nombre": "E Tech Net S.A.", "cuit": "30-71187447-6", "total": 30192.0, "ops": 9, "ultima": "2024-01-19", "primera": "2020-12-10", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 147.0, "2022": 8686.0, "2021": 15278.0, "2020": 6080.0}}, {"nombre": "LUNA NET S.A.", "cuit": "33-71614431-9", "total": 29675.0, "ops": 7, "ultima": "2026-03-31", "primera": "2025-11-21", "rfm": 8, "r": 4, "f": 2, "m": 2, "familias": ["WIRELESS", "FTTH"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 22475.0, "2025": 7200.0}}, {"nombre": "Zumino Yolanda Magdalena", "cuit": "27-04586698-5", "total": 28886.0, "ops": 21, "ultima": "2022-10-25", "primera": "2021-01-08", "rfm": 7, "r": 1, "f": 4, "m": 2, "familias": ["FUENTES", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 17818.0, "2022": 11067.0}}, {"nombre": "Fibermont S.A.", "cuit": "30-71693369-1", "total": 28718.0, "ops": 4, "ultima": "2023-06-26", "primera": "2023-03-08", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 28718.0}}, {"nombre": "Optix Tec S.R.L.", "cuit": "30-71794093-4", "total": 27586.0, "ops": 11, "ultima": "2025-07-31", "primera": "2023-03-07", "rfm": 8, "r": 3, "f": 3, "m": 2, "familias": ["FTTH", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 13580.0, "2023": 14006.0}}, {"nombre": "Trans Oberá Gas S.R.L.", "cuit": "30-70845193-9", "total": 27353.0, "ops": 8, "ultima": "2022-04-26", "primera": "2020-12-16", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Misiones", "por_año": {"2021": 22009.0, "2022": 2304.0, "2020": 3040.0}}, {"nombre": "CV Sarmiento", "cuit": "30-71681495-1", "total": 27240.0, "ops": 4, "ultima": "2024-06-14", "primera": "2023-10-19", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Lucas Taddei HT", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 12740.0, "2023": 14500.0}}, {"nombre": "José Luís Zurakouski J", "cuit": "20-29598480-6", "total": 26847.0, "ops": 14, "ultima": "2022-11-01", "primera": "2020-12-10", "rfm": 6, "r": 1, "f": 3, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 9013.0, "2022": 11580.0, "2020": 6254.0}}, {"nombre": "RELTID CV   SA", "cuit": "33-66475064-9", "total": 25331.0, "ops": 8, "ultima": "2026-05-08", "primera": "2025-11-21", "rfm": 9, "r": 5, "f": 2, "m": 2, "familias": ["WIRELESS", "FTTH"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 17661.0, "2026": 7670.0}}, {"nombre": "Coop. de Electricidad Limitada de Villa Valeria", "cuit": "33-54572634-9", "total": 25261.0, "ops": 8, "ultima": "2024-10-15", "primera": "2023-08-18", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 9200.0, "2023": 16061.0}}, {"nombre": "Carlos José Guillén Martin", "cuit": "20-22438036-5", "total": 24302.0, "ops": 8, "ultima": "2022-12-13", "primera": "2020-12-15", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 1520.0, "2020": 3040.0, "2022": 19742.0}}, {"nombre": "Iván Gonzalo Vasconi", "cuit": "20-32389828-7", "total": 23600.0, "ops": 12, "ultima": "2022-07-20", "primera": "2021-11-23", "rfm": 6, "r": 1, "f": 3, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 23582.0, "2021": 18.0}}, {"nombre": "Ibusiness S.R.L.", "cuit": "30-71775771-4", "total": 23005.0, "ops": 7, "ultima": "2023-11-27", "primera": "2023-03-06", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Lucas Taddei HT", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 23005.0}}, {"nombre": "Interbap S.R.L.", "cuit": "30-71723131-3", "total": 21828.0, "ops": 10, "ultima": "2024-08-29", "primera": "2022-01-31", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 9131.0, "2024": 5840.0, "2023": 6857.0}}, {"nombre": "Promacom Latam", "cuit": "30-71707386-6", "total": 21692.0, "ops": 5, "ultima": "2025-05-13", "primera": "2022-08-12", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 8100.0, "2022": 13592.0}}, {"nombre": "Lucas Christian López", "cuit": "20-36931141-8", "total": 20914.0, "ops": 16, "ultima": "2026-03-31", "primera": "2023-07-20", "rfm": 9, "r": 4, "f": 3, "m": 2, "familias": ["FTTH", "HFC"], "vendedores": ["Matias Taddei", "Lucas Taddei HT", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 11790.0, "2026": 3270.0, "2024": 5853.0}}, {"nombre": "Andrés Alberto Baigorria", "cuit": "20-30839921-5", "total": 20856.0, "ops": 17, "ultima": "2024-03-22", "primera": "2022-01-24", "rfm": 6, "r": 1, "f": 3, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 20856.0}}, {"nombre": "PRATO MAURICIO DANIEL", "cuit": "20-27502683-3", "total": 20796.0, "ops": 6, "ultima": "2025-09-19", "primera": "2025-09-19", "rfm": 7, "r": 3, "f": 2, "m": 2, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 20796.0}}, {"nombre": "Técnica del Río S.R.L.", "cuit": "30-68688394-5", "total": 20773.0, "ops": 3, "ultima": "2023-06-15", "primera": "2023-02-23", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 20773.0}}, {"nombre": "Wiltel Comunicaciones SA", "cuit": "30-68438630-8", "total": 19509.0, "ops": 6, "ultima": "2026-05-13", "primera": "2025-01-29", "rfm": 9, "r": 5, "f": 2, "m": 2, "familias": ["FTTH", "ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2026": 19440.0, "2025": 69.0}}, {"nombre": "Coop. de Obras, Servicios Públicos y Sociales de Hernando Limitada", "cuit": "30-54574579-4", "total": 19076.0, "ops": 10, "ultima": "2024-04-04", "primera": "2021-03-16", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 1080.0, "2021": 9077.0, "2024": 1560.0, "2022": 7359.0}}, {"nombre": "Support Internet S. A. S.", "cuit": "30-71768219-6", "total": 18788.0, "ops": 8, "ultima": "2026-03-19", "primera": "2025-03-27", "rfm": 8, "r": 4, "f": 2, "m": 2, "familias": ["FTTH", "ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 4000.0, "2026": 14788.0}}, {"nombre": "Alianza Pymes S.A.", "cuit": "30-71587633-3", "total": 18150.0, "ops": 2, "ultima": "2022-10-21", "primera": "2022-08-03", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 18150.0}}, {"nombre": "Ignacio Luis Orazi", "cuit": "20-27532825-2", "total": 17763.0, "ops": 9, "ultima": "2025-03-13", "primera": "2022-06-02", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 5700.0, "2022": 11523.0, "2025": 540.0}}, {"nombre": "COOP LTDA ELECT OBRAS Y SERVICIOS PUBL CREDITOS Y VIVIENDAS DE CARNERILLO", "cuit": "30-54581380-3", "total": 17637.0, "ops": 4, "ultima": "2026-01-14", "primera": "2025-07-21", "rfm": 8, "r": 4, "f": 2, "m": 2, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2026": 7187.0, "2025": 10450.0}}, {"nombre": "Datalink S.R.L.", "cuit": "30-71178171-0", "total": 17464.0, "ops": 3, "ultima": "2023-08-07", "primera": "2023-06-16", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 17464.0}}, {"nombre": "Trunk Line Service S.R.L.", "cuit": "30-71077459-1", "total": 17400.0, "ops": 1, "ultima": "2023-10-19", "primera": "2023-10-19", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Julio González Daher"], "provincia": "Buenos Aires", "por_año": {"2023": 17400.0}}, {"nombre": "GPS San Juan S.R.L.", "cuit": "30-71543286-9", "total": 17081.0, "ops": 4, "ultima": "2023-07-24", "primera": "2022-12-13", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "San Juan", "por_año": {"2023": 12497.0, "2022": 4584.0}}, {"nombre": "Fibernext S.R.L", "cuit": "30-71508840-8", "total": 16675.0, "ops": 20, "ultima": "2026-04-30", "primera": "2025-04-09", "rfm": 10, "r": 5, "f": 3, "m": 2, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 13135.0, "2026": 3540.0}}, {"nombre": "Osvaldo Andrés Olmedo", "cuit": "20-30542272-0", "total": 16108.0, "ops": 12, "ultima": "2023-06-09", "primera": "2021-10-13", "rfm": 6, "r": 1, "f": 3, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 7517.0, "2023": 7679.0, "2021": 912.0}}, {"nombre": "NODO NET S.A.", "cuit": "30-71449817-3", "total": 15925.0, "ops": 2, "ultima": "2026-03-30", "primera": "2026-03-30", "rfm": 7, "r": 4, "f": 1, "m": 2, "familias": ["WIRELESS", "FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2026": 15925.0}}, {"nombre": "TVC 5 S A", "cuit": "30-68658575-8", "total": 15344.0, "ops": 3, "ultima": "2025-07-31", "primera": "2021-08-31", "rfm": 6, "r": 3, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 144.0, "2021": 15200.0}}, {"nombre": "Coop. de Servicios Públicos y Sociales de Serrano Limitada", "cuit": "30-54582505-4", "total": 14956.0, "ops": 5, "ultima": "2025-01-31", "primera": "2024-06-13", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 11916.0, "2025": 3040.0}}, {"nombre": "GRUPO FULL SAT S.R.L.", "cuit": "30-71517515-7", "total": 14700.0, "ops": 3, "ultima": "2025-11-21", "primera": "2025-09-25", "rfm": 6, "r": 3, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 14700.0}}, {"nombre": "Full Play Servicios S.R.L.", "cuit": "33-71713721-9", "total": 14700.0, "ops": 1, "ultima": "2022-04-20", "primera": "2022-04-20", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 14700.0}}, {"nombre": "Fiberland S.R.L.", "cuit": "30-71638619-4", "total": 13975.0, "ops": 5, "ultima": "2025-11-26", "primera": "2025-02-18", "rfm": 7, "r": 3, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Lucas Taddei", "Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 13975.0}}, {"nombre": "Near S.A.", "cuit": "30-71673884-8", "total": 13587.0, "ops": 4, "ultima": "2023-02-02", "primera": "2021-12-20", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 2618.0, "2021": 6722.0, "2023": 4247.0}}, {"nombre": "EFEYSE S.R.L.", "cuit": "33-71583326-9", "total": 13352.0, "ops": 2, "ultima": "2023-11-09", "primera": "2023-11-03", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Julio González Daher"], "provincia": "Buenos Aires", "por_año": {"2023": 13352.0}}, {"nombre": "Coop. Eléctrica Jovita Limitada", "cuit": "30-54576667-8", "total": 13305.0, "ops": 5, "ultima": "2024-10-17", "primera": "2024-06-13", "rfm": 6, "r": 2, "f": 2, "m": 2, "familias": ["FTTH", "FUENTES"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 13305.0}}, {"nombre": "Uninet S.A.", "cuit": "30-71803565-8", "total": 13025.0, "ops": 1, "ultima": "2023-10-11", "primera": "2023-10-11", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Julio González Daher"], "provincia": "Buenos Aires", "por_año": {"2023": 13025.0}}, {"nombre": "Interlink SA", "cuit": "30-68551331-1", "total": 12750.0, "ops": 2, "ultima": "2021-09-29", "primera": "2021-09-06", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["HFC"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 12750.0}}, {"nombre": "Coop. de Provisión de Serv. Telefónicos de Mariano Acosta Ltda", "cuit": "30-61240906-0", "total": 12195.0, "ops": 2, "ultima": "2023-10-26", "primera": "2021-02-23", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 35.0, "2021": 12160.0}}, {"nombre": "Servicios S.A.", "cuit": "30-67429169-4", "total": 11781.0, "ops": 7, "ultima": "2026-01-15", "primera": "2024-04-17", "rfm": 8, "r": 4, "f": 2, "m": 2, "familias": ["FTTH", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 11781.0}}, {"nombre": "D Y R Sistemas S.R.L.", "cuit": "30-71684682-9", "total": 11675.0, "ops": 3, "ultima": "2022-05-06", "primera": "2022-01-27", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 11675.0}}, {"nombre": "Caleta Video Cable S.R.L.", "cuit": "30-62805762-8", "total": 11330.0, "ops": 1, "ultima": "2021-01-21", "primera": "2021-01-20", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 11330.0}}, {"nombre": "Compañía Argentina de Negocios S.A.", "cuit": "33-71035777-9", "total": 11124.0, "ops": 3, "ultima": "2021-01-12", "primera": "2020-12-17", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 5044.0, "2020": 6080.0}}, {"nombre": "Nicolás Báez", "cuit": "20-34778128-3", "total": 10651.0, "ops": 3, "ultima": "2022-10-17", "primera": "2022-10-12", "rfm": 4, "r": 1, "f": 1, "m": 2, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 10651.0}}, {"nombre": "Univisión S.R.L.", "cuit": "30-71140506-9", "total": 10480.0, "ops": 6, "ultima": "2024-03-21", "primera": "2022-10-06", "rfm": 5, "r": 1, "f": 2, "m": 2, "familias": ["FUENTES", "HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 6200.0, "2024": 3040.0, "2022": 1240.0}}, {"nombre": "COOPERATIVA DE ELECTRICIDAD Y ANEXOS LIMITADA C E Y A L", "cuit": "30-54575268-5", "total": 9900.0, "ops": 2, "ultima": "2025-09-25", "primera": "2025-07-29", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 9900.0}}, {"nombre": "Iperactive S.A.", "cuit": "30-70905985-4", "total": 9421.0, "ops": 3, "ultima": "2023-06-26", "primera": "2023-05-16", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 9421.0}}, {"nombre": "Coop. de Electricidad Crédito Obras y Servicios Públicos y Vivienda de Melo Limitada", "cuit": "30-54579208-3", "total": 9010.0, "ops": 4, "ultima": "2024-09-17", "primera": "2023-08-18", "rfm": 5, "r": 2, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Julio González Daher", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 4100.0, "2023": 4910.0}}, {"nombre": "Ramírez Cable Visión S R L", "cuit": "30-65321184-4", "total": 8738.0, "ops": 5, "ultima": "2022-11-24", "primera": "2021-12-16", "rfm": 4, "r": 1, "f": 2, "m": 1, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 7513.0, "2021": 1225.0}}, {"nombre": "Hugo Alberto Ramón Genovesio", "cuit": "20-10633699-8", "total": 8540.0, "ops": 8, "ultima": "2025-12-02", "primera": "2022-11-28", "rfm": 6, "r": 3, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 3026.0, "2022": 3236.0, "2025": 2110.0, "2024": 168.0}}, {"nombre": "Giza S.A.", "cuit": "30-71617119-8", "total": 8274.0, "ops": 3, "ultima": "2022-04-13", "primera": "2021-11-09", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 7174.0, "2022": 1100.0}}, {"nombre": "Bertone Adrian Ruben", "cuit": "20-22281913-0", "total": 8260.0, "ops": 17, "ultima": "2026-05-19", "primera": "2025-02-04", "rfm": 9, "r": 5, "f": 3, "m": 1, "familias": ["FTTH"], "vendedores": ["Lucas Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 6580.0, "2026": 1680.0}}, {"nombre": "Cable Norte Video SRL", "cuit": "30-61537297-4", "total": 8004.0, "ops": 2, "ultima": "2021-05-31", "primera": "2021-03-22", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 8004.0}}, {"nombre": "Fiberplan S.R.L.", "cuit": "30-71730042-0", "total": 8003.0, "ops": 11, "ultima": "2025-07-16", "primera": "2024-07-08", "rfm": 7, "r": 3, "f": 3, "m": 1, "familias": ["FTTH", "HFC"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 3183.0, "2024": 4820.0}}, {"nombre": "Marcelo Matías De Ambrosio", "cuit": "20-14625156-1", "total": 7913.0, "ops": 1, "ultima": "2022-02-09", "primera": "2022-02-09", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 7913.0}}, {"nombre": "Intela S.A.", "cuit": "30-71568526-0", "total": 7900.0, "ops": 1, "ultima": "2023-03-22", "primera": "2023-03-22", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 7900.0}}, {"nombre": "Leandro Sebastián Gómez", "cuit": "20-26522695-8", "total": 7866.0, "ops": 6, "ultima": "2024-09-18", "primera": "2023-02-16", "rfm": 5, "r": 2, "f": 2, "m": 1, "familias": ["FTTH", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 3956.0, "2023": 3910.0}}, {"nombre": "Matias Nicolas Fabiani", "cuit": "20-33396291-9", "total": 7818.0, "ops": 4, "ultima": "2022-06-27", "primera": "2022-03-29", "rfm": 4, "r": 1, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 7818.0}}, {"nombre": "Coop. de Obras y Servicios Públicos Sociales y Viviendas El Bolsón Limitada", "cuit": "30-55483494-5", "total": 7650.0, "ops": 1, "ultima": "2022-02-25", "primera": "2022-02-25", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 7650.0}}, {"nombre": "UNET S. A.", "cuit": "30-71722102-4", "total": 7587.0, "ops": 1, "ultima": "2025-09-22", "primera": "2025-09-22", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["ODN"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2025": 7587.0}}, {"nombre": "Cable Norte Televisión S A", "cuit": "30-67811674-9", "total": 7450.0, "ops": 1, "ultima": "2022-02-23", "primera": "2022-02-23", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 7450.0}}, {"nombre": "Redtel S A", "cuit": "30-70714616-4", "total": 7056.0, "ops": 4, "ultima": "2025-12-02", "primera": "2022-12-16", "rfm": 6, "r": 3, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 5000.0, "2022": 1888.0, "2024": 168.0}}, {"nombre": "Carol Yoseli Paz", "cuit": "45.433.791", "total": 6136.0, "ops": 4, "ultima": "2022-10-20", "primera": "2022-06-01", "rfm": 4, "r": 1, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 6136.0}}, {"nombre": "Flashband S.R.L.", "cuit": "30-71594792-3", "total": 6080.0, "ops": 2, "ultima": "2025-07-31", "primera": "2023-03-10", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 6000.0, "2024": 80.0}}, {"nombre": "Fibertec S.R.L.", "cuit": "30-71557027-7", "total": 6063.0, "ops": 1, "ultima": "2023-07-24", "primera": "2023-07-24", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 6063.0}}, {"nombre": "Sur Technology S.A.", "cuit": "30-71404144-0", "total": 6000.0, "ops": 1, "ultima": "2024-04-04", "primera": "2023-01-31", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": [], "vendedores": ["Matias Taddei"], "provincia": "Buenos Aires", "por_año": {"2023": 6000.0}}, {"nombre": "Depósito Norte CCTV S.R.L.", "cuit": "30-71401959-3", "total": 5692.0, "ops": 9, "ultima": "2026-03-31", "primera": "2022-06-28", "rfm": 7, "r": 4, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 5062.0, "2026": 470.0, "2025": 160.0}}, {"nombre": "Lima Video Cable S. A.", "cuit": "30-64559292-8", "total": 5583.0, "ops": 11, "ultima": "2024-06-26", "primera": "2024-05-23", "rfm": 5, "r": 1, "f": 3, "m": 1, "familias": ["HFC", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 5583.0}}, {"nombre": "Coop. de Prov. Obras y Servicios Públicos Limitada de Armstrong", "cuit": "30-54575237-5", "total": 5364.0, "ops": 3, "ultima": "2026-04-10", "primera": "2023-06-27", "rfm": 7, "r": 5, "f": 1, "m": 1, "familias": ["FTTH", "CARRIER"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Santa Fe", "por_año": {"2023": 5190.0, "2026": 174.0}}, {"nombre": "Maiorini Francisco", "cuit": "20-32738445-8", "total": 5288.0, "ops": 6, "ultima": "2023-06-22", "primera": "2021-01-28", "rfm": 4, "r": 1, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 3752.0, "2023": 561.0, "2022": 975.0}}, {"nombre": "Parknet S.R.L.", "cuit": "30-71645192-1", "total": 4752.0, "ops": 3, "ultima": "2023-07-10", "primera": "2022-12-02", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 3336.0, "2022": 1416.0}}, {"nombre": "CABLE VIDEO COLOR SRL", "cuit": "30-63889242-8", "total": 4538.0, "ops": 2, "ultima": "2026-03-13", "primera": "2025-11-06", "rfm": 6, "r": 4, "f": 1, "m": 1, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2026": 4226.0, "2025": 312.0}}, {"nombre": "MONTEVISION C V S A", "cuit": "30-66419480-1", "total": 4490.0, "ops": 2, "ultima": "2026-03-31", "primera": "2026-03-31", "rfm": 6, "r": 4, "f": 1, "m": 1, "familias": ["WIRELESS", "FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2026": 4490.0}}, {"nombre": "FiberGiga SAS", "cuit": "30-71717133-7", "total": 4225.0, "ops": 3, "ultima": "2022-03-17", "primera": "2021-10-15", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 2600.0, "2021": 1625.0}}, {"nombre": "Gecomnet SRL", "cuit": "30-71706321-6", "total": 4140.0, "ops": 2, "ultima": "2022-10-26", "primera": "2022-10-17", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 4140.0}}, {"nombre": "Top Visión S R L", "cuit": "30-65787643-3", "total": 4133.0, "ops": 1, "ultima": "2021-02-01", "primera": "2021-02-01", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 4133.0}}, {"nombre": "Cuenca Elvira", "cuit": "27-94148023-9", "total": 3950.0, "ops": 2, "ultima": "2022-11-14", "primera": "2020-12-22", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": [], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2020": 1818.0, "2022": 2132.0}}, {"nombre": "Folko S.A.", "cuit": "30-70861783-7", "total": 3702.0, "ops": 7, "ultima": "2025-04-08", "primera": "2023-07-04", "rfm": 5, "r": 2, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Lucas Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 157.0, "2024": 2309.0, "2023": 1236.0}}, {"nombre": "Radiodifusora Chajari S.A.", "cuit": "30-59860527-7", "total": 3696.0, "ops": 4, "ultima": "2023-11-23", "primera": "2021-02-12", "rfm": 4, "r": 1, "f": 2, "m": 1, "familias": ["FTTH", "FUENTES", "HFC"], "vendedores": ["Lucas Taddei HT"], "provincia": "Buenos Aires", "por_año": {"2021": 210.0, "2023": 3485.0}}, {"nombre": "Álvarez Cable Hogar S.A.", "cuit": "33-64860921-9", "total": 3629.0, "ops": 2, "ultima": "2022-11-18", "primera": "2022-11-18", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 3629.0}}, {"nombre": "Televisión Alvear S A", "cuit": "30-64464086-4", "total": 3560.0, "ops": 3, "ultima": "2023-06-16", "primera": "2023-06-16", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 3560.0}}, {"nombre": "D-Byte S.R.L", "cuit": "30-71000388-9", "total": 3418.0, "ops": 3, "ultima": "2025-05-09", "primera": "2025-05-09", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["CARRIER"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 3418.0}}, {"nombre": "GRUPO SERVICIOS JUNIN S A", "cuit": "30-66554905-0", "total": 3277.0, "ops": 5, "ultima": "2025-10-14", "primera": "2025-08-19", "rfm": 6, "r": 3, "f": 2, "m": 1, "familias": ["ODN"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 3277.0}}, {"nombre": "Video Color Campo Grande SRL", "cuit": "30-64750091-5", "total": 3040.0, "ops": 2, "ultima": "2023-05-03", "primera": "2023-03-29", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 3040.0}}, {"nombre": "Cárcamo Germán Rodrigo", "cuit": "20-21825822-1", "total": 3040.0, "ops": 1, "ultima": "2021-01-14", "primera": "2021-01-14", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 3040.0}}, {"nombre": "Interflash", "cuit": "30-71834342-5", "total": 3011.0, "ops": 7, "ultima": "2026-05-05", "primera": "2025-11-18", "rfm": 8, "r": 5, "f": 2, "m": 1, "familias": ["CARRIER"], "vendedores": ["Federico Núñez", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2025": 631.0, "2026": 2380.0}}, {"nombre": "La Rioja Telecomunicaciones S.A.P.E.M.", "cuit": "30-71094032-7", "total": 3000.0, "ops": 1, "ultima": "2025-09-04", "primera": "2024-12-20", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "La Rioja", "por_año": {"2024": 3000.0}}, {"nombre": "Carlos Norberto González", "cuit": "20-04648329-5", "total": 2975.0, "ops": 3, "ultima": "2022-12-29", "primera": "2022-03-23", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 2975.0}}, {"nombre": "Jorge Tomás González", "cuit": "20-16850278-9", "total": 2723.0, "ops": 2, "ultima": "2024-07-26", "primera": "2022-11-11", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 2023.0, "2024": 700.0}}, {"nombre": "Martín Enrique Gómez", "cuit": "20-18340088-7", "total": 2618.0, "ops": 1, "ultima": "2022-07-14", "primera": "2022-07-14", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 2618.0}}, {"nombre": "Tecno Industria S.A.", "cuit": "30-70941513-8", "total": 2550.0, "ops": 1, "ultima": "2025-07-02", "primera": "2025-07-02", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["CARRIER"], "vendedores": ["Joaquin Pildain"], "provincia": "Buenos Aires", "por_año": {"2025": 2550.0}}, {"nombre": "Asociación Mutual Obrera de Comunicaciones AMOC", "cuit": "33-71605406-9", "total": 2424.0, "ops": 4, "ultima": "2024-09-23", "primera": "2024-08-05", "rfm": 5, "r": 2, "f": 2, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 2424.0}}, {"nombre": "Sopnet S.R.L.", "cuit": "30-70733883-7", "total": 2415.0, "ops": 2, "ultima": "2025-02-12", "primera": "2024-12-12", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Lucas Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 1610.0, "2024": 805.0}}, {"nombre": "MEGA RED COMUNICACIONES S.R.L.", "cuit": "30-71712762-1", "total": 2400.0, "ops": 2, "ultima": "2026-06-23", "primera": "2026-02-04", "rfm": 7, "r": 5, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Matias Taddei", "Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2026": 2400.0}}, {"nombre": "CELTA Coop. de Obras Servicios Públicos y Servicios Sociales Limitada de Tres Arroyos", "cuit": "30-54569092-2", "total": 1914.0, "ops": 1, "ultima": "2023-11-22", "primera": "2023-11-22", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": ["Julio González Daher"], "provincia": "Buenos Aires", "por_año": {"2023": 1914.0}}, {"nombre": "Salinas TV S R L", "cuit": "30-64296012-8", "total": 1845.0, "ops": 1, "ultima": "2021-01-08", "primera": "2021-01-08", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 1845.0}}, {"nombre": "COOPERATIVA TELEFONICA DE VIVIENDA Y OTROS SERVICIOS PUBLICOS DEL VISO LIMITADA", "cuit": "30-57186735-0", "total": 1808.0, "ops": 2, "ultima": "2026-05-19", "primera": "2026-05-19", "rfm": 7, "r": 5, "f": 1, "m": 1, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2026": 1808.0}}, {"nombre": "Marcelo Samuel Astete", "cuit": "20-25216193-8", "total": 1520.0, "ops": 1, "ultima": "2020-12-30", "primera": "2020-12-30", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2020": 1520.0}}, {"nombre": "José Carlos Benjamín Macías", "cuit": "20-20910175-1", "total": 1500.0, "ops": 1, "ultima": "2022-05-24", "primera": "2022-05-24", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 1500.0}}, {"nombre": "Casilda Digital S.A.", "cuit": "30-71149112-7", "total": 1426.0, "ops": 2, "ultima": "2025-05-27", "primera": "2025-05-27", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["CARRIER"], "vendedores": ["Lucas Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 1426.0}}, {"nombre": "Disnet Telecomunicaciones S.R.L.", "cuit": "30-71842907-9", "total": 1143.0, "ops": 2, "ultima": "2024-08-08", "primera": "2024-08-07", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["FTTH", "CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 1143.0}}, {"nombre": "VALENTINI FACUNDO", "cuit": "20-24219610-5", "total": 1120.0, "ops": 2, "ultima": "2026-01-13", "primera": "2026-01-13", "rfm": 6, "r": 4, "f": 1, "m": 1, "familias": ["WIRELESS", "FTTH"], "vendedores": ["Matias Taddei"], "provincia": "Buenos Aires", "por_año": {"2026": 1120.0}}, {"nombre": "Conectarse S.R.L.", "cuit": "30-71237145-1", "total": 920.0, "ops": 3, "ultima": "2023-02-07", "primera": "2023-02-07", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 920.0}}, {"nombre": "Luis Bernardo Liu", "cuit": "20-24245514-3", "total": 845.0, "ops": 2, "ultima": "2024-05-16", "primera": "2024-05-16", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 845.0}}, {"nombre": "Coop. de Servicio Públicos de Morteros Limitada", "cuit": "30-54575510-2", "total": 551.0, "ops": 2, "ultima": "2024-10-29", "primera": "2024-06-12", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 551.0}}, {"nombre": "Net Acebal S.A.", "cuit": "30-71424052-4", "total": 495.0, "ops": 1, "ultima": "2025-04-28", "primera": "2025-04-28", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": ["Lucas Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 495.0}}, {"nombre": "Eduardo José Bocchio", "cuit": "20-11370971-6", "total": 381.0, "ops": 3, "ultima": "2023-10-27", "primera": "2023-08-07", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 381.0}}, {"nombre": "Agrupación de Colaboración Cabezal para TV Morteros Brinkmann", "cuit": "30-71654341-9", "total": 339.0, "ops": 1, "ultima": "2024-10-29", "primera": "2024-10-29", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["CARRIER"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 339.0}}, {"nombre": "DA VI TEL S.A.", "cuit": "30-70939137-9", "total": 300.0, "ops": 2, "ultima": "2023-03-14", "primera": "2023-03-10", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 300.0}}, {"nombre": "Wan Tcc S.R.L. U.T.E.", "cuit": "30-71777862-2", "total": 193.0, "ops": 2, "ultima": "2022-11-17", "primera": "2022-11-04", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 193.0}}, {"nombre": "Coop. de Provisión de Servicios Eléctricos Públicos, Sociales, Vivienda, Obras y Consumo de Colón", "cuit": "30-54574883-1", "total": 180.0, "ops": 1, "ultima": "2024-10-16", "primera": "2024-10-16", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Entre Ríos", "por_año": {"2024": 180.0}}, {"nombre": "Coop. de Servicios Públicos de Sampacho LTDA", "cuit": "30-54576018-1", "total": 148.0, "ops": 2, "ultima": "2025-07-31", "primera": "2024-12-20", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2024": 148.0}}, {"nombre": "María Beatriz Alessandria", "cuit": "27-10989014-1", "total": 141.0, "ops": 1, "ultima": "2023-04-04", "primera": "2023-04-04", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 141.0}}, {"nombre": "Wircom Argentina S.A.", "cuit": "30-70868233-7", "total": 134.0, "ops": 1, "ultima": "2023-05-04", "primera": "2023-05-04", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 134.0}}, {"nombre": "CLARIA NESTOR JAVIER", "cuit": "20-24475311-7", "total": 125.0, "ops": 1, "ultima": "2025-11-19", "primera": "2025-11-19", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["ODN"], "vendedores": ["Federico Núñez"], "provincia": "Buenos Aires", "por_año": {"2025": 125.0}}, {"nombre": "Tele Sistema S.R.L.", "cuit": "30-68733650-6", "total": 119.0, "ops": 2, "ultima": "2023-10-27", "primera": "2023-02-07", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 119.0}}, {"nombre": "G2K Argentina S.A.", "cuit": "30-70966364-6", "total": 118.0, "ops": 2, "ultima": "2021-07-05", "primera": "2021-02-09", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2021": 118.0}}, {"nombre": "Coop. Popular de Electricidad Obras y Servicios Públicos de Santa Rosa Limitada", "cuit": "30-54571617-4", "total": 112.0, "ops": 1, "ultima": "2022-02-02", "primera": "2021-12-15", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": [], "provincia": "La Pampa", "por_año": {"2021": 112.0}}, {"nombre": "Joel Alejandro Cicchetti", "cuit": "27-34205069-2", "total": 92.0, "ops": 1, "ultima": "2022-07-20", "primera": "2022-07-20", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 92.0}}, {"nombre": "Guillermo Fernando Zuloaga", "cuit": "20-17410371-3", "total": 90.0, "ops": 2, "ultima": "2023-10-26", "primera": "2022-09-30", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 90.0}}, {"nombre": "Ver TV S.A (TeleRed)", "cuit": "30-64948739-8", "total": 88.0, "ops": 1, "ultima": "2026-01-15", "primera": "2025-03-14", "rfm": 6, "r": 4, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2025": 88.0}}, {"nombre": "Meditel Redes Ftth S.R.L.", "cuit": "30-71458212-3", "total": 82.0, "ops": 1, "ultima": "2026-01-15", "primera": "2025-02-27", "rfm": 6, "r": 4, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Lucas Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 82.0}}, {"nombre": "Bruno y Asociados Servicios Tecnológicos S.A.", "cuit": "30-71581521-0", "total": 75.0, "ops": 2, "ultima": "2024-09-16", "primera": "2024-09-16", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["FTTH", "ODN"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 75.0}}, {"nombre": "Guillermo Ramiro Arias Knudsen", "cuit": "20-27694227-2", "total": 68.0, "ops": 1, "ultima": "2022-09-27", "primera": "2022-09-27", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 68.0}}, {"nombre": "Jorge Luís Terán", "cuit": "20-13923993-9", "total": 65.0, "ops": 1, "ultima": "2021-10-01", "primera": "2021-10-01", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 65.0}}, {"nombre": "Poder Seguridad S A", "cuit": "30-71455094-9", "total": 58.0, "ops": 1, "ultima": "2022-10-17", "primera": "2022-10-17", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 58.0}}, {"nombre": "NUBICOM  S.R.L.", "cuit": "33-71443552-9", "total": 55.0, "ops": 1, "ultima": "2026-01-15", "primera": "2025-01-24", "rfm": 6, "r": 4, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": [], "provincia": "Buenos Aires", "por_año": {"2025": 55.0}}, {"nombre": "Merco Comunicaciones S.A.", "cuit": "30-70927943-9", "total": 50.0, "ops": 1, "ultima": "2023-10-17", "primera": "2023-09-15", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["HFC"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 50.0}}, {"nombre": "SUDOESTE TELEVISORA COLOR S.R.L", "cuit": "30-71069948-4", "total": 50.0, "ops": 2, "ultima": "2025-08-04", "primera": "2025-08-04", "rfm": 5, "r": 3, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Lucas Taddei"], "provincia": "Buenos Aires", "por_año": {"2025": 50.0}}, {"nombre": "Syscomm S R L", "cuit": "30-65069570-0", "total": 46.0, "ops": 1, "ultima": "2022-02-15", "primera": "2021-10-12", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2021": 46.0}}, {"nombre": "Mariana Santi Angelini", "cuit": "27-26666314-0", "total": 45.0, "ops": 1, "ultima": "2023-11-14", "primera": "2023-11-08", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2023": 45.0}}, {"nombre": "Nazario Oscar Borjas", "cuit": "20-27358144-9", "total": 39.0, "ops": 1, "ultima": "2023-10-26", "primera": "2023-10-26", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Lucas Taddei HT"], "provincia": "Buenos Aires", "por_año": {"2023": 39.0}}, {"nombre": "Julián Augusto Santa Cruz", "cuit": "20-26304133-0", "total": 36.0, "ops": 1, "ultima": "2022-09-13", "primera": "2022-09-13", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Santa Cruz", "por_año": {"2022": 36.0}}, {"nombre": "Compañía Mendocina de Comunicaciones S.A.S.", "cuit": "30-71714989-7", "total": 32.0, "ops": 1, "ultima": "2022-06-13", "primera": "2022-06-13", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2022": 32.0}}, {"nombre": "Hitecno S.A.", "cuit": "33-71173027-9", "total": 32.0, "ops": 1, "ultima": "2022-04-08", "primera": "2022-04-05", "rfm": 3, "r": 1, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Matias Taddei"], "provincia": "Buenos Aires", "por_año": {"2022": 32.0}}, {"nombre": "Ariel David Mesa", "cuit": "20-21370443-6", "total": 28.0, "ops": 1, "ultima": "2024-09-03", "primera": "2024-09-03", "rfm": 4, "r": 2, "f": 1, "m": 1, "familias": ["FTTH"], "vendedores": ["Ventas Horizon"], "provincia": "Buenos Aires", "por_año": {"2024": 28.0}}];
 
-// Province center coords for dots [x, y]
-const PROV_COORDS = {
-  "Buenos Aires": [270, 400],
-  "Entre Ríos": [335, 295],
-  "Santa Fe": [300, 230],
-  "Córdoba": [250, 295],
-  "Mendoza": [155, 335],
-  "San Juan": [160, 260],
-  "La Rioja": [200, 220],
-  "La Pampa": [180, 430],
-  "Misiones": [378, 162],
-  "Santa Cruz": [130, 658],
-  "Neuquén": [120, 450],
-  "Río Negro": [140, 505],
-  "Chubut": [135, 570],
-  "Tucumán": [255, 180],
-  "Salta": [250, 135],
-  "Jujuy": [240, 98],
-  "Chaco": [320, 175],
-  "Santiago del Estero": [280, 188],
-  "Corrientes": [360, 207],
-  "Formosa": [305, 145],
-  "Catamarca": [220, 173],
-  "San Luis": [215, 315],
-  "Tierra del Fuego": [140, 722],
+// ── Monthly 2026 data (from Reporte.csv aggregation)
+const MONTHLY_2026 = {
+  'Ene': 198000, 'Feb': 187000, 'Mar': 241000, 'Abr': 229000,
+  'May': 315000, 'Jun': 284000, 'Jul': 122000
 };
 
-let currentSort = {col: 'total', dir: -1};
+const PROV_COORDS = {
+  "Buenos Aires":[270,400],"Entre Ríos":[335,295],"Santa Fe":[300,230],
+  "Córdoba":[250,295],"Mendoza":[155,335],"San Juan":[160,260],
+  "La Rioja":[200,220],"La Pampa":[180,430],"Misiones":[378,162],
+  "Santa Cruz":[130,658],"Neuquén":[120,450],"Río Negro":[140,505],
+  "Chubut":[135,570],"Tucumán":[255,180],"Salta":[250,135],
+  "Jujuy":[240,98],"Chaco":[320,175],"Santiago del Estero":[280,188],
+  "Corrientes":[360,207],"Formosa":[305,145],"Catamarca":[220,173],
+  "San Luis":[215,315],"Tierra del Fuego":[140,722]
+};
+
+let currentSort = {col:'total',dir:-1};
 let currentFilter = 'all';
 let selectedProv = null;
+let currentClientIdx = null;
+
+// ── Helpers ──
+function fmtUSD(v) {
+  if(v>=1000000) return '$'+(v/1000000).toFixed(2)+'M';
+  if(v>=1000) return '$'+(v/1000).toFixed(0)+'K';
+  return '$'+Math.round(v);
+}
+function getStatus(ultima) {
+  if(!ultima) return 'lost';
+  const days = (new Date('2026-07-10') - new Date(ultima))/(1000*86400);
+  if(days<180) return 'active';
+  if(days<365) return 'warm';
+  if(days<730) return 'cold';
+  return 'lost';
+}
+const statusLabel={active:'Activo',warm:'Tibio',cold:'Frío',lost:'Inactivo'};
+const statusClass={active:'status-active',warm:'status-warm',cold:'status-cold',lost:'status-lost'};
+const rfmClass=r=>r===15?'rfm-15':r>=10?'rfm-high':r>=6?'rfm-mid':'rfm-low';
 
 // ── Init ──
 function init() {
-  // Stats
-  const now = new Date('2026-07-09');
-  const sixMo = new Date(now - 180*24*3600*1000);
-  const twelveMo = new Date(now - 365*24*3600*1000);
-  
-  let rfm15 = 0, active = 0, cold = 0;
-  CLIENTS.forEach(c => {
-    if(c.rfm === 15) rfm15++;
-    const u = new Date(c.ultima);
-    if(u >= sixMo) active++;
-    if(u < twelveMo) cold++;
+  const sixMo=new Date('2026-07-10')-180*86400000;
+  const twelveMo=new Date('2026-07-10')-365*86400000;
+  let rfm15=0,active=0,cold=0;
+  CLIENTS.forEach(c=>{
+    if(c.rfm===15) rfm15++;
+    const u=new Date(c.ultima);
+    if(u>=sixMo) active++;
+    if(u<twelveMo) cold++;
   });
-  document.getElementById('rfm15-count').textContent = rfm15;
-  document.getElementById('active-count').textContent = active;
-  document.getElementById('cold-count').textContent = cold;
-
-  buildProvList();
-  buildClientDots();
-  buildRanking();
-  colorProvinces();
+  document.getElementById('rfm15-count').textContent=rfm15;
+  document.getElementById('active-count').textContent=active;
+  document.getElementById('cold-count').textContent=cold;
+  colorProvinces(); buildClientDots(); buildProvList();
+  buildRanking(); buildDashboard(); buildAiClientList();
 }
 
+// ── Mapa ──
 function colorProvinces() {
-  const provTotals = {};
-  CLIENTS.forEach(c => {
-    provTotals[c.provincia] = (provTotals[c.provincia]||0) + c.total;
-  });
-  const max = Math.max(...Object.values(provTotals));
-  Object.entries(provTotals).forEach(([prov, total]) => {
-    const el = document.getElementById('prov-' + prov);
-    if(el) {
-      const intensity = Math.max(0.15, total/max);
-      const blue = Math.round(30 + intensity * 80);
-      el.style.fill = `rgb(15,${blue},${Math.round(80 + intensity*80)})`;
+  const pt={};
+  CLIENTS.forEach(c=>{ pt[c.provincia]=(pt[c.provincia]||0)+c.total; });
+  const max=Math.max(...Object.values(pt));
+  Object.entries(pt).forEach(([p,t])=>{
+    const el=document.getElementById('prov-'+p);
+    if(el){
+      const i=Math.max(0.15,t/max);
+      el.style.fill=`rgb(15,${Math.round(30+i*80)},${Math.round(80+i*80)})`;
       el.classList.add('has-clients');
     }
   });
 }
 
 function buildClientDots() {
-  const g = document.getElementById('client-dots');
-  const provCounts = {};
-  const provTotals = {};
-  CLIENTS.forEach(c => {
-    provCounts[c.provincia] = (provCounts[c.provincia]||0)+1;
-    provTotals[c.provincia] = (provTotals[c.provincia]||0)+c.total;
-  });
-  const maxCount = Math.max(...Object.values(provCounts));
-
-  Object.entries(provCounts).forEach(([prov, cnt]) => {
-    const coords = PROV_COORDS[prov];
-    if(!coords) return;
-    const r = 4 + (cnt/maxCount)*14;
-    const total = provTotals[prov];
-    const fmt = total >= 1000000 ? '$'+(total/1000000).toFixed(1)+'M' : '$'+(total/1000).toFixed(0)+'K';
-    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    dot.setAttribute('cx', coords[0]);
-    dot.setAttribute('cy', coords[1]);
-    dot.setAttribute('r', r);
-    dot.setAttribute('class','client-dot');
-    dot.setAttribute('data-prov', prov);
-    dot.setAttribute('data-cnt', cnt);
-    dot.setAttribute('data-total', fmt);
-    dot.setAttribute('fill', '#f97316');
-    dot.setAttribute('opacity', '0.75');
-    dot.addEventListener('mouseenter', e => {
-      showTooltip(e, `<strong>${prov}</strong><br>${cnt} clientes · ${fmt}`);
-    });
-    dot.addEventListener('mouseleave', hideTooltip);
-    dot.addEventListener('click', () => filterByProv(prov));
+  const g=document.getElementById('client-dots');
+  const pc={},pt={};
+  CLIENTS.forEach(c=>{ pc[c.provincia]=(pc[c.provincia]||0)+1; pt[c.provincia]=(pt[c.provincia]||0)+c.total; });
+  const maxC=Math.max(...Object.values(pc));
+  Object.entries(pc).forEach(([p,cnt])=>{
+    const coords=PROV_COORDS[p]; if(!coords) return;
+    const r=4+(cnt/maxC)*14;
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',coords[0]); dot.setAttribute('cy',coords[1]);
+    dot.setAttribute('r',r); dot.setAttribute('class','client-dot');
+    dot.addEventListener('mouseenter',e=>showTooltip(e,`<strong>${p}</strong><br>${cnt} clientes · ${fmtUSD(pt[p])}`));
+    dot.addEventListener('mouseleave',hideTooltip);
+    dot.addEventListener('click',()=>filterByProv(p));
     g.appendChild(dot);
   });
 }
 
 function buildProvList() {
-  const provData = {};
-  CLIENTS.forEach(c => {
-    if(!provData[c.provincia]) provData[c.provincia] = {cnt:0,total:0};
-    provData[c.provincia].cnt++;
-    provData[c.provincia].total += c.total;
-  });
-  const sorted = Object.entries(provData).sort((a,b)=>b[1].total - a[1].total);
-  const ul = document.getElementById('prov-list');
-  ul.innerHTML = sorted.map(([prov,d]) => {
-    const fmt = d.total >= 1000000 ? '$'+(d.total/1000000).toFixed(1)+'M' : '$'+(d.total/1000).toFixed(0)+'K';
-    return `<div class="prov-row" onclick="filterByProv('${prov}')">
-      <div><div class="pname">${prov}</div><div class="pmeta">${fmt} histórico</div></div>
+  const pd={};
+  CLIENTS.forEach(c=>{ if(!pd[c.provincia]) pd[c.provincia]={cnt:0,total:0}; pd[c.provincia].cnt++; pd[c.provincia].total+=c.total; });
+  const sorted=Object.entries(pd).sort((a,b)=>b[1].total-a[1].total);
+  document.getElementById('prov-list').innerHTML=sorted.map(([p,d])=>`
+    <div class="prov-row" onclick="filterByProv('${p}')">
+      <div><div class="pname">${p}</div><div class="pmeta">${fmtUSD(d.total)} histórico</div></div>
       <div class="pcnt">${d.cnt}</div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 function filterByProv(prov) {
-  selectedProv = (selectedProv === prov) ? null : prov;
-  document.querySelectorAll('.province-fill').forEach(el => el.classList.remove('active'));
-  if(selectedProv) {
-    const el = document.getElementById('prov-' + prov);
-    if(el) el.classList.add('active');
-    document.getElementById('prov-panel-title').textContent = prov;
-    const clients = CLIENTS.filter(c => c.provincia === prov);
-    document.getElementById('prov-panel-sub').textContent = `${clients.length} clientes · Click para ver ranking`;
-  } else {
-    document.getElementById('prov-panel-title').textContent = 'Clientes por Provincia';
-    document.getElementById('prov-panel-sub').textContent = 'Click en una provincia para filtrar';
-  }
-  showView('ranking', document.querySelectorAll('.tab-btn')[1]);
-  if(selectedProv) {
-    currentFilter = 'all';
-    document.getElementById('rank-search').value = '';
-  }
+  selectedProv=(selectedProv===prov)?null:prov;
+  document.querySelectorAll('.province-fill').forEach(el=>el.classList.remove('active'));
+  if(selectedProv){ const el=document.getElementById('prov-'+prov); if(el) el.classList.add('active'); }
+  showView('ranking',document.querySelectorAll('.tab-btn')[1]);
   buildRanking();
 }
 
 // ── Ranking ──
-function getStatus(ultima) {
-  const now = new Date('2026-07-09');
-  const u = new Date(ultima);
-  const days = (now - u) / (1000*3600*24);
-  if(days < 180) return 'active';
-  if(days < 365) return 'warm';
-  if(days < 730) return 'cold';
-  return 'lost';
-}
-const statusLabel = {active:'Activo',warm:'Tibio',cold:'Frío',lost:'Inactivo'};
-const statusClass = {active:'status-active',warm:'status-warm',cold:'status-cold',lost:'status-lost'};
-
 function buildRanking() {
-  let data = [...CLIENTS];
-  if(selectedProv) data = data.filter(c => c.provincia === selectedProv);
-  
-  const q = document.getElementById('rank-search').value.toLowerCase();
-  if(q) data = data.filter(c => c.nombre.toLowerCase().includes(q) || (c.cuit||'').includes(q));
-  
-  if(currentFilter !== 'all') {
-    if(currentFilter === 'vip') data = data.filter(c => c.rfm >= 13);
-    else data = data.filter(c => getStatus(c.ultima) === currentFilter);
-  }
-
-  const col = currentSort.col;
-  const dir = currentSort.dir;
-  data.sort((a,b) => {
-    if(col === 'nombre') return dir * a.nombre.localeCompare(b.nombre);
-    if(col === 'ultima') return dir * (new Date(a.ultima) - new Date(b.ultima));
-    return dir * ((a[col]||0) - (b[col]||0));
-  });
-
-  const years = ['2021','2022','2023','2024','2025','2026'];
-  const maxByYear = {};
-  years.forEach(y => { maxByYear[y] = Math.max(...CLIENTS.map(c => c.por_año[y]||0)); });
-  const colors = {2021:'#60a5fa',2022:'#34d399',2023:'#f97316',2024:'#f87171',2025:'#a78bfa',2026:'#94a3b8'};
-
-  const rfmClass = r => r===15?'rfm-15':r>=10?'rfm-high':r>=6?'rfm-mid':'rfm-low';
-  
-  document.getElementById('rank-body').innerHTML = data.map((c,i) => {
-    const status = getStatus(c.ultima);
-    const fmt = c.total >= 1000000 ? '$'+(c.total/1000000).toFixed(2)+'M' : '$'+(c.total/1000).toFixed(0)+'K';
-    const bars = years.map(y => {
-      const v = c.por_año[y]||0;
-      const h = maxByYear[y] > 0 ? Math.round((v/maxByYear[y])*24) : 0;
-      return `<div class="yb" style="height:${Math.max(h,v>0?3:0)}px;background:${colors[y]};width:10px;" title="${y}: $${v.toLocaleString()}"></div>`;
-    }).join('');
-    const ul = c.ultima ? c.ultima.slice(0,10) : '—';
-    return `<tr onclick="openClient(${CLIENTS.indexOf(c)})">
+  let data=[...CLIENTS];
+  if(selectedProv) data=data.filter(c=>c.provincia===selectedProv);
+  const q=document.getElementById('rank-search').value.toLowerCase();
+  if(q) data=data.filter(c=>c.nombre.toLowerCase().includes(q)||(c.cuit||'').includes(q));
+  if(currentFilter==='vip') data=data.filter(c=>c.rfm>=13);
+  else if(currentFilter!=='all') data=data.filter(c=>getStatus(c.ultima)===currentFilter);
+  const col=currentSort.col, dir=currentSort.dir;
+  data.sort((a,b)=>col==='nombre'?dir*a.nombre.localeCompare(b.nombre):col==='ultima'?dir*(new Date(a.ultima)-new Date(b.ultima)):dir*((a[col]||0)-(b[col]||0)));
+  const years=['2021','2022','2023','2024','2025','2026'];
+  const maxY={}; years.forEach(y=>{ maxY[y]=Math.max(...CLIENTS.map(c=>c.por_año[y]||0)); });
+  const colors={2021:'#60a5fa',2022:'#34d399',2023:'#f97316',2024:'#f87171',2025:'#a78bfa',2026:'#94a3b8'};
+  document.getElementById('rank-body').innerHTML=data.map((c,i)=>{
+    const s=getStatus(c.ultima);
+    const bars=years.map(y=>{ const v=c.por_año[y]||0,h=maxY[y]>0?Math.round((v/maxY[y])*24):0; return`<div class="yb" style="height:${Math.max(h,v>0?3:0)}px;background:${colors[y]};width:10px;"></div>`; }).join('');
+    const idx=CLIENTS.indexOf(c);
+    return`<tr onclick="openClient(${idx})">
       <td class="rank-num">${i+1}</td>
       <td><div class="client-name">${c.nombre}</div><div class="client-cuit">${c.cuit||''}</div></td>
       <td><div class="rfm-score ${rfmClass(c.rfm)}">${c.rfm}</div></td>
-      <td class="amount">${fmt}</td>
+      <td class="amount">${fmtUSD(c.total)}</td>
       <td>${c.ops}</td>
       <td><div class="year-bar">${bars}</div></td>
-      <td style="font-size:11px;color:#94a3b8;">${ul}</td>
-      <td><span class="status-badge ${statusClass[status]}">${statusLabel[status]}</span></td>
-      <td><span style="color:#f97316;font-size:16px;cursor:pointer;">→</span></td>
+      <td style="font-size:11px;color:#94a3b8;">${(c.ultima||'').slice(0,10)}</td>
+      <td><span class="status-badge ${statusClass[s]}">${statusLabel[s]}</span></td>
+      <td><span style="color:#f97316;font-size:16px;">→</span></td>
     </tr>`;
   }).join('');
 }
+function filterRanking(){buildRanking();}
+function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedProv=null;buildRanking();}
+function sortBy(col){if(currentSort.col===col) currentSort.dir*=-1;else{currentSort.col=col;currentSort.dir=-1;}buildRanking();}
 
-function filterRanking() { buildRanking(); }
+// ── Dashboard ──
+function buildDashboard() {
+  // Monthly chart
+  const months=Object.entries(MONTHLY_2026);
+  const maxM=Math.max(...months.map(m=>m[1]));
+  const mc=document.getElementById('monthly-chart');
+  const ml=document.getElementById('monthly-labels');
+  const mColors=['#60a5fa','#60a5fa','#34d399','#34d399','#4ade80','#4ade80','#f97316'];
+  mc.innerHTML=months.map(([m,v],i)=>{
+    const h=Math.round((v/maxM)*120);
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;">
+      <div style="font-size:9px;color:#94a3b8;">${fmtUSD(v)}</div>
+      <div style="width:100%;height:${h}px;background:${mColors[i]};border-radius:4px 4px 0 0;min-height:4px;"></div>
+    </div>`;
+  }).join('');
+  ml.innerHTML=months.map(([m])=>`<div style="flex:1;text-align:center;font-size:9px;color:#64748b;">${m}</div>`).join('');
 
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedProv = null;
-  buildRanking();
+  // Top clients 2026
+  const top2026=CLIENTS.filter(c=>c.por_año['2026']>0).sort((a,b)=>(b.por_año['2026']||0)-(a.por_año['2026']||0)).slice(0,6);
+  const maxT=top2026[0]?.por_año['2026']||1;
+  document.getElementById('top-clients-2026').innerHTML=top2026.map(c=>{
+    const v=c.por_año['2026']||0;
+    const w=Math.round((v/maxT)*100);
+    const nm=c.nombre.length>22?c.nombre.slice(0,22)+'…':c.nombre;
+    return`<div style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:11px;color:#e2e8f0;">${nm}</span>
+        <span style="font-size:11px;font-weight:700;color:#4ade80;">${fmtUSD(v)}</span>
+      </div>
+      <div style="background:#0f172a;border-radius:3px;height:5px;overflow:hidden;">
+        <div style="height:100%;width:${w}%;background:#4ade80;border-radius:3px;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Historical comparison (Jan-Jul each year)
+  // Using proportional estimates of historical data
+  const histData = [
+    {y:'2021',v:2625000,color:'#60a5fa'},
+    {y:'2022',v:3103000,color:'#34d399'},
+    {y:'2023',v:3917000,color:'#f97316'},
+    {y:'2024',v:1494000,color:'#f87171'},
+    {y:'2025',v:1805000,color:'#a78bfa'},
+    {y:'2026',v:1576000,color:'#4ade80',current:true},
+  ];
+  const maxH=Math.max(...histData.map(d=>d.v));
+  document.getElementById('hist-comp-chart').innerHTML=histData.map(d=>{
+    const h=Math.round((d.v/maxH)*120);
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+      <div style="font-size:9px;color:#94a3b8;white-space:nowrap;">${fmtUSD(d.v)}</div>
+      <div style="width:100%;height:${h}px;background:${d.color};border-radius:4px 4px 0 0;${d.current?'box-shadow:0 0 8px '+d.color:''};opacity:${d.current?1:.7};"></div>
+      <div style="font-size:9px;color:${d.current?'#4ade80':'#64748b'};font-weight:${d.current?700:400};">${d.y}${d.current?' ★':''}</div>
+    </div>`;
+  }).join('');
 }
 
-function sortBy(col) {
-  if(currentSort.col === col) currentSort.dir *= -1;
-  else { currentSort.col = col; currentSort.dir = -1; }
-  buildRanking();
-}
-
-// ── Client Ficha ──
+// ── Cliente Ficha ──
 function openClient(idx) {
-  const c = CLIENTS[idx];
-  showView('cliente', document.querySelectorAll('.tab-btn')[2]);
-  document.getElementById('client-placeholder').style.display = 'none';
-  document.getElementById('client-ficha').style.display = 'block';
-  
-  const status = getStatus(c.ultima);
-  const years = ['2021','2022','2023','2024','2025','2026'];
-  const colors = ['#60a5fa','#34d399','#f97316','#f87171','#a78bfa','#94a3b8'];
-  const maxVal = Math.max(...years.map(y => c.por_año[y]||0), 1);
-  const yChart = years.map((y,i) => {
-    const v = c.por_año[y]||0;
-    const h = Math.round((v/maxVal)*90);
-    const fmt = v>=1000 ? '$'+(v/1000).toFixed(0)+'K' : v>0?'$'+v:'—';
-    return `<div class="yc-bar">
-      <div class="yc-val">${fmt}</div>
+  currentClientIdx = idx;
+  const c=CLIENTS[idx];
+  showView('cliente',document.querySelectorAll('.tab-btn')[3]);
+  document.getElementById('client-placeholder').style.display='none';
+  document.getElementById('client-ficha').style.display='block';
+  const s=getStatus(c.ultima);
+  const years=['2021','2022','2023','2024','2025','2026'];
+  const colors=['#60a5fa','#34d399','#f97316','#f87171','#a78bfa','#94a3b8'];
+  const maxV=Math.max(...years.map(y=>c.por_año[y]||0),1);
+  const yChart=years.map((y,i)=>{
+    const v=c.por_año[y]||0,h=Math.round((v/maxV)*90);
+    return`<div class="yc-bar">
+      <div class="yc-val">${v>0?fmtUSD(v):'—'}</div>
       <div class="yc-bar-fill" style="height:${Math.max(h,v>0?4:0)}px;background:${colors[i]};"></div>
       <div class="yc-label">${y}</div>
     </div>`;
   }).join('');
 
-  const totalFmt = c.total >= 1000000 ? '$'+(c.total/1000000).toFixed(2)+'M USD' : '$'+c.total.toLocaleString()+' USD';
-  
-  // Action suggestion
-  const action = getActionSuggestion(c, status);
+  // Objetivo de cliente (estimado como 20% del histórico promedio de sus mejores años)
+  const bestYears = years.map(y=>c.por_año[y]||0).sort((a,b)=>b-a).slice(0,2);
+  const clientObj = Math.round(bestYears.reduce((a,b)=>a+b,0)/2 * 0.8);
+  const clientAlc = c.por_año['2026']||0;
+  const clientPct = clientObj>0 ? Math.min(100,Math.round(clientAlc/clientObj*100)) : 0;
 
-  document.getElementById('ficha-content').innerHTML = `
+  const action=getActionSuggestion(c,s);
+
+  document.getElementById('ficha-content').innerHTML=`
     <div class="ficha-card full" style="display:flex;justify-content:space-between;align-items:center;">
       <div>
         <div style="font-size:20px;font-weight:800;color:#e2e8f0;">${c.nombre}</div>
         <div style="font-size:12px;color:#64748b;margin-top:4px;">CUIT ${c.cuit||'—'} · ${c.provincia}</div>
       </div>
-      <span class="status-badge ${statusClass[status]}" style="font-size:13px;padding:6px 14px;">${statusLabel[status]}</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="status-badge ${statusClass[s]}" style="font-size:13px;padding:6px 14px;">${statusLabel[s]}</span>
+        <button class="btn-ai" style="width:auto;margin:0;padding:8px 16px;font-size:12px;" onclick="openAiForClient(${idx})">✦ Análisis IA</button>
+      </div>
     </div>
 
     <div class="ficha-card">
@@ -644,11 +795,11 @@ function openClient(idx) {
 
     <div class="ficha-card">
       <h3>Métricas clave</h3>
-      <div class="stat-row"><span class="stat-label">Total histórico</span><span class="stat-val">${totalFmt}</span></div>
+      <div class="stat-row"><span class="stat-label">Total histórico</span><span class="stat-val">${fmtUSD(c.total)}</span></div>
       <div class="stat-row"><span class="stat-label">Operaciones</span><span class="stat-val">${c.ops} compras</span></div>
       <div class="stat-row"><span class="stat-label">Primera compra</span><span class="stat-val">${c.primera||'—'}</span></div>
-      <div class="stat-row"><span class="stat-label">Última compra</span><span class="stat-val">${c.ultima||'—'}</span></div>
-      <div class="stat-row"><span class="stat-label">Ticket promedio</span><span class="stat-val">$${Math.round(c.total/c.ops).toLocaleString()}</span></div>
+      <div class="stat-row"><span class="stat-label">Última compra</span><span class="stat-val">${(c.ultima||'').slice(0,10)}</span></div>
+      <div class="stat-row"><span class="stat-label">Ticket promedio</span><span class="stat-val">${fmtUSD(c.total/c.ops)}</span></div>
     </div>
 
     <div class="ficha-card full">
@@ -656,11 +807,65 @@ function openClient(idx) {
       <div class="year-chart">${yChart}</div>
     </div>
 
+    <!-- Objetivo de cliente 2026 -->
+    <div class="ficha-card">
+      <h3>Objetivo Cliente 2026</h3>
+      <div style="display:flex;align-items:center;gap:16px;padding:8px 0;">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="38" fill="none" stroke="#1e293b" stroke-width="8"/>
+          <circle cx="45" cy="45" r="38" fill="none" stroke="${clientPct>=80?'#4ade80':clientPct>=50?'#f97316':'#f87171'}"
+            stroke-width="8" stroke-dasharray="${Math.round(clientPct*2.39)} 239"
+            stroke-linecap="round" transform="rotate(-90 45 45)"/>
+          <text x="45" y="49" text-anchor="middle" fill="${clientPct>=80?'#4ade80':clientPct>=50?'#f97316':'#f87171'}" font-size="16" font-weight="800">${clientPct}%</text>
+        </svg>
+        <div>
+          <div style="font-size:11px;color:#64748b;">Alcanzado 2026</div>
+          <div style="font-size:18px;font-weight:800;color:#e2e8f0;margin:2px 0;">${clientAlc>0?fmtUSD(clientAlc):'Sin compras'}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:6px;">Objetivo estimado</div>
+          <div style="font-size:14px;font-weight:700;color:#60a5fa;">${fmtUSD(clientObj)}</div>
+        </div>
+      </div>
+      <div style="background:#0f172a;border-radius:6px;height:8px;overflow:hidden;margin-top:8px;">
+        <div style="height:100%;width:${clientPct}%;background:${clientPct>=80?'#4ade80':clientPct>=50?'#f97316':'#f87171'};border-radius:6px;"></div>
+      </div>
+    </div>
+
+    <!-- CRM Oportunidades (placeholder Federico) -->
+    <div class="ficha-card">
+      <h3>Oportunidades en CRM</h3>
+      <div class="opp-placeholder">
+        <div style="font-size:24px;margin-bottom:8px;">🔗</div>
+        <p>Pendiente integración con CRM Nectar</p>
+        <div class="conn-badge">
+          <div class="conn-dot"></div>
+          <span>CRM Federico — sin conectar</span>
+        </div>
+        <div style="margin-top:12px;font-size:10px;color:#334155;line-height:1.6;">
+          Cuando se conecte aparecerán las oportunidades activas del cliente, su etapa en el pipeline y el monto.
+        </div>
+      </div>
+      <!-- Placeholder visual de cómo se verá -->
+      <div style="margin-top:12px;opacity:.35;pointer-events:none;">
+        <div class="opp-card">
+          <div class="opp-card-head">
+            <span class="opp-title">Fibra drop 48F · Proyecto expansión</span>
+            <span class="opp-stage stage-propuesta">Propuesta</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span class="opp-meta">Vence: ago-2026</span>
+            <span class="opp-amount">$42,000</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:60%;background:#f97316;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="ficha-card">
       <h3>Familias de producto</h3>
       <div class="tag-list">${(c.familias||[]).map(f=>`<span class="tag">${f}</span>`).join('')||'—'}</div>
     </div>
-
     <div class="ficha-card">
       <h3>Vendedores asignados</h3>
       <div class="tag-list">${(c.vendedores||[]).map(v=>`<span class="tag">${v}</span>`).join('')||'—'}</div>
@@ -672,57 +877,262 @@ function openClient(idx) {
         <h4>💡 Sugerencia de preventa</h4>
         <p>${action}</p>
       </div>
-      <button class="btn-crm" disabled title="Integración con CRM Federico — próximamente">
-        🚀 Crear oportunidad en CRM → (próximamente)
-      </button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+        <button class="btn-crm" disabled>🚀 Crear oportunidad en CRM → (próximamente)</button>
+        <button class="btn-ai" onclick="openAiForClient(${idx})">✦ Análisis IA Completo</button>
+      </div>
     </div>
   `;
 }
 
-function getActionSuggestion(c, status) {
-  const fams = (c.familias||[]).join(' ');
-  const hasFTTH = fams.includes('FTTH') || fams.includes('ODN');
-  const hasHFC = fams.includes('HFC');
-  const totalK = c.total / 1000;
-  
-  if(status === 'active' && c.rfm >= 13) {
-    return `Cliente VIP activo. Prioridad alta: mantener relación y ofrecer expansión. ${hasFTTH?'Historial FTTH/ODN: cotizar kit ampliación con fibra Fiberhome 48F o 96F y splitters PLC.':''}${hasHFC?' Tiene equipamiento HFC: oportunidad de migración/upgrade.':''} Acción: llamada de seguimiento esta semana con propuesta proactiva.`;
-  }
-  if(status === 'active') {
-    return `Cliente activo. Momento ideal para cross-sell: ${hasFTTH?'ampliar con ONTs o cajas NAP adicionales':'explorar necesidades FTTH'}. Preguntar por proyectos segundo semestre 2026.`;
-  }
-  if(status === 'warm') {
-    return `Cliente tibio (6-12 meses sin comprar). Reactivación prioritaria. ${totalK > 100 ? 'Por volumen histórico (+$100K) vale una llamada personalizada con precios actualizados.' : 'Enviar lista de precios vigente y consultar proyectos Q3/Q4.'} Ángulo: stock disponible para entrega inmediata.`;
-  }
-  if(status === 'cold') {
-    return `Cliente frío (más de 12 meses inactivo). Requiere acción de reactivación. Revisar motivo de baja. ${totalK > 50 ? 'Historial significativo: vale invertir en llamada directa + propuesta personalizada.' : 'Campaña email con novedades de portfolio y precio competitivo.'}`;
-  }
-  return `Cliente inactivo hace más de 2 años. Verificar si sigue operativo. Si hay contacto vigente, enviar presentación de portfolio actualizado (Fiberhome, Coherent, Huawei GPON).`;
+function backToRanking() {
+  document.getElementById('client-ficha').style.display='none';
+  document.getElementById('client-placeholder').style.display='flex';
+  showView('ranking',document.querySelectorAll('.tab-btn')[1]);
+}
+
+function getActionSuggestion(c,status) {
+  const fams=(c.familias||[]).join(' ');
+  const hasFTTH=fams.includes('FTTH')||fams.includes('ODN');
+  const hasHFC=fams.includes('HFC');
+  const totalK=c.total/1000;
+  if(status==='active'&&c.rfm>=13) return`Cliente VIP activo. Prioridad alta. ${hasFTTH?'Historial FTTH/ODN: cotizar kit ampliación con fibra Fiberhome 48F o 96F y splitters PLC.':''}${hasHFC?' Equipamiento HFC activo: oportunidad de migración/upgrade.':''} Acción: llamada de seguimiento esta semana con propuesta proactiva.`;
+  if(status==='active') return`Cliente activo. Momento ideal para cross-sell: ${hasFTTH?'ampliar con ONTs o cajas NAP':'explorar necesidades FTTH'}. Preguntar por proyectos H2 2026.`;
+  if(status==='warm') return`Cliente tibio (6-12 meses sin comprar). ${totalK>100?'Por volumen histórico vale llamada personalizada con precios actualizados.':'Enviar lista de precios vigente y consultar proyectos Q3/Q4.'} Ángulo: stock disponible para entrega inmediata.`;
+  if(status==='cold') return`Cliente frío (más de 12 meses inactivo). ${totalK>50?'Historial significativo: vale llamada directa + propuesta personalizada.':'Campaña email con novedades de portfolio.'} Revisar motivo de baja.`;
+  return`Cliente inactivo hace más de 2 años. Verificar si sigue operativo. Si hay contacto vigente, enviar presentación de portfolio (Fiberhome, Coherent, Huawei GPON).`;
+}
+
+// ── Análisis IA ──
+function buildAiClientList() {
+  renderAiClientList(CLIENTS);
+}
+
+function renderAiClientList(list) {
+  document.getElementById('ai-client-list').innerHTML=list.map((c,i)=>{
+    const idx=CLIENTS.indexOf(c);
+    const s=getStatus(c.ultima);
+    return`<div class="ai-client-row" id="ai-row-${idx}" onclick="openAiForClient(${idx})">
+      <div class="acr-name">${c.nombre}</div>
+      <div class="acr-meta">${fmtUSD(c.total)} · RFM ${c.rfm} · <span style="color:${s==='active'?'#4ade80':s==='warm'?'#86efac':s==='cold'?'#fb923c':'#64748b'}">${statusLabel[s]}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function filterAiClients(q) {
+  const filtered=q?CLIENTS.filter(c=>c.nombre.toLowerCase().includes(q.toLowerCase())):CLIENTS;
+  renderAiClientList(filtered);
+}
+
+function openAiForClient(idx) {
+  currentClientIdx=idx;
+  const c=CLIENTS[idx];
+  showView('analisis',document.querySelectorAll('.tab-btn')[4]);
+  document.querySelectorAll('.ai-client-row').forEach(r=>r.classList.remove('selected'));
+  const row=document.getElementById('ai-row-'+idx);
+  if(row) { row.classList.add('selected'); row.scrollIntoView({block:'nearest'}); }
+
+  const s=getStatus(c.ultima);
+  const fams=(c.familias||[]).join(', ')||'No registradas';
+
+  document.getElementById('ai-main').innerHTML=`
+    <div style="background:#1e293b;border-radius:12px;border:1px solid #334155;padding:16px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:17px;font-weight:800;color:#e2e8f0;">${c.nombre}</div>
+        <div style="font-size:11px;color:#64748b;margin-top:3px;">RFM ${c.rfm}/15 · ${fmtUSD(c.total)} histórico · ${statusLabel[s]} · Última compra ${(c.ultima||'').slice(0,10)}</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <span class="status-badge ${statusClass[s]}">${statusLabel[s]}</span>
+        <span class="rfm-score ${rfmClass(c.rfm)}" style="font-size:12px;">${c.rfm}</span>
+      </div>
+    </div>
+
+    <div class="flow">
+
+      <!-- Paso 1: Reunión / Contexto -->
+      <div class="flow-step open" id="step-1">
+        <div class="flow-step-head" onclick="toggleStep(1)">
+          <div class="flow-num fn-active">1</div>
+          <div><div class="flow-step-title">📋 Input del cliente</div><div class="flow-step-sub">Notas de reunión, contexto reciente, señales detectadas</div></div>
+          <div class="flow-chevron">▾</div>
+        </div>
+        <div class="flow-step-body">
+          <div style="font-size:11px;color:#64748b;margin-bottom:6px;">Pegá notas de reunión, fragmentos de conversación o cualquier info reciente de este cliente:</div>
+          <textarea class="input-area" id="input-reunion" rows="4" placeholder="Ej: Habló con Javier el 08/07. Menciona proyecto FTTH nuevo barrio en Q4. Tiene ENACOM aprobado. Pidió precios de fibra drop y splitters 1:16..."></textarea>
+          <div style="font-size:11px;color:#64748b;margin-top:10px;">Señales de mercado a considerar:</div>
+          <textarea class="input-area" id="input-mercado" rows="2" placeholder="Ej: Ganó licitación municipal en junio. Activo en CABASE. Postea expansiones en LinkedIn..."></textarea>
+          <button class="btn-run" onclick="runStep1(${idx})">▶ Procesar contexto</button>
+          <div class="output-box" id="out-step1" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Paso 2: Análisis de comportamiento -->
+      <div class="flow-step" id="step-2">
+        <div class="flow-step-head" onclick="toggleStep(2)">
+          <div class="flow-num fn-idle" id="num-2">2</div>
+          <div><div class="flow-step-title">📊 Análisis de comportamiento histórico</div><div class="flow-step-sub">Patrones de compra, estacionalidad, tendencias</div></div>
+          <div class="flow-chevron">▾</div>
+        </div>
+        <div class="flow-step-body">
+          <div class="agent-grid">
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">📈</div><div class="agent-name">Análisis RFM</div><div class="agent-status as-ready">Listo</div></div><div class="agent-desc">RFM ${c.rfm}/15 · ${c.ops} operaciones · ticket promedio ${fmtUSD(c.total/c.ops)}</div></div>
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">📦</div><div class="agent-name">Mix de productos</div><div class="agent-status as-ready">Listo</div></div><div class="agent-desc">${fams}</div></div>
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">📅</div><div class="agent-name">Estacionalidad</div><div class="agent-status as-ready">Listo</div></div><div class="agent-desc">Pico histórico: 2023 · Caída: 2024 · Tendencia 2025-26 pendiente</div></div>
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">🔮</div><div class="agent-name">Proyección cliente</div><div class="agent-status as-ready">Listo</div></div><div class="agent-desc">Proyección H2 basada en ritmo actual y mix de productos</div></div>
+          </div>
+          <button class="btn-run" onclick="runStep2(${idx})">▶ Generar análisis</button>
+          <div class="output-box" id="out-step2" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Paso 3: PM Especializado -->
+      <div class="flow-step" id="step-3">
+        <div class="flow-step-head" onclick="toggleStep(3)">
+          <div class="flow-num fn-idle" id="num-3">3</div>
+          <div><div class="flow-step-title">🤖 PM Especializado</div><div class="flow-step-sub">Identificación de necesidades y soluciones de producto</div></div>
+          <div class="flow-chevron">▾</div>
+        </div>
+        <div class="flow-step-body">
+          <div class="agent-grid">
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">🔴</div><div class="agent-name">PM Fiberhome</div><div class="agent-status as-pending">Disponible</div></div><div class="agent-desc">FTTH · Drop cable · NAPs · Splitters · ONTs GPON</div></div>
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">🔵</div><div class="agent-name">PM Huawei</div><div class="agent-status as-pending">Disponible</div></div><div class="agent-desc">OLT MA5800 · GPON/XGS-PON · Line cards · ONTs</div></div>
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">🟣</div><div class="agent-name">PM Coherent</div><div class="agent-status as-pending">Disponible</div></div><div class="agent-desc">DWDM · ZR/ZR+ · Transceptores · Metro edge</div></div>
+            <div class="agent-card"><div class="agent-header"><div class="agent-icon">🟡</div><div class="agent-name">Inteligencia de mercado</div><div class="agent-status as-pending">Disponible</div></div><div class="agent-desc">ENACOM · Licitaciones · CABASE · Señales RRSS</div></div>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:10px;">Enfoque del análisis (opcional):</div>
+          <textarea class="input-area" id="input-enfoque" rows="2" placeholder="Ej: el cliente mencionó expansión FTTH. Enfocarse en solución completa ODN + GPON..."></textarea>
+          <button class="btn-run" onclick="runStep3(${idx})">▶ Ejecutar PMs</button>
+          <div class="output-box" id="out-step3" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Paso 4: Propuesta -->
+      <div class="flow-step" id="step-4">
+        <div class="flow-step-head" onclick="toggleStep(4)">
+          <div class="flow-num fn-idle" id="num-4">4</div>
+          <div><div class="flow-step-title">📝 Propuesta y oportunidad</div><div class="flow-step-sub">Solución consolidada → CRM → Propuesta comercial</div></div>
+          <div class="flow-chevron">▾</div>
+        </div>
+        <div class="flow-step-body">
+          <div class="output-box" id="out-step4">
+            <div style="color:#475569;font-size:12px;">Completá los pasos 1-3 para generar la propuesta consolidada. El sistema va a sintetizar toda la información y generar:<br><br>
+            ① Solución técnica recomendada (BOM preliminar)<br>
+            ② Oportunidad para enviar al CRM de Federico<br>
+            ③ Mensaje inicial para activar el circuito comercial</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+            <button class="btn-crm" disabled id="btn-send-crm">🚀 Enviar al CRM → Federico (próximamente)</button>
+            <button class="btn-run" disabled id="btn-gen-prop" style="opacity:.4;">📄 Generar propuesta</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+function toggleStep(n) {
+  const el=document.getElementById('step-'+n);
+  el.classList.toggle('open');
+}
+
+function runStep1(idx) {
+  const c=CLIENTS[idx];
+  const reunion=document.getElementById('input-reunion').value;
+  const mercado=document.getElementById('input-mercado').value;
+  const out=document.getElementById('out-step1');
+  out.style.display='block';
+  out.className='output-box has-content';
+  out.innerHTML=`<div style="color:#64748b;font-size:11px;margin-bottom:8px;">✓ CONTEXTO PROCESADO</div>
+    <strong style="color:#f97316;">Señales detectadas:</strong><br>
+    ${reunion?`• Input directo: "${reunion.slice(0,120)}${reunion.length>120?'…':''}"<br>`:'• Sin notas de reunión cargadas<br>'}
+    ${mercado?`• Mercado: "${mercado.slice(0,100)}${mercado.length>100?'…':''}"<br>`:''}
+    <br><strong style="color:#f97316;">Perfil base del cliente:</strong><br>
+    • ${c.nombre} — ${statusLabel[getStatus(c.ultima)]} · RFM ${c.rfm}/15<br>
+    • Última compra: ${(c.ultima||'').slice(0,10)} · ${c.ops} operaciones históricas<br>
+    • Familias activas: ${(c.familias||[]).join(', ')||'no registradas'}<br>
+    <br><span style="color:#4ade80;">→ Listo para análisis en Paso 2</span>`;
+  document.getElementById('step-2').classList.add('open');
+  document.getElementById('num-2').className='flow-num fn-active';
+}
+
+function runStep2(idx) {
+  const c=CLIENTS[idx];
+  const years=['2021','2022','2023','2024','2025','2026'];
+  const peak=years.map(y=>({y,v:c.por_año[y]||0})).sort((a,b)=>b.v-a.v)[0];
+  const out=document.getElementById('out-step2');
+  out.style.display='block';
+  out.className='output-box has-content';
+  out.innerHTML=`<div style="color:#64748b;font-size:11px;margin-bottom:8px;">✓ ANÁLISIS GENERADO</div>
+    <strong style="color:#f97316;">Comportamiento histórico:</strong><br>
+    • Año pico: ${peak.y} con ${fmtUSD(peak.v)}<br>
+    • 2024: caída pronunciada en línea con la caída general del mercado<br>
+    • 2025: recuperación parcial · 2026 YTD: ${fmtUSD(c.por_año['2026']||0)}<br>
+    • Ticket promedio: ${fmtUSD(c.total/c.ops)} · Frecuencia: ${c.ops} ops en ${Object.keys(c.por_año).length} años<br>
+    <br><strong style="color:#f97316;">Mix de producto:</strong><br>
+    • Principales familias: ${(c.familias||['No registradas']).join(', ')}<br>
+    <br><strong style="color:#f97316;">Señal de oportunidad:</strong><br>
+    • ${c.rfm>=12?'Cliente de alto valor — potencial de expansión de mix':'Cliente activo — foco en reactivación y retención'}<br>
+    • Potencial estimado H2 2026: ${fmtUSD(Math.max(c.por_año['2025']||0, c.por_año['2024']||0)*0.6)}<br>
+    <br><span style="color:#4ade80;">→ Listo para análisis de producto en Paso 3</span>`;
+  document.getElementById('step-3').classList.add('open');
+  document.getElementById('num-3').className='flow-num fn-active';
+}
+
+function runStep3(idx) {
+  const c=CLIENTS[idx];
+  const fams=(c.familias||[]);
+  const hasFTTH=fams.some(f=>f.includes('FTTH')||f.includes('ODN'));
+  const out=document.getElementById('out-step3');
+  out.style.display='block';
+  out.className='output-box has-content';
+  out.innerHTML=`<div style="color:#64748b;font-size:11px;margin-bottom:8px;">✓ ANÁLISIS PM COMPLETADO</div>
+    <strong style="color:#f97316;">🔴 PM Fiberhome recomienda:</strong><br>
+    ${hasFTTH?'• Kit FTTH: Fibra drop acero 1F × bobinas + NAP FitDP-420A + Splitters 1:16 SC/APC + ONTs HG6145F3<br>• Stock disponible: fibra drop acero, NAPs y splitters en Lacarra<br>':'• Presentar portfolio ODN completo — cliente sin historial FTTH registrado<br>'}
+    <br><strong style="color:#60a5fa;">🔵 PM Huawei recomienda:</strong><br>
+    • ${hasFTTH?'OLT MA5800-X7 (en tránsito) + placas GPON CGHF si necesitan nodo activo':'Evaluar si el cliente tiene o planea OLT — oportunidad de solución completa'}<br>
+    <br><strong style="color:#a78bfa;">🟣 PM Coherent:</strong><br>
+    • Sin historial DWDM — no aplicable en primera instancia<br>
+    <br><strong style="color:#fbbf24;">🟡 Inteligencia de mercado:</strong><br>
+    • Verificar actividad ENACOM / proyectos REFEFO en la zona del cliente<br>
+    • Revisar CABASE y LinkedIn para señales de expansión<br>
+    <br><span style="color:#4ade80;">→ Síntesis lista para Paso 4 — Propuesta</span>`;
+  document.getElementById('step-4').classList.add('open');
+  document.getElementById('num-4').className='flow-num fn-active';
+  document.getElementById('out-step4').innerHTML=`<div style="color:#64748b;font-size:11px;margin-bottom:8px;">✓ PROPUESTA CONSOLIDADA — borrador</div>
+    <strong style="color:#f97316;">Oportunidad sugerida para CRM:</strong><br>
+    • Cliente: ${c.nombre}<br>
+    • Título: ${hasFTTH?'Expansión FTTH - Fiberhome ODN + GPON':'Activación portfolio FTTH/ODN'}<br>
+    • Etapa inicial: En Frío<br>
+    • Monto estimado: ${fmtUSD(Math.max(c.por_año['2025']||0,30000)*0.4)} – ${fmtUSD(Math.max(c.por_año['2025']||0,30000)*0.8)}<br>
+    • Vendedor sugerido: ${(c.vendedores||['Matias Taddei'])[0]}<br>
+    <br><strong style="color:#f97316;">Mensaje de apertura sugerido:</strong><br>
+    <em style="color:#94a3b8;">"Hola [nombre], te llamo de Horizon. Estuvimos analizando el historial con ustedes y vimos una oportunidad para acompañarlos en ${hasFTTH?'la expansión FTTH':'proyectos de red de este semestre'}. Tenemos stock inmediato de ${hasFTTH?'fibra drop, NAPs y splitters':'material ODN'}. ¿Tienen algo en cartera para H2?"</em>
+    <br><br><span style="color:#4ade80;">✓ Listo para enviar al CRM cuando esté integrado</span>`;
+  document.getElementById('btn-send-crm').disabled=false;
+  document.getElementById('btn-send-crm').disabled=true; // keep disabled until endpoint
+  document.getElementById('btn-gen-prop').disabled=false;
+  document.getElementById('btn-gen-prop').style.opacity='1';
 }
 
 // ── Views ──
-function showView(name, btn) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
+function showView(name,btn) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
 }
 
 // ── Tooltip ──
-function showTooltip(e, html) {
-  const t = document.getElementById('tooltip');
-  t.innerHTML = html;
-  t.style.display = 'block';
-  t.style.left = (e.clientX + 12) + 'px';
-  t.style.top = (e.clientY - 10) + 'px';
+function showTooltip(e,html) {
+  const t=document.getElementById('tooltip');
+  t.innerHTML=html; t.style.display='block';
+  t.style.left=(e.clientX+12)+'px'; t.style.top=(e.clientY-10)+'px';
 }
-function hideTooltip() { document.getElementById('tooltip').style.display='none'; }
-document.addEventListener('mousemove', e => {
-  const t = document.getElementById('tooltip');
-  if(t.style.display === 'block') {
-    t.style.left = (e.clientX + 12) + 'px';
-    t.style.top = (e.clientY - 10) + 'px';
-  }
+function hideTooltip(){document.getElementById('tooltip').style.display='none';}
+document.addEventListener('mousemove',e=>{
+  const t=document.getElementById('tooltip');
+  if(t.style.display==='block'){t.style.left=(e.clientX+12)+'px';t.style.top=(e.clientY-10)+'px';}
 });
 
 init();
