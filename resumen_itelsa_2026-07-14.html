@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen de reunión — Support Internet + Itelsa × Horizon · 14-07-2026</title>
+<style>
+  :root{
+    --blue:#1881FB; --navy:#241F39; --green:#00EF79; --violet:#7856FF; --teal:#4B8BA0;
+    --bg:#f4f6f9; --card:#ffffff; --ink:#241F39; --muted:#6b7280; --line:#e6e8ef;
+    --amber:#f59e0b; --red:#ef4444;
+    --shadow:0 1px 3px rgba(36,31,57,.08),0 1px 2px rgba(36,31,57,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:920px;margin:0 auto;padding:24px 22px 64px}
+  header{background:linear-gradient(120deg,var(--navy),#2f2952);border-radius:18px;color:#fff;padding:26px 28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(24,129,251,.35),transparent 70%)}
+  .brandline{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+  .dotlogo{width:26px;height:26px;border-radius:50%;border:3px solid var(--teal);flex:0 0 auto}
+  .brandline b{font-size:15px;letter-spacing:2px;font-weight:800}
+  .brandline span{font-size:11px;color:#c9cede;letter-spacing:.5px}
+  header h1{font-size:23px;font-weight:800;line-height:1.25;position:relative;z-index:1}
+  header .sub{font-size:13px;color:#cdd2e2;margin-top:8px;position:relative;z-index:1}
+  .htags{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px;position:relative;z-index:1}
+  .htags span{font-size:11px;font-weight:600;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:5px 11px;border-radius:999px}
+  .htags .hot{background:rgba(0,239,121,.16);border-color:rgba(0,239,121,.4);color:#7bffc0}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .box{background:var(--card);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+  .box h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;font-weight:700}
+  .who{font-size:13px;margin:4px 0;display:flex;gap:8px;align-items:baseline}
+  .who b{font-weight:700}.who i{font-style:normal;color:var(--muted);font-size:12px}
+  .tag{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+  .tag.h{background:#e3efff;color:#0b57c7} .tag.c{background:#e8fff3;color:#087a45} .tag.p{background:#efeaff;color:#5b34d6}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 18px}
+  .kpi{background:var(--card);border-radius:14px;padding:14px 15px;box-shadow:var(--shadow);border-left:4px solid var(--blue)}
+  .kpi:nth-child(2){border-left-color:var(--green)} .kpi:nth-child(3){border-left-color:var(--violet)} .kpi:nth-child(4){border-left-color:var(--teal)}
+  .kpi .n{font-size:22px;font-weight:800;line-height:1.1}
+  .kpi .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+
+  section{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px}
+  section > h2{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  section > h2::before{content:"";width:7px;height:19px;border-radius:4px;background:var(--blue);flex:0 0 auto}
+  .item{padding:11px 0;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:none}
+  .item h4{font-size:13.5px;font-weight:700;margin-bottom:3px}
+  .item p{font-size:13px;color:#4b5563}
+  .item .note{font-size:11.5px;color:var(--amber);font-weight:600;margin-top:3px}
+  ul.clean{list-style:none} ul.clean li{font-size:13px;padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--line)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{content:"›";position:absolute;left:4px;top:6px;color:var(--blue);font-weight:800}
+
+  .corridor{display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:#f5fbff;border:1px solid #d7ecff;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;color:#0b57c7}
+  .corridor .stop{background:#fff;border:1px solid #cfe6ff;border-radius:999px;padding:3px 10px}
+  .corridor .ar{color:#7fb4ee}
+
+  .opps{display:grid;grid-template-columns:1fr;gap:10px}
+  .opp{border:1px solid var(--line);border-radius:12px;padding:13px 15px;border-left:4px solid var(--line)}
+  .opp.a{border-left-color:var(--green)} .opp.b{border-left-color:var(--blue)} .opp.c{border-left-color:var(--violet)}
+  .opp .ot{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .opp b{font-size:13.5px} .opp .val{font-size:12px;font-weight:800;color:var(--navy);white-space:nowrap}
+  .opp p{font-size:12px;color:#4b5563;margin-top:4px}
+  .badge{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 8px;border-radius:999px}
+  .badge.ma{background:#fff3d6;color:#a15c00} .badge.m{background:#e3efff;color:#0b57c7}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  td .r{font-weight:700} .dl{font-size:11px;font-weight:700;color:#0b57c7;background:#e3efff;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .dl.key{color:#087a45;background:#e2fbef}
+  tr.hot td{background:#f5fbff}
+
+  .sug li::before{content:"◆";color:var(--violet);font-size:10px;top:8px}
+  footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.7;margin-top:22px}
+  .flag{font-size:11px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:10px 14px;border-radius:10px;margin-top:6px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brandline"><span class="dotlogo"></span><b>HORIZON</b><span>· Tu aliado estratégico</span></div>
+    <h1>Despliegue FTTH ~500 km en Entre Ríos — Support Internet + Itelsa × Horizon-FiberHome</h1>
+    <div class="sub">Corredor Chajarí / Concordia / Federal · Llamada telefónica · 14 de julio de 2026</div>
+    <div class="htags">
+      <span>📞 Origen: llamada</span>
+      <span>🏷️ FiberHome (pasivos · Fase 1)</span>
+      <span class="hot">🎯 Propuesta completa en ~15 días</span>
+      <span>🤝 Partner: SITSA / Pogliotti</span>
+    </div>
+  </header>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>Participantes · Horizon</h3>
+      <div class="who"><span class="tag h">HZ</span><b>Matías Taddei</b> <i>— Director (en la llamada)</i></div>
+      <div class="who"><span class="tag h">HZ</span><b>Juampi Ruiz</b> <i>— Jefe de Operaciones</i></div>
+      <div class="who"><span class="tag h">HZ</span><b>Federico Núñez</b> <i>— Comercial (recibe modelos a cotizar)</i></div>
+      <div class="who"><span class="tag h">HZ</span><b>Charly Schenone</b> <i>— Finanzas (arma el mix financiero)</i></div>
+    </div>
+    <div class="box">
+      <h3>Clientes / Partners</h3>
+      <div class="who"><span class="tag c">CL</span><b>Martín Zambiazo</b> <i>— Support Internet · ~100 km</i></div>
+      <div class="who"><span class="tag c">CL</span><b>Fernando</b> <i>— Itelsa (Chajarí) · &gt;200 km</i></div>
+      <div class="who"><span class="tag c">CL</span><b>Gustavo Martino</b> <i>— socio en Itelsa (pasa modelos a Federico)</i></div>
+      <div class="who"><span class="tag p">PT</span><b>Franco de Ciccia</b> <i>— SITSA / Pogliotti (despliegue + tránsito IP)</i></div>
+      <div class="who" style="color:var(--muted);font-size:12px;margin-top:6px">+ 2 ISPs colegas a sumar (razones sociales a confirmar).</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n">~500 km</div><div class="l">Despliegue conjunto</div></div>
+    <div class="kpi"><div class="n">~100 / +200</div><div class="l">km Support Internet / Itelsa</div></div>
+    <div class="kpi"><div class="n">4+</div><div class="l">ISPs agrupados</div></div>
+    <div class="kpi"><div class="n">15 días</div><div class="l">Objetivo de propuesta</div></div>
+  </div>
+
+  <section>
+    <h2>Traza del corredor (referencia · lado Support Internet)</h2>
+    <div class="corridor">
+      <span class="stop">San Salvador</span><span class="ar">→</span>
+      <span class="stop">Villaguay</span><span class="ar">→</span>
+      <span class="stop">Concordia</span><span class="ar">→</span>
+      <span class="stop">Federal</span><span class="ar">→</span>
+      <span class="stop">Chajarí</span><span class="ar">→</span>
+      <span class="stop">Concordia</span>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px">Traza orientativa del tendido (Entre Ríos), no el detalle km por km. El dimensionamiento fino sale con los modelos que envíe Gustavo (Itelsa).</p>
+  </section>
+
+  <section>
+    <h2>De qué se trató</h2>
+    <div class="item">
+      <h4>Despliegue de gran escala (~500 km)</h4>
+      <p>Varios ISPs se agrupan: <b>Support Internet</b> (~100 km) + <b>Itelsa</b> (&gt;200 km) + <b>2 ISPs colegas</b> a sumar → ~500 km en conjunto.</p>
+    </div>
+    <div class="item">
+      <h4>Horizon entra vía el partner SITSA / Pogliotti</h4>
+      <p><b>Franco de Ciccia (SITSA / Pogliotti)</b> ejecuta el despliegue y da el tránsito IP, y <b>recomienda la fibra FiberHome</b> → nuestra ventaja de canal frente a otros proveedores.</p>
+    </div>
+    <div class="item">
+      <h4>Propuesta por etapas</h4>
+      <p><b>Fase 1 — solo pasivos:</b> fibra, cajas, conectores (lo que se cotiza ahora). &nbsp;·&nbsp; <b>Fase 2 — activos:</b> call-to-action al final de la propuesta para cotizar OLT/ONT más adelante.</p>
+    </div>
+    <div class="item">
+      <h4>Precio + financiación (el corazón del deal)</h4>
+      <p>Horizon es algo más caro que el resto → la financiación es el diferenciador. Los ISPs quieren financiar a <b>36 meses</b>, que <b>Horizon no da directo</b>. Lo que sí hacemos: <b>acercar propuestas de crédito de terceros</b> + <b>financiación propia 30–180 días con cheques</b> + <b>consignación de mercadería en stock</b>. Van a necesitar un <b>mix</b> de condiciones.</p>
+      <div class="note">Horizon no financia a 36m directamente: arma el combo financiero.</div>
+    </div>
+    <div class="item">
+      <h4>Para qué necesitan nuestra info</h4>
+      <p>La obra aún no tiene fecha, pero necesitan nuestra propuesta para <b>armar el proyecto, dimensionar y potencialmente conseguir crédito</b>. Nuestra info es insumo para que ellos avancen.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Oportunidades detectadas</h2>
+    <div class="opps">
+      <div class="opp a">
+        <div class="ot"><b>Fase 1 — Pasivos FiberHome (~500 km)</b><span class="val">s/estimar</span></div>
+        <p>Fibra, cajas y conectores para Support Internet + Itelsa + 2 ISPs. Requerimiento real y de escala, partner empujando FiberHome, señal de compra (Gustavo pasa modelos). Riesgo: precio + dependencia de financiación. <span class="badge ma">Interés medio-alto</span></p>
+      </div>
+      <div class="opp b">
+        <div class="ot"><b>Mix financiero (habilitador)</b><span class="val">crédito 36m + 30–180d + consignación</span></div>
+        <p>Acercar crédito a plazos largos de terceros + financiación propia 30–180d con cheques + consignación de stock. Es la condición para ganar frente a competidores más baratos. <span class="badge ma">Interés medio-alto</span></p>
+      </div>
+      <div class="opp c">
+        <div class="ot"><b>Fase 2 — Activos (OLT/ONT)</b><span class="val">CTA en la propuesta</span></div>
+        <p>Se deja un call-to-action al final de la propuesta para cotizar activos más adelante. Depende de cerrar la Fase 1. <span class="badge m">Interés medio</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Próximos pasos</h2>
+    <table>
+      <thead><tr><th>Tarea</th><th>Responsable</th><th>Deadline</th></tr></thead>
+      <tbody>
+        <tr class="hot"><td>Conversar el proyecto con Charly: armar el mix financiero</td><td class="r">Matías</td><td><span class="dl">16/07</span></td></tr>
+        <tr><td>Recibir de Gustavo (Itelsa) los modelos a cotizar</td><td class="r">Federico</td><td><span class="dl">18/07</span></td></tr>
+        <tr><td>Dimensionar el requerimiento total (~500 km por ISP)</td><td class="r">Matías + Federico</td><td><span class="dl">21/07</span></td></tr>
+        <tr><td>Coordinar con Franco (SITSA / Pogliotti) despliegue + tránsito IP y sumar 2 ISPs</td><td class="r">Juampi</td><td><span class="dl">21/07</span></td></tr>
+        <tr><td>Cotizar materiales pasivos FiberHome (Fase 1)</td><td class="r">Federico</td><td><span class="dl">23/07</span></td></tr>
+        <tr class="hot"><td><b>Entregar la propuesta completa</b> (dimensionamiento + pasivos + mix financiero + CTA activos)</td><td class="r">Matías + Federico</td><td><span class="dl key">29/07</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Ángulo comercial · sugerencias</h2>
+    <ul class="clean sug">
+      <li><b>Vender el paquete, no el metro de fibra:</b> con Horizon más caro, el ángulo ganador es "materiales FiberHome + mix financiero + despliegue llave en mano de SITSA / Pogliotti" como solución integral; el sobreprecio se diluye en la cuota.</li>
+      <li><b>Usar la agrupación de ISPs (~500 km) como palanca de volumen</b> para mejorar precio y justificar la consignación (stock rotando contra el avance de obra).</li>
+      <li><b>Cerrar el mix financiero con Charly antes de mandar la cotización</b>, para presentar precio y condiciones juntos (no el número pelado).</li>
+      <li><b>CTA de activos con gancho concreto</b> (p. ej. "reservá stock de OLT/ONT a precio de hoy") para no perder la Fase 2.</li>
+    </ul>
+    <div class="flag">🔎 <b>Por confirmar:</b> razones sociales de los 2 ISPs colegas · apellido de Fernando (Itelsa) · quién emite la OC (cada ISP / Itelsa agrupador / SITSA / Pogliotti integrador) · modelos exactos de fibra/cajas/conectores · fecha de obra. No se hablaron precios: todo monto está a dimensionar.</div>
+  </section>
+
+  <footer>
+    HORIZON · Tu aliado estratégico &nbsp;|&nbsp; Resumen de la llamada Support Internet + Itelsa × Horizon del 14/07/2026.<br>
+    Minuta completa: <b>Minuta_2026-07-14_Itelsa-Zambiazo-Chajari-despliegue-FTTH-FiberHome.md</b> &nbsp;·&nbsp; Oportunidades cargadas en el Funnel.
+  </footer>
+
+</div>
+</body>
+</html>

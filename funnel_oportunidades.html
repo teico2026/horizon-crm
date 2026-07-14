@@ -280,6 +280,30 @@ const OPS = [
     estadoDefault:"detectada",
     tareas:[
       {id:"t1", texto:"Estructurar acuerdo de margen (~10%) + rol de Catel como importador (por escrito)", resp:"MT", deadline:"2026-07-25"}
+    ]},
+
+  { id:"itelsa-desp", empresa:"Support Internet + Itelsa (Chajarí, ER)", origen:"reunion",
+    producto:"Despliegue FTTH ~500 km — Fase 1 pasivos FiberHome (fibra, cajas, conectores) para Support Internet + Itelsa + 2 ISPs (vía partner SITSA / Pogliotti) · CTA activos Fase 2",
+    valor:0, valorTxt:"s/estimar (sin precios · ~500 km)", indicio:"medioalto",
+    resp:["FN","MT","JP"], deadline:"2026-07-29", src:"Minuta Itelsa/Zambiazo", srcFile:"Minuta_2026-07-14_Itelsa-Zambiazo-Chajari-despliegue-FTTH-FiberHome.md",
+    estadoDefault:"detectada",
+    tareas:[
+      {id:"t1", texto:"Recibir de Gustavo (Itelsa) los modelos a cotizar (fibra, cajas, conectores)", resp:"FN", deadline:"2026-07-18"},
+      {id:"t2", texto:"Dimensionar requerimiento total (~500 km: Support Internet ~100 + Itelsa >200 + 2 ISPs)", resp:"MT", deadline:"2026-07-21"},
+      {id:"t3", texto:"Cotizar materiales pasivos FiberHome (Fase 1)", resp:"FN", deadline:"2026-07-23"},
+      {id:"t4", texto:"Coordinar con Franco (SITSA / Pogliotti) despliegue + tránsito IP y sumar los 2 ISPs", resp:"JP", deadline:"2026-07-21"},
+      {id:"t5", texto:"Armar propuesta completa (dimensionamiento + pasivos + mix financiero + CTA activos)", resp:"MT", deadline:"2026-07-29"}
+    ]},
+
+  { id:"itelsa-fin", empresa:"Support Internet + Itelsa (Chajarí, ER)", origen:"reunion",
+    producto:"Mix financiero: acercar crédito a 36m (terceros) + financiación propia 30–180d con cheques + consignación de stock — habilitador del deal",
+    valor:0, valorTxt:"s/estimar", indicio:"medioalto",
+    resp:["CS","MT"], deadline:"2026-07-16", src:"Minuta Itelsa/Zambiazo", srcFile:"Minuta_2026-07-14_Itelsa-Zambiazo-Chajari-despliegue-FTTH-FiberHome.md",
+    estadoDefault:"detectada",
+    tareas:[
+      {id:"t1", texto:"Conversar el proyecto con Charly: armar el mix financiero (crédito 36m de terceros + propia 30–180d cheques + consignación)", resp:"MT", deadline:"2026-07-16"},
+      {id:"t2", texto:"Definir qué mercadería en stock se puede consignar para el despliegue", resp:"CS", deadline:"2026-07-21"},
+      {id:"t3", texto:"Revisar competitividad de precio (somos más caros) y compensarla con el mix financiero", resp:"CS", deadline:"2026-07-23"}
     ]}
 ];
 
