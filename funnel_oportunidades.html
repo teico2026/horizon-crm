@@ -249,6 +249,37 @@ const OPS = [
     estadoDefault:"detectada",
     tareas:[
       {id:"t1", texto:"Definir esquema FOB y financiación 6 meses para la propuesta", resp:"CS", deadline:"2026-07-11"}
+    ]},
+
+  { id:"telviso-consig", empresa:"Telviso (Coop. Pilar)", origen:"reunion",
+    producto:"Consignación de pasivos FiberHome (drop, conectores, fibra, cajas NAP y de empalme) — Fase 1 autoconsumo",
+    valor:500000, valorTxt:"aspiracional ~USD 500k (a dimensionar)", indicio:"medioalto",
+    resp:["FN","MT"], deadline:"2026-07-16", src:"Minuta Telviso", srcFile:"Minuta_2026-07-12_Telviso-Horizon-consignacion-pasivos-FiberHome.md",
+    estadoDefault:"en_validacion",
+    tareas:[
+      {id:"t1", texto:"Enviar mail de status + propuesta personalizada (cc Manu) — hoy a la tarde", resp:"FN", deadline:"2026-07-12"},
+      {id:"t2", texto:"Armar propuesta gráfica/armada + programa del modelo de consignación", resp:"FN", deadline:"2026-07-16"},
+      {id:"t3", texto:"Dimensionar volumen y estructura (techo, materiales, reposición por consumo)", resp:"MT", deadline:"2026-07-18"},
+      {id:"t4", texto:"Enviar cotizaciones de fibra, drop y conectores", resp:"FN", deadline:"2026-07-15"}
+    ]},
+
+  { id:"telviso-olt", empresa:"Telviso (Coop. Pilar)", origen:"reunion",
+    producto:"Homologación OLT FiberHome (hito técnico habilitante — lab Depósito Tecnológico, coordina Fabián)",
+    valor:0, valorTxt:"s/estimar (habilita activos)", indicio:"medio",
+    resp:["FN","MT"], deadline:"2026-07-22", src:"Minuta Telviso", srcFile:"Minuta_2026-07-12_Telviso-Horizon-consignacion-pasivos-FiberHome.md",
+    estadoDefault:"detectada",
+    tareas:[
+      {id:"t1", texto:"Empujar homologación OLT FiberHome (coordinar Fabián / lab Depósito Tecnológico)", resp:"FN", deadline:"2026-07-22"},
+      {id:"t2", texto:"Reunión con Cintia por capacidad de data center", resp:"FN", deadline:"2026-07-14"}
+    ]},
+
+  { id:"telviso-reventa", empresa:"Telviso (Coop. Pilar)", origen:"reunion",
+    producto:"Reventa a terceros vía Telviso (Fase 2, ~10% margen, Catel importador)",
+    valor:0, valorTxt:"s/estimar", indicio:"medio",
+    resp:["MT","FN"], deadline:"2026-07-25", src:"Minuta Telviso", srcFile:"Minuta_2026-07-12_Telviso-Horizon-consignacion-pasivos-FiberHome.md",
+    estadoDefault:"detectada",
+    tareas:[
+      {id:"t1", texto:"Estructurar acuerdo de margen (~10%) + rol de Catel como importador (por escrito)", resp:"MT", deadline:"2026-07-25"}
     ]}
 ];
 
