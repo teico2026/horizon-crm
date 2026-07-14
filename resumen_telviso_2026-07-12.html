@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen de reunión — Telviso × Horizon · 12-07-2026</title>
+<style>
+  :root{
+    --blue:#1881FB; --navy:#241F39; --green:#00EF79; --violet:#7856FF; --teal:#4B8BA0;
+    --bg:#f4f6f9; --card:#ffffff; --ink:#241F39; --muted:#6b7280; --line:#e6e8ef;
+    --amber:#f59e0b; --red:#ef4444;
+    --shadow:0 1px 3px rgba(36,31,57,.08),0 1px 2px rgba(36,31,57,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:920px;margin:0 auto;padding:24px 22px 64px}
+  header{background:linear-gradient(120deg,var(--navy),#2f2952);border-radius:18px;color:#fff;padding:26px 28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(24,129,251,.35),transparent 70%)}
+  .brandline{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+  .dotlogo{width:26px;height:26px;border-radius:50%;border:3px solid var(--teal);flex:0 0 auto}
+  .brandline b{font-size:15px;letter-spacing:2px;font-weight:800}
+  .brandline span{font-size:11px;color:#c9cede;letter-spacing:.5px}
+  header h1{font-size:23px;font-weight:800;line-height:1.25;position:relative;z-index:1}
+  header .sub{font-size:13px;color:#cdd2e2;margin-top:8px;position:relative;z-index:1}
+  .htags{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px;position:relative;z-index:1}
+  .htags span{font-size:11px;font-weight:600;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:5px 11px;border-radius:999px}
+  .htags .hot{background:rgba(0,239,121,.16);border-color:rgba(0,239,121,.4);color:#7bffc0}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .box{background:var(--card);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+  .box h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;font-weight:700}
+  .who{font-size:13px;margin:4px 0;display:flex;gap:8px;align-items:baseline}
+  .who b{font-weight:700}.who i{font-style:normal;color:var(--muted);font-size:12px}
+  .tag{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+  .tag.h{background:#e3efff;color:#0b57c7} .tag.c{background:#e8fff3;color:#087a45}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 18px}
+  .kpi{background:var(--card);border-radius:14px;padding:14px 15px;box-shadow:var(--shadow);border-left:4px solid var(--blue)}
+  .kpi:nth-child(2){border-left-color:var(--green)} .kpi:nth-child(3){border-left-color:var(--violet)} .kpi:nth-child(4){border-left-color:var(--teal)}
+  .kpi .n{font-size:22px;font-weight:800;line-height:1.1}
+  .kpi .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+
+  section{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px}
+  section > h2{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  section > h2::before{content:"";width:7px;height:19px;border-radius:4px;background:var(--blue);flex:0 0 auto}
+  .item{padding:11px 0;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:none}
+  .item h4{font-size:13.5px;font-weight:700;margin-bottom:3px}
+  .item p{font-size:13px;color:#4b5563}
+  .item .note{font-size:11.5px;color:var(--amber);font-weight:600;margin-top:3px}
+  ul.clean{list-style:none} ul.clean li{font-size:13px;padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--line)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{content:"›";position:absolute;left:4px;top:6px;color:var(--blue);font-weight:800}
+
+  .opps{display:grid;grid-template-columns:1fr;gap:10px}
+  .opp{border:1px solid var(--line);border-radius:12px;padding:13px 15px;border-left:4px solid var(--line)}
+  .opp.a{border-left-color:var(--green)} .opp.b{border-left-color:var(--blue)} .opp.c{border-left-color:var(--violet)}
+  .opp .ot{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .opp b{font-size:13.5px} .opp .val{font-size:12px;font-weight:800;color:var(--navy);white-space:nowrap}
+  .opp p{font-size:12px;color:#4b5563;margin-top:4px}
+  .badge{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 8px;border-radius:999px}
+  .badge.ma{background:#fff3d6;color:#a15c00} .badge.m{background:#e3efff;color:#0b57c7}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  td .r{font-weight:700} .dl{font-size:11px;font-weight:700;color:#0b57c7;background:#e3efff;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .dl.today{color:#a15c00;background:#fff3d6}
+  tr.hot td{background:#f5fbff}
+
+  .sug li::before{content:"◆";color:var(--violet);font-size:10px;top:8px}
+  footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.7;margin-top:22px}
+  .flag{font-size:11px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:10px 14px;border-radius:10px;margin-top:6px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brandline"><span class="dotlogo"></span><b>HORIZON</b><span>· Tu aliado estratégico</span></div>
+    <h1>Alianza Telviso × Horizon — Consignación de pasivos FiberHome</h1>
+    <div class="sub">Cooperativa de Pilar · Reunión comercial · 12 de julio de 2026</div>
+    <div class="htags">
+      <span>📍 Origen: reunión</span>
+      <span>🏷️ FiberHome (pasivos)</span>
+      <span class="hot">🎯 Objetivo de negocio: USD 500k</span>
+      <span>😊 Clima: positivo</span>
+    </div>
+  </header>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>Participantes · Horizon</h3>
+      <div class="who"><span class="tag h">HZ</span><b>Federico Núñez</b> <i>— Comercial (lleva la cuenta)</i></div>
+      <div class="who"><span class="tag h">HZ</span><b>Matías Taddei</b> <i>— Director comercial</i></div>
+    </div>
+    <div class="box">
+      <h3>Participantes · Telviso</h3>
+      <div class="who"><span class="tag c">CL</span><b>Horacio Vitullo</b> <i>— referente / decisor</i></div>
+      <div class="who" style="color:var(--muted);font-size:12px;margin-top:8px">A coordinar (no presentes): <b>Fabián</b> (homologaciones), <b>Adrián</b>, <b>Cintia</b> (data center), <b>Manu</b> (cc mail), <b>Maxi</b> (recibió cajas de empalme).</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n">~30k</div><div class="l">Homes passed (próx.)</div></div>
+    <div class="kpi"><div class="n">~15k</div><div class="l">Abonados (Inmowi)</div></div>
+    <div class="kpi"><div class="n">1.1–1.2k</div><div class="l">Altas / mes</div></div>
+    <div class="kpi"><div class="n">USD 500k</div><div class="l">Volumen objetivo a plantear</div></div>
+  </div>
+
+  <section>
+    <h2>De qué se trató</h2>
+    <div class="item">
+      <h4>Modelo propuesto: mercadería en consignación</h4>
+      <p>Horizon deja stock de pasivos FiberHome en consignación en Telviso (drop, conectores, fibra, cajas NAP y de empalme) para consumir contra su ritmo de altas sin inmovilizar capital por adelantado.</p>
+    </div>
+    <div class="item">
+      <h4>Modelo en dos fases</h4>
+      <p><b>Fase 1 — autoconsumo:</b> consignación para el despliegue propio de Telviso. &nbsp;·&nbsp; <b>Fase 2 — reventa a terceros:</b> Telviso revende con margen ~10%, con <b>Catel</b> como importador.</p>
+      <div class="note">Rol/estructura de Catel a confirmar.</div>
+    </div>
+    <div class="item">
+      <h4>Estado de homologaciones</h4>
+      <p><b>Pasivos:</b> entregados y probados (avanzado). &nbsp;·&nbsp; <b>OLT FiberHome:</b> próximo hito técnico — prueba en el lab "Depósito Tecnológico", con <b>Fabián</b> como cuello de botella.</p>
+    </div>
+    <div class="item">
+      <h4>Compras / cotizaciones en curso</h4>
+      <p>Federico ya hizo una compra chica de <b>cajas de empalme</b> (las recibió Maxi). Quedan pendientes las cotizaciones de <b>fibra, drop y conectores</b> — todavía sin OC.</p>
+    </div>
+    <div class="item">
+      <h4>Contexto competitivo</h4>
+      <p><b>Aitera</b> y <b>Huawei</b> también están cortejando a Telviso por la misma cuenta.</p>
+    </div>
+    <div class="item">
+      <h4>Infraestructura (tema paralelo)</h4>
+      <p>Telviso enfrenta una crisis de capacidad de data center. Federico tiene reunión con <b>Cintia</b> el <b>martes 14/07</b> para tratarlo.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Oportunidades detectadas</h2>
+    <div class="opps">
+      <div class="opp a">
+        <div class="ot"><b>Consignación de pasivos FiberHome — Fase 1</b><span class="val">Objetivo USD 500k</span></div>
+        <p>Drop, conectores, fibra, cajas NAP y de empalme. Relación activa, primeras compras hechas, gran volumen potencial. <span class="badge ma">Interés medio-alto</span></p>
+      </div>
+      <div class="opp b">
+        <div class="ot"><b>Homologación OLT FiberHome</b><span class="val">Habilita activos</span></div>
+        <p>Hito técnico que desbloquea la venta de equipamiento activo. Depende de Fabián y del lab Depósito Tecnológico. <span class="badge m">Interés medio</span></p>
+      </div>
+      <div class="opp c">
+        <div class="ot"><b>Reventa a terceros — Fase 2</b><span class="val">~10% margen</span></div>
+        <p>Telviso revende materiales a terceros; Catel como importador. Modelo futuro, a estructurar por escrito. <span class="badge m">Interés medio</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Próximos pasos</h2>
+    <table>
+      <thead><tr><th>Tarea</th><th>Responsable</th><th>Deadline</th></tr></thead>
+      <tbody>
+        <tr class="hot"><td>Enviar mail de status + propuesta personalizada (cc Manu)</td><td class="r">Federico</td><td><span class="dl today">HOY 12/07</span></td></tr>
+        <tr><td>Reunión con Cintia por capacidad de data center</td><td class="r">Federico</td><td><span class="dl">mar 14/07</span></td></tr>
+        <tr><td>Enviar cotizaciones de fibra, drop y conectores</td><td class="r">Federico</td><td><span class="dl">15/07</span></td></tr>
+        <tr><td>Armar propuesta gráfica/armada + programa de consignación</td><td class="r">Federico + Matías</td><td><span class="dl">16/07</span></td></tr>
+        <tr><td>Dimensionar volumen y estructura (techo, materiales, reposición)</td><td class="r">Matías</td><td><span class="dl">18/07</span></td></tr>
+        <tr><td>Empujar homologación OLT FiberHome (Fabián / lab)</td><td class="r">Federico + Horacio</td><td><span class="dl">22/07</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Sugerencias del asistente</h2>
+    <ul class="clean sug">
+      <li><b>Blindar la cuenta frente a Aitera/Huawei:</b> la consignación es un diferencial fuerte (baja la barrera de capital). Presentarla como exclusividad de pasivos y acelerar la homologación de la OLT para capturar también los activos.</li>
+      <li><b>Amarrar la Fase 2 por escrito:</b> acuerdo simple de margen (~10%) + rol de Catel como importador, para que Telviso vea upside propio y se comprometa con el volumen.</li>
+      <li><b>Usar la crisis de data center como puerta de entrada</b> a una conversación más amplia de infraestructura (no solo pasivos), apalancando la reunión con Cintia.</li>
+      <li><b>Reposición automática por consumo:</b> con ~1.100–1.200 altas/mes, dimensionar la consignación con mínimos/máximos de stock para no frenar el despliegue.</li>
+    </ul>
+    <div class="flag">🔎 <b>A confirmar:</b> fecha exacta, cifras de abonados/homes passed, techo real de la consignación, rol de Catel. Los USD 500k son el <b>volumen objetivo de negocio que Horizon va a plantear</b>, no un monto comprometido.</div>
+  </section>
+
+  <footer>
+    HORIZON · Tu aliado estratégico &nbsp;|&nbsp; Resumen generado a partir de la reunión Telviso × Horizon del 12/07/2026.<br>
+    Minuta completa: <b>Minuta_2026-07-12_Telviso-Horizon-consignacion-pasivos-FiberHome.md</b> &nbsp;·&nbsp; Oportunidades cargadas en el Funnel.
+  </footer>
+
+</div>
+</body>
+</html>
